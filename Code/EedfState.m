@@ -67,6 +67,74 @@ classdef EedfState < State
       gas.stateArray(end+1) = state;
       state.evaluateName;
     end
+
+    function [doubleEffectiveCrossSectionFound] = checkSiblingsEffectiveCrossSections(state)
+      % Check if there are two target siblings of the state (including itself) with effective cross sections defined
+      firstSiblingWithEffectiveCrossSection = false;
+      doubleEffectiveCrossSectionFound = false;
+      for sibling = [state, state.siblingArray]
+        % Avoid dummy states
+        if ~sibling.isTarget
+          continue;
+        end
+        % Check if current sibling has an effective cross section defined
+        for collision = sibling.collisionArray
+          if strcmp(collision.type, 'Effective')
+            if ~firstSiblingWithEffectiveCrossSection
+                firstSiblingWithEffectiveCrossSection = true;
+            elseif ~doubleEffectiveCrossSectionFound
+                doubleEffectiveCrossSectionFound = true;
+                error(['Effective cross section duplicated among %s and its siblings.\n' ...
+                    'Please, check the corresponding LXCat file(s).'], sibling.name);
+            end    
+          end
+        end
+      end 
+    end 
+
+    function [allElasticCollisionsFound, anyElasticCollisionFound] = checkSiblingsElasticCollisions(state)
+      % Check if all target siblings (including itself) of the state have elastic collisions defined
+      anyElasticCollisionFound = false;
+      allElasticCollisionsFound = true;
+      for sibling = [state, state.siblingArray]
+        % Avoid dummy states
+        if ~sibling.isTarget
+          continue;
+        end
+        % Check if current sibling has an elastic collision defined explicitly
+        currentSiblingDoesNotHaveElasticCollision = true;
+        for collision = sibling.collisionArray
+          if strcmp(collision.type, 'Elastic')
+            currentSiblingDoesNotHaveElasticCollision = false;
+            anyElasticCollisionFound = true;
+            break;
+          end
+        end
+        % Check elastic collisions among its chldren (if any)
+        if ~isempty(sibling.childArray)
+          [allElasticCollisionFoundAmongChildren, anyElasticCollisionFoundAmongChildren] = ...
+            sibling.childArray(1).checkSiblingsElasticCollisions();
+          % check if information is provided/duplicated with elastic collisions among its children
+          if currentSiblingDoesNotHaveElasticCollision
+            currentSiblingDoesNotHaveElasticCollision = ~allElasticCollisionFoundAmongChildren;
+          else
+            if anyElasticCollisionFoundAmongChildren
+              error(['Elastic collision information is duplicated among %s and its children.\n'...
+                'Please, check the corresponding LXCat file(s).'], sibling.name);
+            end
+          end
+        end
+        % If current sibling finally does not have elastic collision, set global flag to false and return
+        if currentSiblingDoesNotHaveElasticCollision
+          allElasticCollisionsFound = false;
+        end
+      end
+      % If any, but not all, elastic collisions are found among siblings, raise error
+      if anyElasticCollisionFound && ~allElasticCollisionsFound
+        error(['Some elastic collision information is missing among %s siblings.\n'...
+          'Please, check the corresponding LXCat file(s).'], state.name);
+      end
+    end
     
   end
   

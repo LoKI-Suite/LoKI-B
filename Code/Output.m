@@ -1,4 +1,4 @@
-% LoKI-B solves a time and space independent form of the two-term 
+% LoKI-B solves a time and space independent form of the two-term
 % electron Boltzmann equation (EBE), for non-magnetised non-equilibrium 
 % low-temperature plasmas excited by DC/HF electric fields from 
 % different gases or gas mixtures.
@@ -22,73 +22,455 @@
 classdef Output < handle
   
   properties
-    folder = '';    % main output folder
-    subFolder = ''; % sub folder for output of different jobs
-    
+    folder = '';                        % main output folder
+    subFolder = '';                     % sub folder for output of different jobs
+    h5file = '';                        % output file name if dataFormat is hdf5
+    dataFormat = '';                    % data format to save results. Options are: 'txt' and 'hdf5'
+
     isSimulationHF = false;             % boolean to know if the electron kinetics (Boltzmann only) is HF
-    
+    isBoltzmann = true;                 % boolean to know if the electron kinetics is Boltzmann (true) of prescribedEedf (false)
+
     logIsToBeSaved = false;             % boolean to know if the log (as written by the CLI) must be saved
     inputsAreToBeSaved = false;         % boolean to know if the input files must be saved
+    currentJobID = 1;                   % index of the job value used for data writing
     eedfIsToBeSaved = false;            % boolean to know if the eedf must be saved
     swarmParamsIsToBeSaved = false;     % boolean to know if the swarm parameters info must be saved
     rateCoeffsIsToBeSaved = false;      % boolean to know if the rate coefficients info must be saved
     powerBalanceIsToBeSaved = false;    % boolean to know if the power balance info must be saved
     lookUpTableIsToBeSaved = false;     % boolean to know if look-up tables with results must be saved
-    
   end
   
   methods (Access = public)
     
     function output = Output(setup)
       
-      % set output folder (if not specified in the setup, a generic folder with a timestamp is created)
-      if isfield(setup.info.output, 'folder')
-        output.folder = ['Output' filesep setup.info.output.folder];
-      else
-        output.folder = ['Output' filesep 'Simulation ' datestr(datetime, 'dd mmm yyyy HHMMSS')];
-      end
-      % create output folder in case it doesn't exist
-      if 7 ~= exist(output.folder, 'file')
-        mkdir(output.folder);
+      output.dataFormat = setup.info.output.dataFormat;
+
+      if contains(output.dataFormat, 'txt')
+        % set output folder (if not specified in the setup, a generic folder with a timestamp is created)
+        if isfield(setup.info.output, 'folder')
+          output.folder = ['Output' filesep setup.info.output.folder];
+        else
+          output.folder = ['Output' filesep 'Simulation ' datestr(datetime, 'dd mmm yyyy HHMMSS')];
+        end
+        % create output folder in case it doesn't exist
+        if ~isfolder(output.folder)
+          mkdir(output.folder);
+        end
+
+        % set initial output subfolder (in case multiple jobs are to be run)
+        outputSubFolder = '';
+        if setup.numberOfJobs > 1
+          for i = setup.numberOfBatches:-1:1
+            outputSubFolder = sprintf('%s%s%s_%g', outputSubFolder, filesep, setup.batches(i).property, ...
+            setup.batches(i).value(1));
+          end
+        end
+        % save output sub folder info (folder inside the output.folder folder)
+        output.subFolder = outputSubFolder;
       end
       
-      % set initial output subfolder (in case multiple jobs are to be run)
-      outputSubFolder = '';
-      if setup.numberOfJobs > 1
-        for i = setup.numberOfBatches:-1:1
-          outputSubFolder = sprintf('%s%s%s_%g', outputSubFolder, filesep, setup.batches(i).property, ...
-            setup.batches(i).value(1));
+      if contains(output.dataFormat, 'hdf5')
+        % In this case we only need the root 'Output' folder where the hdfFile
+        % is written. This file contains the data organized in groups which are 
+        % the equivalent to subfoldes. The hdfFile filename is saved in output.folder.
+        % The hdfFile identifier is saved in output h5fid.
+
+        % create root output folder in case it doesn't exist
+        % If we also have 'txt' output format we have already an output.folder
+        if ~contains(output.dataFormat, 'txt')
+          if isfield(setup.info.output, 'folder')
+            output.folder = ['Output' filesep setup.info.output.folder];
+          else
+            output.folder = ['Output' filesep 'Simulation ' datestr(datetime, 'dd mmm yyyy HHMMSS')];
+          end
+          if ~isfolder(output.folder)
+            mkdir(output.folder);
+          end
+        end
+        % The hdfFile name is the setup.info.output.folder with the h5 extension
+        if isfield(setup.info.output, 'folder')
+          hdfFile = [output.folder filesep setup.info.output.folder '.h5'];
+        else
+          hdfFile = [output.folder filesep 'Simulation ' datestr(datetime, 'dd mmm yyyy HHMMSS') '.h5'];
+        end
+        output.h5file = hdfFile;
+        % Choose the number of E/N values
+        if isempty(setup.pulseInfo)
+          numberOfJobs = setup.numberOfJobs;
+        else
+          numberOfJobs = setup.pulseInfo.samplingPoints+1;
+        end            
+        % Common constants for hdf5 calls
+        dcpl = "H5P_DEFAULT";
+        doubleType = H5T.copy("H5T_NATIVE_DOUBLE");
+        intType = H5T.copy("H5T_NATIVE_INT");
+        % creates the file with default library properties (overwrite, ...)
+        fID = H5F.create(hdfFile, "H5F_ACC_TRUNC", dcpl, dcpl);
+        % Saves working conditions as attributes
+        workingConditions = setup.info.workingConditions;
+        spaceID = H5S.create("H5S_SCALAR");
+        acpl = H5P.create("H5P_ATTRIBUTE_CREATE");
+        % Excitation frequency
+        attrID = H5A.create(fID,"Excitation frequency (Hz)",doubleType,spaceID,acpl);
+        H5A.write(attrID,"H5ML_DEFAULT",workingConditions.excitationFrequency);
+        H5A.close(attrID);
+        % Gas pressure
+        attrID = H5A.create(fID,"Gas pressure (Pa)",doubleType,spaceID,acpl);
+        H5A.write(attrID,"H5ML_DEFAULT",workingConditions.gasPressure);
+        H5A.close(attrID);
+        % Temperature
+        attrID = H5A.create(fID,"Gas temperature (K)",doubleType,spaceID,acpl);
+        H5A.write(attrID,"H5ML_DEFAULT",workingConditions.gasTemperature);
+        H5A.close(attrID);
+        % Electron density
+        attrID = H5A.create(fID,"Electron density (m-3)",doubleType,spaceID,acpl);
+        H5A.write(attrID,"H5ML_DEFAULT",workingConditions.electronDensity);
+        H5A.close(attrID);
+        % Chamber dimensions (cylindric)
+        attrID = H5A.create(fID,"Chamber length (m)",doubleType,spaceID,acpl);
+        H5A.write(attrID,"H5ML_DEFAULT",workingConditions.chamberLength);
+        H5A.close(attrID);
+        attrID = H5A.create(fID,"Chamber radius (m)",doubleType,spaceID,acpl);
+        H5A.write(attrID,"H5ML_DEFAULT",workingConditions.chamberRadius);
+        H5A.close(attrID);
+        H5S.close(spaceID);
+        if setup.enableElectronKinetics
+          geid = H5G.create(fID,"electronKinetics",dcpl,dcpl,dcpl);
         end
       end
-      % save output sub folder info (folder inside the output.folder folder)
-      output.subFolder = outputSubFolder;
-      
+
       % save what information must be saved
-      dataFiles = setup.info.output.dataFiles;
-      if ischar(dataFiles)
-        dataFiles = {dataFiles};
+      dataSets = setup.info.output.dataSets;
+      if ischar(dataSets)
+        dataSets = {dataSets};
       end
-      for dataFile = dataFiles
-        switch dataFile{1}
+
+      % save the information if the electron kinetics is HF
+      if setup.workCond.reducedExcFreqSI > 0
+        output.isSimulationHF = true;
+      end
+
+      for dataSet = dataSets
+        switch dataSet{1}
           case 'log'
+            % Log file is always written as a txt file
             output.logIsToBeSaved = true;
             output.initializeLogFile(setup.cli.logStr);
           case 'inputs'
+            % Input file is always written as a txt file
             output.inputsAreToBeSaved = true;
             output.saveInputFiles(setup);
           case 'eedf'
             output.eedfIsToBeSaved = true;
+            if contains(output.dataFormat, 'hdf5')
+              if strcmpi(setup.info.electronKinetics.eedfType, 'boltzmann')
+                % First saves the reducedField values if we don't do the chemistry.
+                reducedField = setup.info.workingConditions.reducedField;
+                % get dims
+                if isempty(setup.pulseInfo)
+                  dims = [1 numberOfJobs];
+                else    % reducedField(t) -> columns for t and E/N
+                  dims = [2 numberOfJobs];
+                end
+                spaceID = H5S.create_simple(2,fliplr(dims),[]);
+                dsID = H5D.create(geid,'reducedField',doubleType,spaceID,dcpl);
+                if isempty(setup.pulseInfo)
+                  H5DS.set_label(dsID,0,'E/N')
+                else
+                  H5DS.set_label(dsID,0,'time')
+                  H5DS.set_label(dsID,1,'E/N')
+                end
+                if isempty(setup.pulseInfo)
+                  H5D.write(dsID,'H5ML_DEFAULT','H5S_ALL','H5S_ALL', ...
+                    'H5P_DEFAULT',reducedField);
+                end
+                H5S.close(spaceID);
+                % units attribute
+                units = "Td";
+                stypeID = H5T.copy("H5T_C_S1");
+                H5T.set_size (stypeID, "H5T_VARIABLE");
+                spaceID = H5S.create_simple(1,1,[]);
+                acpl = H5P.create("H5P_ATTRIBUTE_CREATE");
+                attrID = H5A.create(dsID,'units',stypeID,spaceID,acpl);
+                H5A.write(attrID,"H5ML_DEFAULT",units);
+                % set as scale
+                H5DS.set_scale(dsID,"E/N");
+                H5T.close(stypeID);
+              elseif strcmpi(setup.info.electronKinetics.eedfType, 'prescribedEedf')
+                output.isBoltzmann = false;  
+                % First saves the electronTemperature values
+                % get dims
+                electronTemperature = setup.info.workingConditions.electronTemperature;
+                if isscalar(electronTemperature)
+                  dims = [1 1];
+                else
+                  dims = size(electronTemperature);
+                end
+                spaceID = H5S.create_simple(2,fliplr(dims),[]);
+                dsID = H5D.create(geid,'electronTemperature',doubleType,spaceID,dcpl);
+                H5D.write(dsID,'H5ML_DEFAULT','H5S_ALL','H5S_ALL', ...
+                  'H5P_DEFAULT',electronTemperature);
+                H5S.close(spaceID);
+                % units attribute
+                units = "eV";
+                stypeID = H5T.copy("H5T_C_S1");
+                H5T.set_size (stypeID, "H5T_VARIABLE");
+                spaceID = H5S.create_simple(1,1,[]);
+                acpl = H5P.create("H5P_ATTRIBUTE_CREATE");
+                attrID = H5A.create(dsID,'units',stypeID,spaceID,acpl);
+                H5A.write(attrID,"H5ML_DEFAULT",units);
+                % set as scale
+                H5DS.set_scale(dsID,"Te");
+              end
+
+              % now create the eedf dataset
+              if strcmpi(setup.info.electronKinetics.eedfType, 'boltzmann')
+                sz(1:3) = H5T.get_size(doubleType);
+                offset(1) = 0;
+                offset(2:3) = cumsum(sz(1:2));
+                name = ["Energy" "EEDF" "Anisotropy"];
+              elseif strcmpi(setup.info.electronKinetics.eedfType, 'prescribedEedf')
+                sz(1:2) = H5T.get_size(doubleType);
+                offset(1) = 0;
+                offset(2) = sz(1);
+                name = ["Energy" "EEDF"];
+              end
+              ctypeID = H5T.create ('H5T_COMPOUND', sum(sz));
+              for i = 1:length(sz)
+                H5T.insert(ctypeID,name(i),offset(i),doubleType);
+              end
+              dims = [length(setup.energyGrid.cell) 1 numberOfJobs];
+              h5_dims = fliplr(dims);
+              spaceID = H5S.create_simple(3,h5_dims,h5_dims);
+              dsfID = H5D.create(geid,'eedf',ctypeID,spaceID,dcpl);
+              H5DS.attach_scale(dsfID,dsID,0);
+              H5S.close(spaceID);
+
+              % now create the attributes: variable and units in each column
+              if strcmpi(setup.info.electronKinetics.eedfType, 'boltzmann')
+                units = ['eV       '; 'eV^-(3/2)'; 'eV^-(3/2)'];
+                atdims = 3;
+              elseif strcmpi(setup.info.electronKinetics.eedfType, 'prescribedEedf')
+                units = ['eV       '; 'eV^-(3/2)'];
+                atdims = 2;
+              end
+              filetype = H5T.copy('H5T_FORTRAN_S1');
+              H5T.set_size(filetype, 9);
+              memtype = H5T.copy('H5T_C_S1');
+              H5T.set_size(memtype, 9);
+              space = H5S.create_simple(1,fliplr(atdims), []);
+              attr = H5A.create(dsfID, 'Units', filetype, space, 'H5P_DEFAULT');
+              H5A.write(attr, memtype, units');
+
+              % finally close the workspaces
+              H5A.close(attr);
+              H5S.close(space);
+              H5T.close(filetype);
+              H5T.close(memtype);
+              H5D.close(dsfID);
+            end
           case 'swarmParameters'
             output.swarmParamsIsToBeSaved = true;
-          case 'rateCoefficients'
-            output.rateCoeffsIsToBeSaved = true;
+            if contains(output.dataFormat, 'hdf5')
+              sz(1:9) = H5T.get_size(doubleType);
+              offset(1)=0;
+              % get dims
+              if output.isSimulationHF
+                offset(2:9)=cumsum(sz(1:8));
+                if output.isBoltzmann
+                  name = ["meanEnergy" "characEnergy" "Te" "redMobility" ...
+                    "redMobilityHFr" "redMobilityHFi" "redDiffCoeff" ...
+                    "redMobilityEnergy" "redDiffCoeffEnergy"];
+                  units = ['eV      '; 'eV      '; 'eV      '; '1/(msV) '; '1/(msV) '; ...
+                    '1/(msV) '; '1/(ms)  '; 'eV/(msV)'; 'eV/(ms) '];
+                else
+                  name = ["meanEnergy" "characEnergy" "reducedField" "redMobility" ...
+                  "redMobilityHFr" "redMobilityHFi" "redDiffCoeff" ...
+                  "redMobilityEnergy" "redDiffCoeffEnergy"];
+                  units = ['eV      '; 'eV      '; 'Td      '; '1/(msV) '; '1/(msV) '; ...
+                    '1/(msV) '; '1/(ms)  '; 'eV/(msV)'; 'eV/(ms) '];
+                end 
+              else
+                sz(10) = H5T.get_size(doubleType);
+                offset(2:10)=cumsum(sz(1:9));
+                if output.isBoltzmann
+                  name = ["meanEnergy" "characEnergy" "Te" "driftVelocity" ...
+                    "redMobility" "redDiffCoeff" "redMobilityEnergy" ...
+                    "redDiffCoeffEnergy" "redTownsendCoeff" "redAttCoeff"];
+                  units = ['eV      '; 'eV      '; 'eV      '; 'm/s     '; '1/(msV) '; ...
+                    '1/(ms)  '; 'eV/(msV)'; 'eV/(ms) '; 'm2      '; 'm2      '];
+                else
+                  name = ["meanEnergy" "characEnergy" "reducedField" "driftVelocity" ...
+                    "redMobility" "redDiffCoeff" "redMobilityEnergy" ...
+                    "redDiffCoeffEnergy" "redTownsendCoeff" "redAttCoeff"];
+                  units = ['eV      '; 'eV      '; 'Td      '; 'm/s     '; '1/(msV) '; ...
+                    '1/(ms)  '; 'eV/(msV)'; 'eV/(ms) '; 'm2      '; 'm2      '];
+                end                   
+              end
+              atdims = length(name);
+              ctypeID = H5T.create ('H5T_COMPOUND', sum(sz));
+              for i = 1:length(sz)
+                H5T.insert(ctypeID,name(i),offset(i),doubleType);
+              end
+              dims = [numberOfJobs 1];
+              spaceID = H5S.create_simple(2,fliplr(dims),[]);
+              dssID = H5D.create(geid,'swarmParameters',ctypeID,spaceID,dcpl);
+              H5DS.attach_scale(dssID,dsID,1);
+              % attributes: variable and units in each column
+              filetype = H5T.copy('H5T_FORTRAN_S1');
+              H5T.set_size(filetype, 8);
+              memtype = H5T.copy('H5T_C_S1');
+              H5T.set_size(memtype, 8);
+              space = H5S.create_simple(1,fliplr(atdims), []);
+              attr = H5A.create(dssID, 'Units', filetype, space, 'H5P_DEFAULT');
+              H5A.write(attr, memtype, units');
+              %
+              H5A.close(attr);
+              H5S.close(space);
+              H5T.close(filetype);
+              H5T.close(memtype);
+              H5T.close(ctypeID);
+              H5S.close(spaceID);
+              H5D.close(dssID);
+            end
           case 'powerBalance'
             output.powerBalanceIsToBeSaved = true;
+            if contains(output.dataFormat, 'hdf5')
+              % we set two datasets: powerBalanceSummary and powerBalanceGases
+              % powerBalanceGases
+              clear sz;
+              sz(1:5) = H5T.get_size(doubleType);
+              offset(1) = 0;
+              offset(2:5) = cumsum(sz(1:4));
+              name = ["rotCol" "vibCol" "eleCol" "ionCol" "attCol"];
+              ctypeID = H5T.create('H5T_COMPOUND', sum(sz));
+              for i = 1:length(sz)
+                H5T.insert(ctypeID,name(i),offset(i),doubleType);
+              end
+              ngas = length(setup.electronKineticsGasArray);
+              dims = [numberOfJobs 1 3 ngas];
+              spaceID = H5S.create_simple(4,fliplr(dims),[]);
+              dspID = H5D.create(geid,'powerBalanceGases',ctypeID,spaceID,dcpl);
+              H5DS.attach_scale(dspID,dsID,3);
+              % attributes: variable and units in each column
+              units = ['eVm^3/s'; 'eVm^3/s'; 'eVm^3/s'; 'eVm^3/s'; 'eVm^3/s'];
+              atdims = 5;
+              filetype = H5T.copy('H5T_FORTRAN_S1');
+              H5T.set_size(filetype, 7);
+              memtype = H5T.copy('H5T_C_S1');
+              H5T.set_size(memtype, 7);
+              space = H5S.create_simple(1,fliplr(atdims), []);
+              attr = H5A.create(dspID, 'Units', filetype, space, 'H5P_DEFAULT');
+              H5A.write(attr, memtype, units');
+              %
+              H5A.close(attr);
+              H5S.close(space);
+              H5T.close(filetype);
+              H5T.close(memtype);
+              H5T.close(ctypeID);
+              H5S.close(spaceID);
+              H5D.close(dspID);
+              % powerBalanceSummary
+              sz(1:10) = H5T.get_size(doubleType);
+              offset(1) = 0;
+              offset(2:10) = cumsum(sz(1:9));
+              name = ["Field" "Elastic" "CAR" "Rotational" "Vibrational" ...
+                "Electronic" "Ionization" "Attachment" "eDensGrowth" "Balance"];
+              ctypeID = H5T.create('H5T_COMPOUND', sum(sz));
+              for i = 1:length(sz)
+                H5T.insert(ctypeID,name(i),offset(i),doubleType);
+              end
+              dims = [numberOfJobs 1 3];
+              spaceID = H5S.create_simple(3,fliplr(dims),[]);
+              dspID = H5D.create(geid,'powerBalanceSummary',ctypeID,spaceID,dcpl);
+              H5DS.attach_scale(dspID,dsID,2);
+              % attributes: variable and units in each column
+              units = ['eVm^3/s'; 'eVm^3/s'; 'eVm^3/s'; 'eVm^3/s'; 'eVm^3/s'; 'eVm^3/s'; ...
+                'eVm^3/s'; 'eVm^3/s'; 'eVm^3/s'; 'eVm^3/s'];
+              atdims = 10;
+              filetype = H5T.copy('H5T_FORTRAN_S1');
+              H5T.set_size(filetype, 7);
+              memtype = H5T.copy('H5T_C_S1');
+              H5T.set_size(memtype, 7);
+              space = H5S.create_simple(1,fliplr(atdims), []);
+              attr = H5A.create(dspID, 'Units', filetype, space, 'H5P_DEFAULT');
+              H5A.write(attr, memtype, units');
+              %
+              H5A.close(attr);
+              H5S.close(space);
+              H5T.close(filetype);
+              H5T.close(memtype);
+              H5D.close(dspID);
+            end
+          case 'rateCoefficients'
+            output.rateCoeffsIsToBeSaved = true;
+            if contains(output.dataFormat, 'hdf5')
+              % e-collision reactions
+              % builds two tables for each gas (collisions and extraCollisions)
+              temp = [setup.electronKineticsCollisionArray(1:end).isExtra];
+              nReactions = length(temp(~temp));
+              % Create the base types
+              sz(1) = H5T.get_size(intType);
+              sz(2:4) = H5T.get_size(doubleType);
+              strType = H5T.copy ('H5T_C_S1');
+              H5T.set_size (strType, 'H5T_VARIABLE');
+              sz(5) = H5T.get_size(strType);
+              % Compute the offsets to each field. The first offset is always zero.
+              offset(1)=0;
+              offset(2:5)=cumsum(sz(1:4));
+              % Create the compound datatype for the file.
+              ctypeID = H5T.create ('H5T_COMPOUND', sum(sz));
+              H5T.insert(ctypeID,'rate_id',offset(1),intType);
+              H5T.insert(ctypeID,'ine_coeff',offset(2),doubleType);
+              H5T.insert(ctypeID,'sup_coeff',offset(3),doubleType);
+              H5T.insert(ctypeID,'threshold',offset(4),doubleType);
+              H5T.insert(ctypeID,'description',offset(5),strType);
+              % get dims
+              dims = [nReactions 1 numberOfJobs];
+              spaceID = H5S.create_simple(3,fliplr(dims),[]);
+              dsrID = H5D.create(geid,'rateCoefficients',ctypeID,spaceID,dcpl);
+              H5DS.attach_scale(dsrID,dsID,1);
+              % clean-up
+              H5S.close(spaceID);
+              % attributes: variable and units in each column
+              units = ['  -  '; 'm^3/s'; 'm^3/s'; 'eV   '; '  -  '];
+              atdims = 5;
+              filetype = H5T.copy('H5T_FORTRAN_S1');
+              H5T.set_size(filetype, 5);
+              memtype = H5T.copy('H5T_C_S1');
+              H5T.set_size(memtype, 5);
+              space = H5S.create_simple(1,fliplr(atdims), []);
+              attr = H5A.create(dsrID, 'Units', filetype, space, 'H5P_DEFAULT');
+              H5A.write(attr, memtype, units');
+              %
+              H5A.close(attr);
+              H5S.close(space);
+              H5T.close(filetype);
+              H5T.close(memtype);
+              H5D.close(dsrID);
+                H5T.close(ctypeID);
+              % final clean-up
+              H5T.close(strType);
+              H5T.close(intType);
+            end
           case 'lookUpTable'
+            % lookUpTable is always written as a txt file
             output.lookUpTableIsToBeSaved = true;
+        end     % switch dataSet{1}
+      end     % for dataSet = dataSets
+
+      % closes the hdf5 objects
+      if contains(output.dataFormat, 'hdf5')
+        H5D.close(dsID);    % We still had the scale dataset open...
+        if setup.enableElectronKinetics
+          H5G.close(geid);
         end
+%         H5S.close(spaceID);            % this is not realy needed as all ...
+        H5T.close(doubleType);         % identifiers are closed when they ...
+        H5F.close(fID);                % go out of scope if inside a function.
       end
-      
+
       % save the setup information for reference (always saved)
       output.saveSetupInfo(setup.unparsedInfo);
 
@@ -97,15 +479,13 @@ classdef Output < handle
       % add listener of the working conditions object
       addlistener(setup.workCond, 'genericStatusMessage', @output.genericStatusMessage);
       
-      % add listener to status messages of the electron kinetics object
-      addlistener(setup.electronKinetics, 'genericStatusMessage', @output.genericStatusMessage);
-      % add listener to output results when a new solution for the EEDF is found
-      addlistener(setup.electronKinetics, 'obtainedNewEedf', @output.electronKineticsSolution);
-      % save the information if the electron kinetics is HF
-      if setup.workCond.reducedExcFreqSI>0
-        output.isSimulationHF = true;
+     if setup.enableElectronKinetics
+        % add listener to status messages of the electron kinetics object
+        addlistener(setup.electronKinetics, 'genericStatusMessage', @output.genericStatusMessage);
+        % add listener to output results when a new solution for the EEDF is found
+        addlistener(setup.electronKinetics, 'obtainedNewEedf', @output.electronKineticsSolution);
       end
-      
+
     end
     
   end
@@ -117,18 +497,16 @@ classdef Output < handle
     
       fileName = [output.folder filesep 'setup.txt'];
       fileID = fopen(fileName, 'wt');
-      
       for cell = setupCellArray
-        fprintf(fileID, '%s\n', cell{1});
+          fprintf(fileID, '%s\n', cell{1});
       end
-      
       fclose(fileID);
-      
-    end
+
+    end % saveSetupInfo
 
     function saveInputFiles(output, setup)
-    % saveInputFiles saves all the input files found in the setup of the simulation inside an Input folder in the Output
-    % folder
+    % saveInputFiles saves all the input files found in the setup of the simulation
+    % inside an Input folder in the Output folder
       
       % find setup file
       files = {['Input' filesep setup.fileName]};
@@ -140,7 +518,7 @@ classdef Output < handle
           files{end+1} = ['Input' filesep file{1}];
         end
         % find cross-section files (extra)
-        if isfield('LXCatFilesExtra', setup.info.electronKinetics)
+        if isfield(setup.info.electronKinetics, 'LXCatFilesExtra')
           for file = setup.info.electronKinetics.LXCatFilesExtra
             files{end+1} = ['Input' filesep file{1}];
           end
@@ -178,10 +556,11 @@ classdef Output < handle
       if ~isfolder(inputOutputFolder)
         mkdir(inputOutputFolder);
       end
+
       % copy input files to output folder
       for file = files
         finalFile = [output.folder filesep file{1}];
-        [finalFolder, ~, ~] = fileparts(finalFile);
+        [finalFolder, fileName, ~] = fileparts(finalFile);
         if ~isfolder(finalFolder)
           mkdir(finalFolder);
         end
@@ -191,8 +570,9 @@ classdef Output < handle
     end
     
     function initializeLogFile(output, logCellArray)
-    % initializeLogFile initialized the output file containing the log of the simulation and writes previous messages of
-    % the log produced before the creation of the output object
+    % initializeLogFile initialized the output file containing the log of the
+    % simulation and writes previous messages of the log produced before the
+    % creation of the output object
     
       fileName = [output.folder filesep 'log.txt'];
       fileID = fopen(fileName, 'wt');
@@ -225,21 +605,48 @@ classdef Output < handle
       % create subfolder in case it is needed (when performing runs of simmulations or in time-dependent Boltzmann)
       if ~isempty(output.subFolder) && (output.eedfIsToBeSaved || output.powerBalanceIsToBeSaved || ...
           output.swarmParamsIsToBeSaved || output.rateCoeffsIsToBeSaved )
-        if 7 ~= exist([output.folder output.subFolder], 'file')
-          mkdir([output.folder output.subFolder]);
+        if contains(output.dataFormat, 'txt')
+          % By now output.folder SHOULD exist as per Output() function
+          if ~isfolder([output.folder filesep output.subFolder])
+            mkdir(output.folder,output.subFolder);
+          end
         end
       end
       
+      % if output format is hdf5, save the time and reducedField values
+      if contains(output.dataFormat, 'hdf5')
+          data = [electronKinetics.workCond.currentTime, electronKinetics.workCond.reducedField];
+          if length(data) == 2
+              % write the values
+              fID = H5F.open(output.h5file, "H5F_ACC_RDWR", "H5P_DEFAULT");
+              dseID = H5D.open(fID,'/electronKinetics/reducedField');
+              start = [0 output.currentJobID-1];
+              block = [2 1];
+              h5_block = fliplr(block);
+              memSpaceID = H5S.create_simple(2,h5_block,[]);
+              dspaceID = H5D.get_space(dseID);
+              H5S.select_hyperslab(dspaceID,"H5S_SELECT_SET",fliplr(start),[],[],h5_block);
+              H5D.write(dseID,"H5ML_DEFAULT",memSpaceID,dspaceID,"H5P_DEFAULT",data);
+              %
+              H5S.close(dspaceID);
+              H5S.close(memSpaceID);
+              H5D.close(dseID);
+              H5F.close(fID);
+          end
+      end
+
       % save selected results of the electron kinetics
       if output.eedfIsToBeSaved
         if isa(electronKinetics, 'Boltzmann')
+          % Check if 'Boltzmann' is a datatype. Otherwise change to strcmp function
           output.saveEedf(electronKinetics.eedf, electronKinetics.firstAnisotropy, electronKinetics.energyGrid.cell);
         else
           output.saveEedf(electronKinetics.eedf, [], electronKinetics.energyGrid.cell);
         end
       end
       if output.swarmParamsIsToBeSaved
-        output.saveSwarm(electronKinetics.swarmParam, electronKinetics.workCond.reducedField);
+        output.saveSwarm(electronKinetics.swarmParam, electronKinetics.workCond.reducedField, ...
+          electronKinetics.workCond.electronDensity);
       end
       if output.rateCoeffsIsToBeSaved
         output.saveRateCoefficients(electronKinetics.rateCoeffAll, electronKinetics.rateCoeffExtra, []);
@@ -248,203 +655,461 @@ classdef Output < handle
         output.savePower(electronKinetics.power);
       end
       if output.lookUpTableIsToBeSaved
-        output.saveLookUpTable(electronKinetics);
+        if contains(output.dataFormat, 'txt')        % hdf5 format is already a lookUptable!
+          output.saveLookUpTable(electronKinetics);
+        end
       end
       
+      output.currentJobID = output.currentJobID + 1;
     end
     
     function saveEedf(output, eedf, firstAnisotropy, energy)
     % saveEedf saves the eedf information of the current simulation
       
-      % create file name
-      fileName = [output.folder output.subFolder filesep 'eedf.txt'];
-      
-      % open file
-      fileID = fopen(fileName, 'wt');
-      
-      % save information into the file
-      if isempty(firstAnisotropy)
-        fprintf(fileID, 'Energy(eV)           EEDF(eV^-(3/2))\n');
-        values(2:2:2*length(eedf)) = eedf;
-        values(1:2:2*length(eedf)) = energy;
-        fprintf(fileID, '%#.14e %#.14e \n', values);
-      else
-        fprintf(fileID, 'Energy(eV)           EEDF(eV^-(3/2))      Anisotropy(eV^-(3/2))\n');
-        values(3:3:3*length(eedf)) = firstAnisotropy;
-        values(2:3:3*length(eedf)) = eedf;
-        values(1:3:3*length(eedf)) = energy;
-        fprintf(fileID, '%#.14e %#.14e %#.14e \n', values);
+      if contains(output.dataFormat, 'txt')
+        % create file name
+        fileName = [output.folder filesep output.subFolder filesep 'eedf.txt'];
+
+        % open file
+        fileID = fopen(fileName, 'wt');
+
+        % save information into the file
+        if isempty(firstAnisotropy)
+          fprintf(fileID, 'Energy(eV)           EEDF(eV^-(3/2))\n');
+          values(2:2:2*length(eedf)) = eedf;
+          values(1:2:2*length(eedf)) = energy;
+          fprintf(fileID, '%#.14e %#.14e \n', values);
+        else
+          fprintf(fileID, 'Energy(eV)           EEDF(eV^-(3/2))      Anisotropy(eV^-(3/2))\n');
+          values(3:3:3*length(eedf)) = firstAnisotropy;
+          values(2:3:3*length(eedf)) = eedf;
+          values(1:3:3*length(eedf)) = energy;
+          fprintf(fileID, '%#.14e %#.14e %#.14e \n', values);
+        end
+
+        % close file
+        fclose(fileID);
       end
-      
-      % close file
-      fclose(fileID);
+      if contains(output.dataFormat, 'hdf5')
+        % write dataset on outputFile
+        fID = H5F.open(output.h5file, "H5F_ACC_RDWR", "H5P_DEFAULT");
+        dsfID = H5D.open(fID,'/electronKinetics/eedf');
+        doubleType = H5T.copy('H5T_NATIVE_DOUBLE');
+        offset(1)=0;
+        if ~isempty(firstAnisotropy)
+          sz(1:3) = H5T.get_size(doubleType);
+          offset(2:3)=cumsum(sz(1:2));
+        else
+          sz(1:2) = H5T.get_size(doubleType);
+          offset(2:2)=cumsum(sz(1:1));
+        end
+        memtype = H5T.create ('H5T_COMPOUND', sum(sz));
+        data.Energy = energy;
+        data.f0 = eedf;
+        if ~isempty(firstAnisotropy)
+          data.f1 = firstAnisotropy;
+          name = ["Energy" "EEDF" "Anisotropy"];
+        else
+          name = ["Energy" "EEDF"];
+        end
+        for i = 1:length(sz)
+          H5T.insert(memtype,name(i),offset(i),doubleType);
+        end
+        start = [0 0 output.currentJobID-1];
+        block = [length(energy) 1 1];
+        h5_block = fliplr(block);
+        memSpaceID = H5S.create_simple(3,h5_block,[]);
+        dspaceID = H5D.get_space(dsfID);
+        H5S.select_hyperslab(dspaceID,"H5S_SELECT_SET",fliplr(start),[],[],h5_block);
+        H5D.write(dsfID,memtype,memSpaceID,dspaceID,"H5P_DEFAULT",data);
+        % clean-up...
+        H5T.close(doubleType);
+        H5S.close(dspaceID);
+        H5S.close(memSpaceID);
+        H5D.close(dsfID);
+        H5F.close(fID);
+      end
       
     end
     
-    function saveSwarm(output, swarmParam, reducedField)
-    % saveSwarm saves the swarm parameters information of the current simulation
-      
-      % create file name
-      fileName = [output.folder output.subFolder filesep 'swarmParameters.txt'];
-      
-      % open file
-      fileID = fopen(fileName, 'wt');
-      
-      % save information into the file
-      fprintf(fileID, '               Reduced electric field = %#.14e (Td)\n', reducedField);
-      fprintf(fileID, '        Reduced diffusion coefficient = %#.14e ((ms)^-1)\n', swarmParam.redDiffCoeff);
-      fprintf(fileID, '                     Reduced mobility = %#.14e ((msV)^-1)\n', swarmParam.redMobility);
-      if output.isSimulationHF 
-        fprintf(fileID, '                  Reduced mobility HF = %#.14e%+#.14ei ((msV)^-1)\n', ...
-          real(swarmParam.redMobilityHF), imag(swarmParam.redMobilityHF));
-      else
-        fprintf(fileID, '                       Drift velocity = %#.14e (ms^-1)\n', swarmParam.driftVelocity);
-        fprintf(fileID, '         Reduced Townsend coefficient = %#.14e (m^2)\n', swarmParam.redTownsendCoeff);
-        fprintf(fileID, '       Reduced attachment coefficient = %#.14e (m^2)\n', swarmParam.redAttCoeff);
+    function saveSwarm(output, swarmParam, reducedField, electronDensity)
+    % Saves the swarm parameters information of the current simulation
+    
+      if contains(output.dataFormat, 'txt')
+        % create file name
+        fileName = [output.folder filesep output.subFolder filesep 'swarmParameters.txt'];
+
+        % open file
+        fileID = fopen(fileName, 'wt');
+
+        % save information into the file
+        fprintf(fileID, '                     Electron density = %#.14e (m^-3)\n', electronDensity);
+        fprintf(fileID, '               Reduced electric field = %#.14e (Td)\n', reducedField);
+        fprintf(fileID, '                          Mean energy = %#.14e (eV)\n', swarmParam.meanEnergy);
+        fprintf(fileID, '                Characteristic energy = %#.14e (eV)\n', swarmParam.characEnergy);
+        fprintf(fileID, '                 Electron temperature = %#.14e (eV)\n', swarmParam.Te);
+        if ~output.isSimulationHF
+          fprintf(fileID, '                       Drift velocity = %#.14e (ms^-1)\n', swarmParam.driftVelocity);
+        end
+        fprintf(fileID, '                     Reduced mobility = %#.14e ((msV)^-1)\n', swarmParam.redMobility);
+        if output.isSimulationHF
+          fprintf(fileID, '                  Reduced mobility HF = %#.14e%+#.14ei ((msV)^-1)\n', ...
+            real(swarmParam.redMobilityHF), imag(swarmParam.redMobilityHF));
+        end
+        fprintf(fileID, '        Reduced diffusion coefficient = %#.14e ((ms)^-1)\n', swarmParam.redDiffCoeff);
+        fprintf(fileID, '              Reduced energy mobility = %#.14e (eV(msV)^-1)\n', swarmParam.redMobilityEnergy);
+        fprintf(fileID, ' Reduced energy diffusion coefficient = %#.14e (eV(ms)^-1)\n', swarmParam.redDiffCoeffEnergy);
+        if ~output.isSimulationHF
+          fprintf(fileID, '         Reduced Townsend coefficient = %#.14e (m^2)\n', swarmParam.redTownsendCoeff);
+          fprintf(fileID, '       Reduced attachment coefficient = %#.14e (m^2)\n', swarmParam.redAttCoeff);
+        end
+
+        % close file
+        fclose(fileID);
       end
-      fprintf(fileID, ' Reduced energy diffusion coefficient = %#.14e (eV(ms)^-1)\n', swarmParam.redDiffCoeffEnergy);
-      fprintf(fileID, '              Reduced energy mobility = %#.14e (eV(msV)^-1)\n', swarmParam.redMobilityEnergy);
-      fprintf(fileID, '                          Mean energy = %#.14e (eV)\n', swarmParam.meanEnergy);
-      fprintf(fileID, '                Characteristic energy = %#.14e (eV)\n', swarmParam.characEnergy);
-      fprintf(fileID, '                 Electron temperature = %#.14e (eV)\n', swarmParam.Te);
       
-      % close file
-      fclose(fileID);
-      
+      if contains(output.dataFormat, 'hdf5')
+        fID = H5F.open(output.h5file, "H5F_ACC_RDWR", "H5P_DEFAULT");
+        doubleType = H5T.copy('H5T_NATIVE_DOUBLE');
+        dssID = H5D.open(fID,'/electronKinetics/swarmParameters');
+        sz(1:9) = H5T.get_size(doubleType);
+        offset(1)=0;
+        % get offset and name
+        if output.isSimulationHF
+          offset(2:9)=cumsum(sz(1:8));
+          if output.isBoltzmann
+            name = ["meanEnergy" "characEnergy" "Te" "redMobility" ...
+                "redMobilityHFr" "redMobilityHFi" "redDiffCoeff" ...
+                "redMobilityEnergy" "redDiffCoeffEnergy"];
+            data.meanEnergy = swarmParam.meanEnergy;
+            data.characEnergy = swarmParam.characEnergy;
+            data.Te = swarmParam.Te;
+          else
+            name = ["meanEnergy" "characEnergy" "reducedField" "redMobility" ...
+                "redMobilityHFr" "redMobilityHFi" "redDiffCoeff" ...
+                "redMobilityEnergy" "redDiffCoeffEnergy"];
+            data.meanEnergy = swarmParam.meanEnergy;
+            data.characEnergy = swarmParam.characEnergy;
+            data.reducedField = reducedField;
+          end
+          data.redMobility = swarmParam.redMobility;
+          data.redMobilityHFr = real(swarmParam.redMobilityHF);
+          data.redMobilityHFi = imag(swarmParam.redMobilityHF);
+          data.redDiffCoeff = swarmParam.redDiffCoeff;
+          data.redMobilityEnergy = swarmParam.redMobilityEnergy;
+          data.redDiffCoeffEnergy = swarmParam.redDiffCoeffEnergy;
+        else
+          sz(10) = H5T.get_size(doubleType);
+          offset(2:10)=cumsum(sz(1:9));
+          if output.isBoltzmann
+            name = ["meanEnergy" "characEnergy" "Te" "driftVelocity" ...
+                "redMobility" "redDiffCoeff" "redMobilityEnergy" ...
+                "redDiffCoeffEnergy" "redTownsendCoeff" "redAttCoeff"];
+            data.meanEnergy = swarmParam.meanEnergy;
+            data.characEnergy = swarmParam.characEnergy;
+            data.Te = swarmParam.Te;
+          else
+            name = ["meanEnergy" "characEnergy" "reducedField" "driftVelocity" ...
+                "redMobility" "redDiffCoeff" "redMobilityEnergy" ...
+                "redDiffCoeffEnergy" "redTownsendCoeff" "redAttCoeff"];
+            data.meanEnergy = swarmParam.meanEnergy;
+            data.characEnergy = swarmParam.characEnergy;
+            data.reducedField = reducedField;
+          end   
+          data.driftVelocity = swarmParam.driftVelocity;
+          data.redMobility = swarmParam.redMobility;
+          data.redDiffCoeff = swarmParam.redDiffCoeff;
+          data.redMobilityEnergy = swarmParam.redMobilityEnergy;
+          data.redDiffCoeffEnergy = swarmParam.redDiffCoeffEnergy;
+          data.redTownsendCoeff = swarmParam.redTownsendCoeff;
+          data.redAttCoeff = swarmParam.redAttCoeff;
+        end
+        memtype = H5T.create ('H5T_COMPOUND', sum(sz));
+        for i = 1:length(sz)
+          H5T.insert(memtype,name(i),offset(i),doubleType);
+        end
+        start = [output.currentJobID-1 0];  % Note: location is 0-based, not 1-based!
+        h5_block = [1 1];
+        memSpaceID = H5S.create_simple(2,h5_block,[]);
+        dspaceID = H5D.get_space(dssID);
+        H5S.select_hyperslab(dspaceID,"H5S_SELECT_SET",fliplr(start),[],[],h5_block);
+        H5D.write(dssID,memtype,memSpaceID,dspaceID,"H5P_DEFAULT",data);
+        % clean-up...
+        H5S.close(dspaceID);
+        H5S.close(memSpaceID);
+        H5T.close(memtype);
+        H5T.close(doubleType);
+        H5D.close(dssID);
+        H5F.close(fID);
+      end
     end
     
     function saveRateCoefficients(output, eKineticsRateCoeffs, eKineticsRateCoeffsExtra, reactionsInfo)
     % saveRateCoefficients saves the rate coefficients obtained in the current simulation
       
-      % create file name
-      fileName = [output.folder output.subFolder filesep 'rateCoefficients.txt'];
+      if contains(output.dataFormat, 'txt')
+        % create file name
+        fileName = [output.folder filesep output.subFolder filesep 'rateCoefficients.txt'];
       
-      % open file
-      fileID = fopen(fileName, 'wt');
+        % open file
+        fileID = fopen(fileName, 'wt');
       
-      % save information into the file
-      if ~isempty(eKineticsRateCoeffs)
-        fprintf(fileID, '%s\n*    e-Kinetics Rate Coefficients    *\n%s\n\n', repmat('*', 1,38), repmat('*', 1,38));
-        fprintf(fileID, 'ID   Ine.R.Coeff.(m^3s^-1) Sup.R.Coeff.(m^3s^-1) Threshold(eV)         Description\n');
-        for rateCoeff = eKineticsRateCoeffs
-          if length(rateCoeff.value) == 1
-            fprintf(fileID, '%4d %20.14e  (N/A)                 %20.14e  %s\n', rateCoeff.collID, rateCoeff.value, ...
-              rateCoeff.energy, rateCoeff.collDescription);
-          else
-            fprintf(fileID, '%4d %20.14e  %20.14e  %20.14e  %s\n', rateCoeff.collID, rateCoeff.value(1), ...
-              rateCoeff.value(2), rateCoeff.energy, rateCoeff.collDescription);
+        % save information into the file
+        if ~isempty(eKineticsRateCoeffs)
+          fprintf(fileID, '%s\n*    e-Kinetics Rate Coefficients    *\n%s\n\n', repmat('*', 1,38), repmat('*', 1,38));
+          fprintf(fileID, 'ID   Ine.R.Coeff.(m^3s^-1) Sup.R.Coeff.(m^3s^-1) Threshold(eV)         Description\n');
+          for rateCoeff = eKineticsRateCoeffs
+            if length(rateCoeff.value) == 1
+              fprintf(fileID, '%4d %20.14e  (N/A)                 %20.14e  %s\n', rateCoeff.collID, rateCoeff.value, ...
+                rateCoeff.energy, rateCoeff.collDescription);
+            else
+              fprintf(fileID, '%4d %20.14e  %20.14e  %20.14e  %s\n', rateCoeff.collID, rateCoeff.value(1), ...
+                rateCoeff.value(2), rateCoeff.energy, rateCoeff.collDescription);
+            end
           end
         end
+        if ~isempty(eKineticsRateCoeffsExtra)
+          fprintf(fileID, '\n%s\n* e-Kinetics Extra Rate Coefficients *\n%s\n\n', repmat('*', 1,38), repmat('*', 1,38));
+          fprintf(fileID, 'ID   Ine.R.Coeff.(m^3s^-1) Sup.R.Coeff.(m^3s^-1) Threshold(eV)         Description\n');
+          for rateCoeff = eKineticsRateCoeffsExtra
+            if length(rateCoeff.value) == 1
+              fprintf(fileID, '%4d %20.14e  (N/A)                 %20.14e  %s\n', rateCoeff.collID, rateCoeff.value, ...
+                rateCoeff.energy, rateCoeff.collDescription);
+            else
+              fprintf(fileID, '%4d %20.14e  %20.14e  %20.14e  %s\n', rateCoeff.collID, rateCoeff.value(1), ...
+                rateCoeff.value(2), rateCoeff.energy, rateCoeff.collDescription);
+            end
+          end
+        end
+        if ~isempty(reactionsInfo)
+          fprintf(fileID, '\n%s\n*     Chemistry Rate Coefficients    *\n%s\n\n', repmat('*', 1,38), repmat('*', 1,38));
+          fprintf(fileID, ['ID   Dir.R.Coeff.(S.I.)    Inv.R.Coeff.(S.I.)    Enthalpy(eV)          ' ...
+            'Net.Reac.Rate(m^-3s^-1) Description\n']);
+          for reaction = reactionsInfo
+            if length(reaction.rateCoeff) == 1
+              fprintf(fileID, '%4d %20.14e  (N/A)                 %+20.14e %+20.14e   %s\n', reaction.reactID, ...
+                reaction.rateCoeff, reaction.energy, reaction.netRate, reaction.description);
+            else
+              fprintf(fileID, '%4d %20.14e  %20.14e  %+20.14e %+20.14e   %s\n', reaction.reactID, ...
+                reaction.rateCoeff(1), reaction.rateCoeff(2), reaction.energy, reaction.netRate, reaction.description);
+            end
+          end
+        end
+        fclose(fileID);
       end
-      if ~isempty(eKineticsRateCoeffsExtra)
-        fprintf(fileID, '\n%s\n* e-Kinetics Extra Rate Coefficients *\n%s\n\n', repmat('*', 1,38), repmat('*', 1,38));
-        fprintf(fileID, 'ID   Ine.R.Coeff.(m^3s^-1) Sup.R.Coeff.(m^3s^-1) Threshold(eV)         Description\n');
-        for rateCoeff = eKineticsRateCoeffsExtra
-          if length(rateCoeff.value) == 1
-            fprintf(fileID, '%4d %20.14e  (N/A)                 %20.14e  %s\n', rateCoeff.collID, rateCoeff.value, ...
-              rateCoeff.energy, rateCoeff.collDescription);
-          else
-            fprintf(fileID, '%4d %20.14e  %20.14e  %20.14e  %s\n', rateCoeff.collID, rateCoeff.value(1), ...
-              rateCoeff.value(2), rateCoeff.energy, rateCoeff.collDescription);
+      
+      if contains(output.dataFormat, 'hdf5')
+        fID = H5F.open(output.h5file, "H5F_ACC_RDWR", "H5P_DEFAULT");
+        % Create the base types that will be used is the datasets
+        intType     = H5T.copy('H5T_NATIVE_INT');
+        doubleType  = H5T.copy('H5T_NATIVE_DOUBLE');
+        strType     = H5T.copy ('H5T_C_S1');
+        H5T.set_size(strType, 'H5T_VARIABLE');
+        %
+        if ~isempty(eKineticsRateCoeffs)
+          % process the hdf5 file
+          dsrID = H5D.open(fID,'/electronKinetics/rateCoefficients');
+          % Create the base types
+          sz(1) = H5T.get_size(intType);
+          sz(2:4) = H5T.get_size(doubleType);
+          sz(5) = H5T.get_size(strType);
+          % Compute the offsets to each field. The first offset is always zero.
+          offset(1)=0;
+          offset(2:5)=cumsum(sz(1:4));
+          % Create the compound datatype for memory.
+          memtype = H5T.create ('H5T_COMPOUND', sum(sz));
+          H5T.insert(memtype,'rate_id',offset(1),intType);
+          H5T.insert(memtype,'ine_coeff',offset(2),doubleType);
+          H5T.insert(memtype,'sup_coeff',offset(3),doubleType);
+          H5T.insert(memtype,'threshold',offset(4),doubleType);
+          H5T.insert(memtype,'description',offset(5),strType);
+          % Get the data values
+          ratePosition = -1;
+          for rateCoeff = eKineticsRateCoeffs
+            ratePosition = ratePosition + 1;
+            data.rate_id    = int32(rateCoeff.collID);
+            if length(rateCoeff.value) == 1
+              data.ine_coeff = rateCoeff.value;
+              data.sup_coeff = 0.0;
+            else
+              data.ine_coeff = rateCoeff.value(1);
+              data.sup_coeff = rateCoeff.value(2);
+            end
+            data.threshold  = rateCoeff.energy;
+            data.reaction   = rateCoeff.collDescription;
+            %
+            start = [ratePosition 0 output.currentJobID-1];
+            h5_block = [1 1 1];
+            memSpaceID = H5S.create_simple(3,h5_block,[]);
+            dspaceID = H5D.get_space(dsrID);
+            H5S.select_hyperslab(dspaceID,"H5S_SELECT_SET",fliplr(start),[],[],h5_block);
+            H5D.write(dsrID,memtype,memSpaceID,dspaceID,"H5P_DEFAULT",data);
           end
+          clear data;
+          H5D.close(dsrID);
         end
-      end
-      if ~isempty(reactionsInfo)
-        fprintf(fileID, '\n%s\n*     Chemistry Rate Coefficients    *\n%s\n\n', repmat('*', 1,38), repmat('*', 1,38));
-        fprintf(fileID, ['ID   Dir.R.Coeff.(S.I.)    Inv.R.Coeff.(S.I.)    Enthalpy(eV)          ' ...
-          'Net.Reac.Rate(m^-3s^-1) Description\n']);
-        for reaction = reactionsInfo
-          if length(reaction.rateCoeff) == 1
-            fprintf(fileID, '%4d %20.14e  (N/A)                 %+20.14e %+20.14e   %s\n', reaction.reactID, ...
-              reaction.rateCoeff, reaction.energy, reaction.netRate, reaction.description);
-          else
-            fprintf(fileID, '%4d %20.14e  %20.14e  %+20.14e %+20.14e   %s\n', reaction.reactID, ...
-              reaction.rateCoeff(1), reaction.rateCoeff(2), reaction.energy, reaction.netRate, reaction.description);
-          end
-        end
+        clear data;
+        %
+        H5T.close(memtype);
+        H5S.close(dspaceID);
+        H5S.close(memSpaceID);
+        H5F.close(fID);
       end
 
-      % close file
-      fclose(fileID);
-      
     end
     
     function savePower(output, power)
     % savePower saves the power balance information of the current simulation
       
-      % create file name
-      fileName = [output.folder output.subFolder filesep 'powerBalance.txt'];
-      
-      % open file
-      fileID = fopen(fileName, 'wt');
-      
-      % save information into the file
-      fprintf(fileID, '                               Field = %#+.14e (eVm^3s^-1)\n', power.field);
-      fprintf(fileID, '           Elastic collisions (gain) = %#+.14e (eVm^3s^-1)\n', power.elasticGain);
-      fprintf(fileID, '           Elastic collisions (loss) = %#+.14e (eVm^3s^-1)\n', power.elasticLoss);
-      fprintf(fileID, '                          CAR (gain) = %#+.14e (eVm^3s^-1)\n', power.carGain);
-      fprintf(fileID, '                          CAR (loss) = %#+.14e (eVm^3s^-1)\n', power.carLoss);
-      fprintf(fileID, '     Excitation inelastic collisions = %#+.14e (eVm^3s^-1)\n', power.excitationIne);
-      fprintf(fileID, '  Excitation superelastic collisions = %#+.14e (eVm^3s^-1)\n', power.excitationSup);
-      fprintf(fileID, '    Vibrational inelastic collisions = %#+.14e (eVm^3s^-1)\n', power.vibrationalIne);
-      fprintf(fileID, ' Vibrational superelastic collisions = %#+.14e (eVm^3s^-1)\n', power.vibrationalSup);
-      fprintf(fileID, '     Rotational inelastic collisions = %#+.14e (eVm^3s^-1)\n', power.rotationalIne);
-      fprintf(fileID, '  Rotational superelastic collisions = %#+.14e (eVm^3s^-1)\n', power.rotationalSup);
-      fprintf(fileID, '               Ionization collisions = %#+.14e (eVm^3s^-1)\n', power.ionizationIne);
-      fprintf(fileID, '               Attachment collisions = %#+.14e (eVm^3s^-1)\n', power.attachmentIne);
-      fprintf(fileID, '             Electron density growth = %#+.14e (eVm^3s^-1) +\n', power.eDensGrowth);
-      fprintf(fileID, ' %s\n', repmat('-', 1, 73));
-      fprintf(fileID, '                       Power Balance = %#+.14e (eVm^3s^-1)\n', power.balance);
-      fprintf(fileID, '              Relative Power Balance = % #.14e%%\n\n', power.relativeBalance*100);
-      fprintf(fileID, '           Elastic collisions (gain) = %#+.14e (eVm^3s^-1)\n', power.elasticGain);
-      fprintf(fileID, '           Elastic collisions (loss) = %#+.14e (eVm^3s^-1) +\n', power.elasticLoss);
-      fprintf(fileID, ' %s\n', repmat('-', 1, 73));
-      fprintf(fileID, '            Elastic collisions (net) = %#+.14e (eVm^3s^-1)\n\n', power.elasticNet);
-      fprintf(fileID, '                          CAR (gain) = %#+.14e (eVm^3s^-1)\n', power.carGain);
-      fprintf(fileID, '                          CAR (gain) = %#+.14e (eVm^3s^-1) +\n', power.carLoss);
-      fprintf(fileID, ' %s\n', repmat('-', 1, 73));
-      fprintf(fileID, '                           CAR (net) = %#+.14e (eVm^3s^-1)\n\n', power.carNet);
-      fprintf(fileID, '     Excitation inelastic collisions = %#+.14e (eVm^3s^-1)\n', power.excitationIne);
-      fprintf(fileID, '  Excitation superelastic collisions = %#+.14e (eVm^3s^-1) +\n', power.excitationSup);
-      fprintf(fileID, ' %s\n', repmat('-', 1, 73));
-      fprintf(fileID, '         Excitation collisions (net) = %#+.14e (eVm^3s^-1)\n\n', power.excitationNet);
-      fprintf(fileID, '    Vibrational inelastic collisions = %#+.14e (eVm^3s^-1)\n', power.vibrationalIne);
-      fprintf(fileID, ' Vibrational superelastic collisions = %#+.14e (eVm^3s^-1) +\n', power.vibrationalSup);
-      fprintf(fileID, ' %s\n', repmat('-', 1, 73));
-      fprintf(fileID, '        Vibrational collisions (net) = %#+.14e (eVm^3s^-1)\n\n', power.vibrationalNet);
-      fprintf(fileID, '     Rotational inelastic collisions = %#+.14e (eVm^3s^-1)\n', power.rotationalIne);
-      fprintf(fileID, '  Rotational superelastic collisions = %#+.14e (eVm^3s^-1) +\n', power.rotationalSup);
-      fprintf(fileID, ' %s\n', repmat('-', 1, 73));
-      fprintf(fileID, '         Rotational collisions (net) = %#+.14e (eVm^3s^-1)\n', power.rotationalNet);
-      
-      % power balance by gases
-      gases = fields(power.gases);
-      powerByGas = power.gases;
-      for i = 1:length(gases)
-        gas = gases{i};
-        fprintf(fileID, '\n%s\n\n', [repmat('*', 1, 37) ' ' gas ' ' repmat('*', 1, 39-length(gas))]);
-        fprintf(fileID, '     Excitation inelastic collisions = %#+.14e (eVm^3s^-1)\n', powerByGas.(gas).excitationIne);
-        fprintf(fileID, '  Excitation superelastic collisions = %#+.14e (eVm^3s^-1) +\n', powerByGas.(gas).excitationSup);
+      if contains(output.dataFormat, 'txt')
+        % create file name
+        fileName = [output.folder filesep output.subFolder filesep 'powerBalance.txt'];
+        
+        % open file
+        fileID = fopen(fileName, 'wt');
+        
+        % save information into the file
+        fprintf(fileID, '                               Field = %#+.14e (eVm^3s^-1)\n', power.field);
+        fprintf(fileID, '           Elastic collisions (gain) = %#+.14e (eVm^3s^-1)\n', power.elasticGain);
+        fprintf(fileID, '           Elastic collisions (loss) = %#+.14e (eVm^3s^-1)\n', power.elasticLoss);
+        fprintf(fileID, '                          CAR (gain) = %#+.14e (eVm^3s^-1)\n', power.carGain);
+        fprintf(fileID, '                          CAR (loss) = %#+.14e (eVm^3s^-1)\n', power.carLoss);
+        fprintf(fileID, '     Excitation inelastic collisions = %#+.14e (eVm^3s^-1)\n', power.excitationIne);
+        fprintf(fileID, '  Excitation superelastic collisions = %#+.14e (eVm^3s^-1)\n', power.excitationSup);
+        fprintf(fileID, '    Vibrational inelastic collisions = %#+.14e (eVm^3s^-1)\n', power.vibrationalIne);
+        fprintf(fileID, ' Vibrational superelastic collisions = %#+.14e (eVm^3s^-1)\n', power.vibrationalSup);
+        fprintf(fileID, '     Rotational inelastic collisions = %#+.14e (eVm^3s^-1)\n', power.rotationalIne);
+        fprintf(fileID, '  Rotational superelastic collisions = %#+.14e (eVm^3s^-1)\n', power.rotationalSup);
+        fprintf(fileID, '               Ionization collisions = %#+.14e (eVm^3s^-1)\n', power.ionizationIne);
+        fprintf(fileID, '               Attachment collisions = %#+.14e (eVm^3s^-1)\n', power.attachmentIne);
+        fprintf(fileID, '             Electron density growth = %#+.14e (eVm^3s^-1) +\n', power.eDensGrowth);
         fprintf(fileID, ' %s\n', repmat('-', 1, 73));
-        fprintf(fileID, '         Excitation collisions (net) = %#+.14e (eVm^3s^-1)\n\n', powerByGas.(gas).excitationNet);
-        fprintf(fileID, '    Vibrational inelastic collisions = %#+.14e (eVm^3s^-1)\n', powerByGas.(gas).vibrationalIne);
-        fprintf(fileID, ' Vibrational superelastic collisions = %#+.14e (eVm^3s^-1) +\n', powerByGas.(gas).vibrationalSup);
+        fprintf(fileID, '                       Power Balance = %#+.14e (eVm^3s^-1)\n', power.balance);
+        fprintf(fileID, '              Relative Power Balance = % #.14e%%\n\n', power.relativeBalance*100);
+        fprintf(fileID, '           Elastic collisions (gain) = %#+.14e (eVm^3s^-1)\n', power.elasticGain);
+        fprintf(fileID, '           Elastic collisions (loss) = %#+.14e (eVm^3s^-1) +\n', power.elasticLoss);
         fprintf(fileID, ' %s\n', repmat('-', 1, 73));
-        fprintf(fileID, '        Vibrational collisions (net) = %#+.14e (eVm^3s^-1)\n\n', powerByGas.(gas).vibrationalNet);
-        fprintf(fileID, '     Rotational inelastic collisions = %#+.14e (eVm^3s^-1)\n', powerByGas.(gas).rotationalIne);
-        fprintf(fileID, '  Rotational superelastic collisions = %#+.14e (eVm^3s^-1) +\n', powerByGas.(gas).rotationalSup);
+        fprintf(fileID, '            Elastic collisions (net) = %#+.14e (eVm^3s^-1)\n\n', power.elasticNet);
+        fprintf(fileID, '                          CAR (gain) = %#+.14e (eVm^3s^-1)\n', power.carGain);
+        fprintf(fileID, '                          CAR (loss) = %#+.14e (eVm^3s^-1) +\n', power.carLoss);
         fprintf(fileID, ' %s\n', repmat('-', 1, 73));
-        fprintf(fileID, '         Rotational collisions (net) = %#+.14e (eVm^3s^-1)\n\n', powerByGas.(gas).rotationalNet);
-        fprintf(fileID, '               Ionization collisions = %#+.14e (eVm^3s^-1)\n', powerByGas.(gas).ionizationIne);
-        fprintf(fileID, '               Attachment collisions = %#+.14e (eVm^3s^-1)\n', powerByGas.(gas).attachmentIne);
+        fprintf(fileID, '                           CAR (net) = %#+.14e (eVm^3s^-1)\n\n', power.carNet);
+        fprintf(fileID, '     Excitation inelastic collisions = %#+.14e (eVm^3s^-1)\n', power.excitationIne);
+        fprintf(fileID, '  Excitation superelastic collisions = %#+.14e (eVm^3s^-1) +\n', power.excitationSup);
+        fprintf(fileID, ' %s\n', repmat('-', 1, 73));
+        fprintf(fileID, '         Excitation collisions (net) = %#+.14e (eVm^3s^-1)\n\n', power.excitationNet);
+        fprintf(fileID, '    Vibrational inelastic collisions = %#+.14e (eVm^3s^-1)\n', power.vibrationalIne);
+        fprintf(fileID, ' Vibrational superelastic collisions = %#+.14e (eVm^3s^-1) +\n', power.vibrationalSup);
+        fprintf(fileID, ' %s\n', repmat('-', 1, 73));
+        fprintf(fileID, '        Vibrational collisions (net) = %#+.14e (eVm^3s^-1)\n\n', power.vibrationalNet);
+        fprintf(fileID, '     Rotational inelastic collisions = %#+.14e (eVm^3s^-1)\n', power.rotationalIne);
+        fprintf(fileID, '  Rotational superelastic collisions = %#+.14e (eVm^3s^-1) +\n', power.rotationalSup);
+        fprintf(fileID, ' %s\n', repmat('-', 1, 73));
+        fprintf(fileID, '         Rotational collisions (net) = %#+.14e (eVm^3s^-1)\n', power.rotationalNet);
+
+        % power balance by gases
+        gases = fields(power.gases);
+        powerByGas = power.gases;
+        for i = 1:length(gases)
+          gas = gases{i};
+          fprintf(fileID, '\n%s\n\n', [repmat('*', 1, 37) ' ' gas ' ' repmat('*', 1, 39-length(gas))]);
+          fprintf(fileID, '     Excitation inelastic collisions = %#+.14e (eVm^3s^-1)\n', powerByGas.(gas).excitationIne);
+          fprintf(fileID, '  Excitation superelastic collisions = %#+.14e (eVm^3s^-1) +\n', powerByGas.(gas).excitationSup);
+          fprintf(fileID, ' %s\n', repmat('-', 1, 73));
+          fprintf(fileID, '         Excitation collisions (net) = %#+.14e (eVm^3s^-1)\n\n', powerByGas.(gas).excitationNet);
+          fprintf(fileID, '    Vibrational inelastic collisions = %#+.14e (eVm^3s^-1)\n', powerByGas.(gas).vibrationalIne);
+          fprintf(fileID, ' Vibrational superelastic collisions = %#+.14e (eVm^3s^-1) +\n', powerByGas.(gas).vibrationalSup);
+          fprintf(fileID, ' %s\n', repmat('-', 1, 73));
+          fprintf(fileID, '        Vibrational collisions (net) = %#+.14e (eVm^3s^-1)\n\n', powerByGas.(gas).vibrationalNet);
+          fprintf(fileID, '     Rotational inelastic collisions = %#+.14e (eVm^3s^-1)\n', powerByGas.(gas).rotationalIne);
+          fprintf(fileID, '  Rotational superelastic collisions = %#+.14e (eVm^3s^-1) +\n', powerByGas.(gas).rotationalSup);
+          fprintf(fileID, ' %s\n', repmat('-', 1, 73));
+          fprintf(fileID, '         Rotational collisions (net) = %#+.14e (eVm^3s^-1)\n\n', powerByGas.(gas).rotationalNet);
+          fprintf(fileID, '               Ionization collisions = %#+.14e (eVm^3s^-1)\n', powerByGas.(gas).ionizationIne);
+          fprintf(fileID, '               Attachment collisions = %#+.14e (eVm^3s^-1)\n', powerByGas.(gas).attachmentIne);
+        end
+        % close file
+        fclose(fileID);
       end
-      % close file
-      fclose(fileID);
-      
+      if contains(output.dataFormat, 'hdf5')
+        % Convert data in struct to mat
+        temp = struct2cell(power);
+        dataSummary = [cell2mat(temp(1:24)); cell2mat(temp(26:end))];
+        % write powerBalanceSummary
+        doubleType = H5T.copy("H5T_NATIVE_DOUBLE");
+        sz(1:10) = H5T.get_size(doubleType);
+        offset(1) = 0;
+        offset(2:10) = cumsum(sz(1:9));
+        name = ["Field" "Elastic" "CAR" "Rotational" "Vibrational" "Electronic" ...
+          "Ionization" "Attachment" "eDensGrowth" "Balance"];
+        memtype = H5T.create('H5T_COMPOUND', sum(sz));
+        for i = 1:length(sz)
+          H5T.insert(memtype,name(i),offset(i),doubleType);
+        end
+        powerSummary.field = [dataSummary(1) dataSummary(1) 0];                        % field
+        powerSummary.elastic = dataSummary(2:4);                                       % elastic
+        powerSummary.CAR = dataSummary(5:7);                                           % CAR
+        powerSummary.rotational = [dataSummary(16) dataSummary(15) dataSummary(14)];   % rotational
+        powerSummary.vibrational = [dataSummary(13) dataSummary(12) dataSummary(11)];  % vibrational
+        powerSummary.electronic = [dataSummary(10) dataSummary(9) dataSummary(8)];     % electronic
+        powerSummary.ionization = [dataSummary(17) 0 dataSummary(17)];                 % ionization
+        powerSummary.attachment = [dataSummary(18) 0 dataSummary(18)];                 % attachment
+        powerSummary.eDensGrowth = [dataSummary(21) dataSummary(21) 0];                % eDensGrowth
+        powerSummary.balance = [dataSummary(25) dataSummary(26) 0];                    % balance and relativeBalance
+        % Process the hdf5 file
+        fID = H5F.open(output.h5file, "H5F_ACC_RDWR", "H5P_DEFAULT");
+        % powerBalanceSummary
+        dspID = H5D.open(fID,'/electronKinetics/powerBalanceSummary');
+        start = [output.currentJobID-1 0 0];
+        block = [1 1 3];
+        h5_block = fliplr(block);
+        memSpaceID = H5S.create_simple(3,h5_block,[]);
+        dspaceID = H5D.get_space(dspID);
+        H5S.select_hyperslab(dspaceID,"H5S_SELECT_SET",fliplr(start),[],[],h5_block);
+        H5D.write(dspID,memtype,memSpaceID,dspaceID,"H5P_DEFAULT",powerSummary);
+        H5S.close(memSpaceID);
+        H5D.close(dspID);
+        H5T.close(memtype);
+        % powerBalanceGases
+        dspID = H5D.open(fID,'/electronKinetics/powerBalanceGases');
+        gases = fields(power.gases);
+        clear sz;
+        sz(1:5) = H5T.get_size(doubleType);
+        offset(1) = 0;
+        offset(2:5) = cumsum(sz(1:4));
+        name = ["rotCol" "vibCol" "eleCol" "ionCol" "attCol"];
+        memtype = H5T.create('H5T_COMPOUND', sum(sz));
+        for i = 1:length(sz)
+          H5T.insert(memtype,name(i),offset(i),doubleType);
+        end
+        for i = 1:length(gases)
+          gas = gases{i};
+          temp = struct2cell(power.gases.(gas));
+          powerGas.rot = [cell2mat(temp(9)) cell2mat(temp(8)) cell2mat(temp(7))];
+          powerGas.vib = [cell2mat(temp(6)) cell2mat(temp(5)) cell2mat(temp(4))];
+          powerGas.ele = [cell2mat(temp(1)) cell2mat(temp(2)) cell2mat(temp(1))];
+          powerGas.ion = [cell2mat(temp(10)) 0 cell2mat(temp(10))];
+          powerGas.att = [cell2mat(temp(11)) 0 cell2mat(temp(11))];
+          % DEBUG:
+          % powerGas also includes inelastic and superelastic fields,
+          % these fiels are NOT included in the initial definition!
+          start = [output.currentJobID-1 0 0 i-1];
+          block = [1 1 3 1];
+          h5_block = fliplr(block);
+          memSpaceID = H5S.create_simple(4,h5_block,[]);
+          dspaceID = H5D.get_space(dspID);
+          H5S.select_hyperslab(dspaceID,"H5S_SELECT_SET",fliplr(start),[],[],h5_block);
+          H5D.write(dspID,memtype,memSpaceID,dspaceID,"H5P_DEFAULT",powerGas);
+        end
+        H5D.close(dspID);
+        H5F.close(fID);
+      end
+
     end
     
     function saveLookUpTable(output, electronKinetics)
-      
+    % NOTE: lookUpTables are only created if (output.dataFormat is 'txt'
+
       % name of the files containing the different lookup tables
       persistent fileName1;
       persistent fileName2;
@@ -533,7 +1198,7 @@ classdef Output < handle
           else
             fprintf(fileID1, [repmat('%-21s ', 1, 11) '\n'], 'EleTemp(eV)', 'RedField(Td)', 'RedDiff(1/(ms))', ...
             'RedMob(1/(msV))', 'DriftVelocity(m/s)', 'RedTow(m2)', 'RedAtt(m2)', 'RedDiffE(eV/(ms))', 'RedMobE(eV/(msV))', 'MeanE(eV)', ...
-            'CharE(eV)');            
+            'CharE(eV)');
           end
           fprintf(fileID2, '%-21s ', 'EleTemp(eV)');
           fprintf(fileID3, '%-21s ', 'EleTemp(eV)');
@@ -594,7 +1259,7 @@ classdef Output < handle
         if output.isSimulationHF
           fprintf(fileID1, [repmat('%-+21.14e ', 1, 10) '\n'], ...
             swarmParams.Te, workCond.reducedField, swarmParams.redDiffCoeff, swarmParams.redMobility, ...
-            real(swarmParams.redMobilityHF), imag(swarmParams.redMobilityHF), swarmParams.redDiffCoeffEnergy, ...
+             real(swarmParams.redMobilityHF), imag(swarmParams.redMobilityHF), swarmParams.redDiffCoeffEnergy, ...
             swarmParams.redMobilityEnergy, swarmParams.meanEnergy, swarmParams.characEnergy);
         else
           fprintf(fileID1, [repmat('%-+21.14e ', 1, 11) '\n'], ...

@@ -172,11 +172,11 @@ classdef PrescribedEedf < handle
     function eedf = evaluateEEDF(prescribedEedf)
     
       % evaluate the distribution without normalization
-      g = prescribedEedf.shapeParameter;
+      shape = prescribedEedf.shapeParameter;
       Te = prescribedEedf.workCond.electronTemperature;
       energy = prescribedEedf.energyGrid.cell;
-      eedf = gamma(5/(2*g))^(1.5)*gamma(3/(2*g))^(-2.5)*(2/(3*Te))^(1.5)*...
-        exp(-(energy*gamma(5/(2*g))*2/(gamma(3/(2*g))*3*Te)).^g);
+      eedf = shape*gamma(5/(2*shape))^(1.5)*gamma(3/(2*shape))^(-2.5)*(2/(3*Te))^(1.5)*...
+        exp(-(energy*gamma(5/(2*shape))*2/(gamma(3/(2*shape))*3*Te)).^shape);
 
       % renormalising the distribution
       eedf = eedf/(sum(sqrt(prescribedEedf.energyGrid.cell).*eedf)*prescribedEedf.energyGrid.step);

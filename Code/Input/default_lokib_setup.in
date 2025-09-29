@@ -16,6 +16,10 @@ workingConditions:
   electronDensity: 1e19                       % in m-3
   chamberLength: 1.0                          % in m
   chamberRadius: 1.0                          % in m
+%   dischargeCurrent: 1e-2                      % in A
+%   dischargePowerDensity: 1e5                  % in W m-3
+  totalSccmInFlow: 1                          % in sccm
+  totalSccmOutFlow: ensureIsobaric            % a number (in sccm) or a model: totalSccmInFlow, ensureIsobaric
 
 % --- configuration of the electron kinetics ---
 electronKinetics:
@@ -30,7 +34,7 @@ electronKinetics:
     - Nitrogen/N2_rot_LXCat.txt
 %   LXCatFilesExtra: extra_LXCat.txt    % extra cross section files
 %   effectiveCrossSectionPopulations:   % see doc
-%     - N2_effectivePop.txt
+%     - Nitrogen/N2_effectivePop.txt
 %   CARgases:                           % gases for which CAR is activated
 %     - N2
   gasProperties:                       % properties of the gases (S.I. Units)
@@ -79,8 +83,9 @@ gui:
 % ---  configuration of the output files ---
 output: 
   isOn: false
-  folder: simulation1
-  dataFiles:
+  dataFormat: hdf5+txt % txt or hdf5 or hdf5+txt
+  folder: simulation_1
+  dataSets:
 %     - inputs
     - log
     - eedf
@@ -88,4 +93,3 @@ output:
     - rateCoefficients
     - powerBalance
     - lookUpTable
-

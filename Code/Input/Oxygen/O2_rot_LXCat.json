@@ -1,0 +1,4945 @@
+{
+    "$schema": "undefined/scat-css/LTPMixture",
+    "url": "undefined/scat-cs/inspect?ids=32680923,32680949,32680975,32681001,32681027,32681053,32696857,32696883,32696909,32696935,32696961,32696987,32697013,32697039,32697065",
+    "termsOfUse": "undefined/scat-cs/inspect?ids=32680923,32680949,32680975,32681001,32681027,32681053,32696857,32696883,32696909,32696935,32696961,32696987,32697013,32697039,32697065&termsOfUse=true",
+    "states": {
+        "32582124": {
+            "detailed": {
+                "charge": -1,
+                "composition": "e",
+                "type": "Electron"
+            },
+            "serialized": {
+                "composition": {
+                    "summary": "e^-",
+                    "latex": "\\mathrm{e}^-"
+                },
+                "summary": "e^-",
+                "latex": "\\mathrm{e}^-"
+            }
+        },
+        "32680586": {
+            "detailed": {
+                "charge": 0,
+                "composition": [
+                    [
+                        "O",
+                        2
+                    ]
+                ],
+                "electronic": {
+                    "energyId": "X",
+                    "Lambda": 0,
+                    "S": 1,
+                    "reflection": "-",
+                    "parity": "g",
+                    "vibrational": {
+                        "v": 0,
+                        "rotational": {
+                            "J": 27
+                        }
+                    }
+                },
+                "type": "HomonuclearDiatom"
+            },
+            "serialized": {
+                "composition": {
+                    "summary": "O2",
+                    "latex": "\\mathrm{O_{2}}"
+                },
+                "summary": "O2{X^3S_g^-{0{27}}}",
+                "latex": "\\mathrm{O_{2}}\\left(\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-\\left(0\\left(27\\right)\\right)\\right)",
+                "electronic": {
+                    "summary": "X^3S_g^-",
+                    "latex": "\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-",
+                    "vibrational": {
+                        "summary": "0",
+                        "latex": "0",
+                        "rotational": {
+                            "summary": "27",
+                            "latex": "27"
+                        }
+                    }
+                }
+            }
+        },
+        "32680606": {
+            "detailed": {
+                "charge": 0,
+                "composition": [
+                    [
+                        "O",
+                        2
+                    ]
+                ],
+                "electronic": {
+                    "energyId": "X",
+                    "Lambda": 0,
+                    "S": 1,
+                    "reflection": "-",
+                    "parity": "g",
+                    "vibrational": {
+                        "v": 0,
+                        "rotational": {
+                            "J": 5
+                        }
+                    }
+                },
+                "type": "HomonuclearDiatom"
+            },
+            "serialized": {
+                "composition": {
+                    "summary": "O2",
+                    "latex": "\\mathrm{O_{2}}"
+                },
+                "summary": "O2{X^3S_g^-{0{5}}}",
+                "latex": "\\mathrm{O_{2}}\\left(\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-\\left(0\\left(5\\right)\\right)\\right)",
+                "electronic": {
+                    "summary": "X^3S_g^-",
+                    "latex": "\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-",
+                    "vibrational": {
+                        "summary": "0",
+                        "latex": "0",
+                        "rotational": {
+                            "summary": "5",
+                            "latex": "5"
+                        }
+                    }
+                }
+            }
+        },
+        "32680626": {
+            "detailed": {
+                "charge": 0,
+                "composition": [
+                    [
+                        "O",
+                        2
+                    ]
+                ],
+                "electronic": {
+                    "energyId": "X",
+                    "Lambda": 0,
+                    "S": 1,
+                    "reflection": "-",
+                    "parity": "g",
+                    "vibrational": {
+                        "v": 0,
+                        "rotational": {
+                            "J": 15
+                        }
+                    }
+                },
+                "type": "HomonuclearDiatom"
+            },
+            "serialized": {
+                "composition": {
+                    "summary": "O2",
+                    "latex": "\\mathrm{O_{2}}"
+                },
+                "summary": "O2{X^3S_g^-{0{15}}}",
+                "latex": "\\mathrm{O_{2}}\\left(\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-\\left(0\\left(15\\right)\\right)\\right)",
+                "electronic": {
+                    "summary": "X^3S_g^-",
+                    "latex": "\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-",
+                    "vibrational": {
+                        "summary": "0",
+                        "latex": "0",
+                        "rotational": {
+                            "summary": "15",
+                            "latex": "15"
+                        }
+                    }
+                }
+            }
+        },
+        "32680646": {
+            "detailed": {
+                "charge": 0,
+                "composition": [
+                    [
+                        "O",
+                        2
+                    ]
+                ],
+                "electronic": {
+                    "energyId": "X",
+                    "Lambda": 0,
+                    "S": 1,
+                    "reflection": "-",
+                    "parity": "g",
+                    "vibrational": {
+                        "v": 0,
+                        "rotational": {
+                            "J": 9
+                        }
+                    }
+                },
+                "type": "HomonuclearDiatom"
+            },
+            "serialized": {
+                "composition": {
+                    "summary": "O2",
+                    "latex": "\\mathrm{O_{2}}"
+                },
+                "summary": "O2{X^3S_g^-{0{9}}}",
+                "latex": "\\mathrm{O_{2}}\\left(\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-\\left(0\\left(9\\right)\\right)\\right)",
+                "electronic": {
+                    "summary": "X^3S_g^-",
+                    "latex": "\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-",
+                    "vibrational": {
+                        "summary": "0",
+                        "latex": "0",
+                        "rotational": {
+                            "summary": "9",
+                            "latex": "9"
+                        }
+                    }
+                }
+            }
+        },
+        "32680666": {
+            "detailed": {
+                "charge": 0,
+                "composition": [
+                    [
+                        "O",
+                        2
+                    ]
+                ],
+                "electronic": {
+                    "energyId": "X",
+                    "Lambda": 0,
+                    "S": 1,
+                    "reflection": "-",
+                    "parity": "g",
+                    "vibrational": {
+                        "v": 0,
+                        "rotational": {
+                            "J": 29
+                        }
+                    }
+                },
+                "type": "HomonuclearDiatom"
+            },
+            "serialized": {
+                "composition": {
+                    "summary": "O2",
+                    "latex": "\\mathrm{O_{2}}"
+                },
+                "summary": "O2{X^3S_g^-{0{29}}}",
+                "latex": "\\mathrm{O_{2}}\\left(\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-\\left(0\\left(29\\right)\\right)\\right)",
+                "electronic": {
+                    "summary": "X^3S_g^-",
+                    "latex": "\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-",
+                    "vibrational": {
+                        "summary": "0",
+                        "latex": "0",
+                        "rotational": {
+                            "summary": "29",
+                            "latex": "29"
+                        }
+                    }
+                }
+            }
+        },
+        "32680686": {
+            "detailed": {
+                "charge": 0,
+                "composition": [
+                    [
+                        "O",
+                        2
+                    ]
+                ],
+                "electronic": {
+                    "energyId": "X",
+                    "Lambda": 0,
+                    "S": 1,
+                    "reflection": "-",
+                    "parity": "g",
+                    "vibrational": {
+                        "v": 0,
+                        "rotational": {
+                            "J": 25
+                        }
+                    }
+                },
+                "type": "HomonuclearDiatom"
+            },
+            "serialized": {
+                "composition": {
+                    "summary": "O2",
+                    "latex": "\\mathrm{O_{2}}"
+                },
+                "summary": "O2{X^3S_g^-{0{25}}}",
+                "latex": "\\mathrm{O_{2}}\\left(\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-\\left(0\\left(25\\right)\\right)\\right)",
+                "electronic": {
+                    "summary": "X^3S_g^-",
+                    "latex": "\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-",
+                    "vibrational": {
+                        "summary": "0",
+                        "latex": "0",
+                        "rotational": {
+                            "summary": "25",
+                            "latex": "25"
+                        }
+                    }
+                }
+            }
+        },
+        "32680706": {
+            "detailed": {
+                "charge": 0,
+                "composition": [
+                    [
+                        "O",
+                        2
+                    ]
+                ],
+                "electronic": {
+                    "energyId": "X",
+                    "Lambda": 0,
+                    "S": 1,
+                    "reflection": "-",
+                    "parity": "g",
+                    "vibrational": {
+                        "v": 0,
+                        "rotational": {
+                            "J": 3
+                        }
+                    }
+                },
+                "type": "HomonuclearDiatom"
+            },
+            "serialized": {
+                "composition": {
+                    "summary": "O2",
+                    "latex": "\\mathrm{O_{2}}"
+                },
+                "summary": "O2{X^3S_g^-{0{3}}}",
+                "latex": "\\mathrm{O_{2}}\\left(\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-\\left(0\\left(3\\right)\\right)\\right)",
+                "electronic": {
+                    "summary": "X^3S_g^-",
+                    "latex": "\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-",
+                    "vibrational": {
+                        "summary": "0",
+                        "latex": "0",
+                        "rotational": {
+                            "summary": "3",
+                            "latex": "3"
+                        }
+                    }
+                }
+            }
+        },
+        "32680726": {
+            "detailed": {
+                "charge": 0,
+                "composition": [
+                    [
+                        "O",
+                        2
+                    ]
+                ],
+                "electronic": {
+                    "energyId": "X",
+                    "Lambda": 0,
+                    "S": 1,
+                    "reflection": "-",
+                    "parity": "g",
+                    "vibrational": {
+                        "v": 0,
+                        "rotational": {
+                            "J": 11
+                        }
+                    }
+                },
+                "type": "HomonuclearDiatom"
+            },
+            "serialized": {
+                "composition": {
+                    "summary": "O2",
+                    "latex": "\\mathrm{O_{2}}"
+                },
+                "summary": "O2{X^3S_g^-{0{11}}}",
+                "latex": "\\mathrm{O_{2}}\\left(\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-\\left(0\\left(11\\right)\\right)\\right)",
+                "electronic": {
+                    "summary": "X^3S_g^-",
+                    "latex": "\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-",
+                    "vibrational": {
+                        "summary": "0",
+                        "latex": "0",
+                        "rotational": {
+                            "summary": "11",
+                            "latex": "11"
+                        }
+                    }
+                }
+            }
+        },
+        "32680746": {
+            "detailed": {
+                "charge": 0,
+                "composition": [
+                    [
+                        "O",
+                        2
+                    ]
+                ],
+                "electronic": {
+                    "energyId": "X",
+                    "Lambda": 0,
+                    "S": 1,
+                    "reflection": "-",
+                    "parity": "g",
+                    "vibrational": {
+                        "v": 0,
+                        "rotational": {
+                            "J": 21
+                        }
+                    }
+                },
+                "type": "HomonuclearDiatom"
+            },
+            "serialized": {
+                "composition": {
+                    "summary": "O2",
+                    "latex": "\\mathrm{O_{2}}"
+                },
+                "summary": "O2{X^3S_g^-{0{21}}}",
+                "latex": "\\mathrm{O_{2}}\\left(\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-\\left(0\\left(21\\right)\\right)\\right)",
+                "electronic": {
+                    "summary": "X^3S_g^-",
+                    "latex": "\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-",
+                    "vibrational": {
+                        "summary": "0",
+                        "latex": "0",
+                        "rotational": {
+                            "summary": "21",
+                            "latex": "21"
+                        }
+                    }
+                }
+            }
+        },
+        "32680766": {
+            "detailed": {
+                "charge": 0,
+                "composition": [
+                    [
+                        "O",
+                        2
+                    ]
+                ],
+                "electronic": {
+                    "energyId": "X",
+                    "Lambda": 0,
+                    "S": 1,
+                    "reflection": "-",
+                    "parity": "g",
+                    "vibrational": {
+                        "v": 0,
+                        "rotational": {
+                            "J": 23
+                        }
+                    }
+                },
+                "type": "HomonuclearDiatom"
+            },
+            "serialized": {
+                "composition": {
+                    "summary": "O2",
+                    "latex": "\\mathrm{O_{2}}"
+                },
+                "summary": "O2{X^3S_g^-{0{23}}}",
+                "latex": "\\mathrm{O_{2}}\\left(\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-\\left(0\\left(23\\right)\\right)\\right)",
+                "electronic": {
+                    "summary": "X^3S_g^-",
+                    "latex": "\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-",
+                    "vibrational": {
+                        "summary": "0",
+                        "latex": "0",
+                        "rotational": {
+                            "summary": "23",
+                            "latex": "23"
+                        }
+                    }
+                }
+            }
+        },
+        "32680786": {
+            "detailed": {
+                "charge": 0,
+                "composition": [
+                    [
+                        "O",
+                        2
+                    ]
+                ],
+                "electronic": {
+                    "energyId": "X",
+                    "Lambda": 0,
+                    "S": 1,
+                    "reflection": "-",
+                    "parity": "g",
+                    "vibrational": {
+                        "v": 0,
+                        "rotational": {
+                            "J": 13
+                        }
+                    }
+                },
+                "type": "HomonuclearDiatom"
+            },
+            "serialized": {
+                "composition": {
+                    "summary": "O2",
+                    "latex": "\\mathrm{O_{2}}"
+                },
+                "summary": "O2{X^3S_g^-{0{13}}}",
+                "latex": "\\mathrm{O_{2}}\\left(\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-\\left(0\\left(13\\right)\\right)\\right)",
+                "electronic": {
+                    "summary": "X^3S_g^-",
+                    "latex": "\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-",
+                    "vibrational": {
+                        "summary": "0",
+                        "latex": "0",
+                        "rotational": {
+                            "summary": "13",
+                            "latex": "13"
+                        }
+                    }
+                }
+            }
+        },
+        "32680806": {
+            "detailed": {
+                "charge": 0,
+                "composition": [
+                    [
+                        "O",
+                        2
+                    ]
+                ],
+                "electronic": {
+                    "energyId": "X",
+                    "Lambda": 0,
+                    "S": 1,
+                    "reflection": "-",
+                    "parity": "g",
+                    "vibrational": {
+                        "v": 0,
+                        "rotational": {
+                            "J": 19
+                        }
+                    }
+                },
+                "type": "HomonuclearDiatom"
+            },
+            "serialized": {
+                "composition": {
+                    "summary": "O2",
+                    "latex": "\\mathrm{O_{2}}"
+                },
+                "summary": "O2{X^3S_g^-{0{19}}}",
+                "latex": "\\mathrm{O_{2}}\\left(\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-\\left(0\\left(19\\right)\\right)\\right)",
+                "electronic": {
+                    "summary": "X^3S_g^-",
+                    "latex": "\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-",
+                    "vibrational": {
+                        "summary": "0",
+                        "latex": "0",
+                        "rotational": {
+                            "summary": "19",
+                            "latex": "19"
+                        }
+                    }
+                }
+            }
+        },
+        "32680826": {
+            "detailed": {
+                "charge": 0,
+                "composition": [
+                    [
+                        "O",
+                        2
+                    ]
+                ],
+                "electronic": {
+                    "energyId": "X",
+                    "Lambda": 0,
+                    "S": 1,
+                    "reflection": "-",
+                    "parity": "g",
+                    "vibrational": {
+                        "v": 0,
+                        "rotational": {
+                            "J": 17
+                        }
+                    }
+                },
+                "type": "HomonuclearDiatom"
+            },
+            "serialized": {
+                "composition": {
+                    "summary": "O2",
+                    "latex": "\\mathrm{O_{2}}"
+                },
+                "summary": "O2{X^3S_g^-{0{17}}}",
+                "latex": "\\mathrm{O_{2}}\\left(\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-\\left(0\\left(17\\right)\\right)\\right)",
+                "electronic": {
+                    "summary": "X^3S_g^-",
+                    "latex": "\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-",
+                    "vibrational": {
+                        "summary": "0",
+                        "latex": "0",
+                        "rotational": {
+                            "summary": "17",
+                            "latex": "17"
+                        }
+                    }
+                }
+            }
+        },
+        "32680846": {
+            "detailed": {
+                "charge": 0,
+                "composition": [
+                    [
+                        "O",
+                        2
+                    ]
+                ],
+                "electronic": {
+                    "energyId": "X",
+                    "Lambda": 0,
+                    "S": 1,
+                    "reflection": "-",
+                    "parity": "g",
+                    "vibrational": {
+                        "v": 0,
+                        "rotational": {
+                            "J": 1
+                        }
+                    }
+                },
+                "type": "HomonuclearDiatom"
+            },
+            "serialized": {
+                "composition": {
+                    "summary": "O2",
+                    "latex": "\\mathrm{O_{2}}"
+                },
+                "summary": "O2{X^3S_g^-{0{1}}}",
+                "latex": "\\mathrm{O_{2}}\\left(\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-\\left(0\\left(1\\right)\\right)\\right)",
+                "electronic": {
+                    "summary": "X^3S_g^-",
+                    "latex": "\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-",
+                    "vibrational": {
+                        "summary": "0",
+                        "latex": "0",
+                        "rotational": {
+                            "summary": "1",
+                            "latex": "1"
+                        }
+                    }
+                }
+            }
+        },
+        "32680866": {
+            "detailed": {
+                "charge": 0,
+                "composition": [
+                    [
+                        "O",
+                        2
+                    ]
+                ],
+                "electronic": {
+                    "energyId": "X",
+                    "Lambda": 0,
+                    "S": 1,
+                    "reflection": "-",
+                    "parity": "g",
+                    "vibrational": {
+                        "v": 0,
+                        "rotational": {
+                            "J": 7
+                        }
+                    }
+                },
+                "type": "HomonuclearDiatom"
+            },
+            "serialized": {
+                "composition": {
+                    "summary": "O2",
+                    "latex": "\\mathrm{O_{2}}"
+                },
+                "summary": "O2{X^3S_g^-{0{7}}}",
+                "latex": "\\mathrm{O_{2}}\\left(\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-\\left(0\\left(7\\right)\\right)\\right)",
+                "electronic": {
+                    "summary": "X^3S_g^-",
+                    "latex": "\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-",
+                    "vibrational": {
+                        "summary": "0",
+                        "latex": "0",
+                        "rotational": {
+                            "summary": "7",
+                            "latex": "7"
+                        }
+                    }
+                }
+            }
+        },
+        "32680890": {
+            "detailed": {
+                "charge": 0,
+                "composition": [
+                    [
+                        "O",
+                        2
+                    ]
+                ],
+                "electronic": {
+                    "energyId": "X",
+                    "Lambda": 0,
+                    "S": 1,
+                    "reflection": "-",
+                    "parity": "g",
+                    "vibrational": {
+                        "v": 0,
+                        "rotational": {
+                            "J": 31
+                        }
+                    }
+                },
+                "type": "HomonuclearDiatom"
+            },
+            "serialized": {
+                "composition": {
+                    "summary": "O2",
+                    "latex": "\\mathrm{O_{2}}"
+                },
+                "summary": "O2{X^3S_g^-{0{31}}}",
+                "latex": "\\mathrm{O_{2}}\\left(\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-\\left(0\\left(31\\right)\\right)\\right)",
+                "electronic": {
+                    "summary": "X^3S_g^-",
+                    "latex": "\\mathrm{X}^{3}\\Sigma_\\mathrm{g}^-",
+                    "vibrational": {
+                        "summary": "0",
+                        "latex": "0",
+                        "rotational": {
+                            "summary": "31",
+                            "latex": "31"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "references": {
+        "32637781": {
+            "DOI": "10.1103/physrev.97.1671",
+            "ISSN": "0031-899X",
+            "URL": "http://dx.doi.org/10.1103/PhysRev.97.1671",
+            "author": [
+                {
+                    "family": "Gerjuoy",
+                    "given": "E.",
+                    "sequence": "first",
+                    "affiliation": []
+                },
+                {
+                    "family": "Stein",
+                    "given": "S.",
+                    "sequence": "additional",
+                    "affiliation": []
+                }
+            ],
+            "container-title": "Physical Review",
+            "container-title-short": "Phys. Rev.",
+            "id": "temp_id_42672329701637635",
+            "issue": "6",
+            "issued": {
+                "date-parts": [
+                    [
+                        1955,
+                        3,
+                        15
+                    ]
+                ]
+            },
+            "language": "en",
+            "page": "1671-1679",
+            "publisher": "American Physical Society (APS)",
+            "source": "Crossref",
+            "title": "Rotational Excitation by Slow Electrons",
+            "type": "article-journal",
+            "volume": "97"
+        }
+    },
+    "processes": [
+        {
+            "reaction": {
+                "lhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680846",
+                        "count": 1
+                    }
+                ],
+                "reversible": true,
+                "typeTags": [
+                    "Rotational"
+                ],
+                "rhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680706",
+                        "count": 1
+                    }
+                ]
+            },
+            "info": [
+                {
+                    "_key": "32680923",
+                    "isPartOf": [
+                        "32697347"
+                    ],
+                    "references": [
+                        "32637781"
+                    ],
+                    "versionInfo": {
+                        "version": 1,
+                        "createdOn": "2018-06-29T17:45:00Z",
+                        "status": "published",
+                        "commitMessage": "Migrated from LXCat 2."
+                    },
+                    "threshold": 0.0017861,
+                    "parameters": {
+                        "statisticalWeightRatio": 2.33333
+                    },
+                    "data": {
+                        "type": "LUT",
+                        "labels": [
+                            "Energy",
+                            "Cross section"
+                        ],
+                        "units": [
+                            "eV",
+                            "m^2"
+                        ],
+                        "values": [
+                            [
+                                0.0017861,
+                                0
+                            ],
+                            [
+                                0.0017871,
+                                8.6955e-23
+                            ],
+                            [
+                                0.0017971,
+                                2.876e-22
+                            ],
+                            [
+                                0.0018971,
+                                8.8918e-22
+                            ],
+                            [
+                                0.0019971,
+                                1.1948e-21
+                            ],
+                            [
+                                0.0020971,
+                                1.4156e-21
+                            ],
+                            [
+                                0.0021971,
+                                1.5899e-21
+                            ],
+                            [
+                                0.0022971,
+                                1.7338e-21
+                            ],
+                            [
+                                0.0023971,
+                                1.8559e-21
+                            ],
+                            [
+                                0.0024971,
+                                1.9615e-21
+                            ],
+                            [
+                                0.0025971,
+                                2.0542e-21
+                            ],
+                            [
+                                0.0026971,
+                                2.1364e-21
+                            ],
+                            [
+                                0.0027971,
+                                2.21e-21
+                            ],
+                            [
+                                0.0028971,
+                                2.2764e-21
+                            ],
+                            [
+                                0.0029971,
+                                2.3367e-21
+                            ],
+                            [
+                                0.0030971,
+                                2.3916e-21
+                            ],
+                            [
+                                0.0031971,
+                                2.4421e-21
+                            ],
+                            [
+                                0.0032971,
+                                2.4885e-21
+                            ],
+                            [
+                                0.0033971,
+                                2.5314e-21
+                            ],
+                            [
+                                0.0034971,
+                                2.5713e-21
+                            ],
+                            [
+                                0.0035971,
+                                2.6083e-21
+                            ],
+                            [
+                                0.0036971,
+                                2.6429e-21
+                            ],
+                            [
+                                0.0037971,
+                                2.6752e-21
+                            ],
+                            [
+                                0.0038971,
+                                2.7055e-21
+                            ],
+                            [
+                                0.0039971,
+                                2.734e-21
+                            ],
+                            [
+                                0.0040971,
+                                2.7608e-21
+                            ],
+                            [
+                                0.0041971,
+                                2.7861e-21
+                            ],
+                            [
+                                0.0042971,
+                                2.81e-21
+                            ],
+                            [
+                                0.0043971,
+                                2.8327e-21
+                            ],
+                            [
+                                0.0044971,
+                                2.8541e-21
+                            ],
+                            [
+                                0.0045971,
+                                2.8745e-21
+                            ],
+                            [
+                                0.0046971,
+                                2.8939e-21
+                            ],
+                            [
+                                0.0047971,
+                                2.9123e-21
+                            ],
+                            [
+                                0.0048971,
+                                2.9299e-21
+                            ],
+                            [
+                                0.0049971,
+                                2.9467e-21
+                            ],
+                            [
+                                0.0050971,
+                                2.9627e-21
+                            ],
+                            [
+                                0.0051971,
+                                2.9781e-21
+                            ],
+                            [
+                                0.0052971,
+                                2.9928e-21
+                            ],
+                            [
+                                0.0053971,
+                                3.0068e-21
+                            ],
+                            [
+                                0.0054971,
+                                3.0203e-21
+                            ],
+                            [
+                                0.0055971,
+                                3.0333e-21
+                            ],
+                            [
+                                0.0056971,
+                                3.0457e-21
+                            ],
+                            [
+                                0.0057971,
+                                3.0577e-21
+                            ],
+                            [
+                                0.0058971,
+                                3.0692e-21
+                            ],
+                            [
+                                0.0059971,
+                                3.0803e-21
+                            ],
+                            [
+                                0.0060971,
+                                3.091e-21
+                            ],
+                            [
+                                0.0061971,
+                                3.1013e-21
+                            ],
+                            [
+                                0.0062971,
+                                3.1113e-21
+                            ],
+                            [
+                                0.0063971,
+                                3.1209e-21
+                            ],
+                            [
+                                0.0064971,
+                                3.1302e-21
+                            ],
+                            [
+                                0.0065971,
+                                3.1392e-21
+                            ],
+                            [
+                                0.0066971,
+                                3.1479e-21
+                            ],
+                            [
+                                0.0067971,
+                                3.1563e-21
+                            ],
+                            [
+                                0.0068971,
+                                3.1644e-21
+                            ],
+                            [
+                                0.0069971,
+                                3.1723e-21
+                            ],
+                            [
+                                0.0070971,
+                                3.18e-21
+                            ],
+                            [
+                                0.0071971,
+                                3.1874e-21
+                            ],
+                            [
+                                0.0072971,
+                                3.1946e-21
+                            ],
+                            [
+                                0.0073971,
+                                3.2016e-21
+                            ],
+                            [
+                                0.0074971,
+                                3.2084e-21
+                            ],
+                            [
+                                0.0075971,
+                                3.215e-21
+                            ],
+                            [
+                                0.0076971,
+                                3.2214e-21
+                            ],
+                            [
+                                0.0077971,
+                                3.2276e-21
+                            ],
+                            [
+                                0.0078971,
+                                3.2337e-21
+                            ],
+                            [
+                                0.0079971,
+                                3.2396e-21
+                            ],
+                            [
+                                0.0080971,
+                                3.2453e-21
+                            ],
+                            [
+                                0.0081971,
+                                3.2509e-21
+                            ],
+                            [
+                                0.0082971,
+                                3.2564e-21
+                            ],
+                            [
+                                0.0083971,
+                                3.2617e-21
+                            ],
+                            [
+                                0.0084971,
+                                3.2669e-21
+                            ],
+                            [
+                                0.0085971,
+                                3.2719e-21
+                            ],
+                            [
+                                0.0086971,
+                                3.2769e-21
+                            ],
+                            [
+                                0.0087971,
+                                3.2817e-21
+                            ],
+                            [
+                                0.0088971,
+                                3.2864e-21
+                            ],
+                            [
+                                0.0089971,
+                                3.291e-21
+                            ],
+                            [
+                                0.0090971,
+                                3.2954e-21
+                            ],
+                            [
+                                0.0091971,
+                                3.2998e-21
+                            ],
+                            [
+                                0.0092971,
+                                3.3041e-21
+                            ],
+                            [
+                                0.0093971,
+                                3.3083e-21
+                            ],
+                            [
+                                0.0094971,
+                                3.3123e-21
+                            ],
+                            [
+                                0.0095971,
+                                3.3163e-21
+                            ],
+                            [
+                                0.0096971,
+                                3.3202e-21
+                            ],
+                            [
+                                0.0097971,
+                                3.3241e-21
+                            ],
+                            [
+                                0.0098971,
+                                3.3278e-21
+                            ],
+                            [
+                                0.0099971,
+                                3.3315e-21
+                            ],
+                            [
+                                0.01,
+                                3.3316e-21
+                            ],
+                            [
+                                0.02,
+                                3.508e-21
+                            ],
+                            [
+                                0.03,
+                                3.5649e-21
+                            ],
+                            [
+                                0.04,
+                                3.593e-21
+                            ],
+                            [
+                                0.05,
+                                3.6097e-21
+                            ],
+                            [
+                                0.06,
+                                3.6209e-21
+                            ],
+                            [
+                                0.07,
+                                3.6288e-21
+                            ],
+                            [
+                                0.08,
+                                3.6347e-21
+                            ],
+                            [
+                                0.09,
+                                3.6393e-21
+                            ],
+                            [
+                                0.1,
+                                3.643e-21
+                            ],
+                            [
+                                0.2,
+                                3.6596e-21
+                            ],
+                            [
+                                0.3,
+                                3.665e-21
+                            ],
+                            [
+                                0.4,
+                                3.6678e-21
+                            ],
+                            [
+                                0.5,
+                                3.6694e-21
+                            ],
+                            [
+                                0.6,
+                                3.6705e-21
+                            ],
+                            [
+                                0.7,
+                                3.6713e-21
+                            ],
+                            [
+                                0.8,
+                                3.6719e-21
+                            ],
+                            [
+                                0.9,
+                                3.6724e-21
+                            ],
+                            [
+                                1,
+                                3.6727e-21
+                            ],
+                            [
+                                2,
+                                3.6744e-21
+                            ],
+                            [
+                                3,
+                                3.6749e-21
+                            ],
+                            [
+                                4,
+                                3.6752e-21
+                            ],
+                            [
+                                5,
+                                3.6753e-21
+                            ],
+                            [
+                                6,
+                                3.6755e-21
+                            ],
+                            [
+                                7,
+                                3.6755e-21
+                            ],
+                            [
+                                8,
+                                3.6756e-21
+                            ],
+                            [
+                                9,
+                                3.6756e-21
+                            ],
+                            [
+                                10,
+                                3.6757e-21
+                            ]
+                        ]
+                    },
+                    "comments": [
+                        "[e + O2(X,v=0,J=1) <-> e + O2(X,v=0,J=3), Rotational]"
+                    ],
+                    "type": "CrossSection"
+                }
+            ]
+        },
+        {
+            "reaction": {
+                "lhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680706",
+                        "count": 1
+                    }
+                ],
+                "reversible": true,
+                "typeTags": [
+                    "Rotational"
+                ],
+                "rhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680606",
+                        "count": 1
+                    }
+                ]
+            },
+            "info": [
+                {
+                    "_key": "32680949",
+                    "isPartOf": [
+                        "32697347"
+                    ],
+                    "references": [
+                        "32637781"
+                    ],
+                    "versionInfo": {
+                        "version": 1,
+                        "createdOn": "2018-06-29T17:45:00Z",
+                        "status": "published",
+                        "commitMessage": "Migrated from LXCat 2."
+                    },
+                    "threshold": 0.003215,
+                    "parameters": {
+                        "statisticalWeightRatio": 1.57143
+                    },
+                    "data": {
+                        "type": "LUT",
+                        "labels": [
+                            "Energy",
+                            "Cross section"
+                        ],
+                        "units": [
+                            "eV",
+                            "m^2"
+                        ],
+                        "values": [
+                            [
+                                0.003215,
+                                0
+                            ],
+                            [
+                                0.003216,
+                                5.1445e-23
+                            ],
+                            [
+                                0.003226,
+                                1.7036e-22
+                            ],
+                            [
+                                0.003326,
+                                5.3297e-22
+                            ],
+                            [
+                                0.003426,
+                                7.2402e-22
+                            ],
+                            [
+                                0.003526,
+                                8.6645e-22
+                            ],
+                            [
+                                0.003626,
+                                9.8222e-22
+                            ],
+                            [
+                                0.003726,
+                                1.0804e-21
+                            ],
+                            [
+                                0.003826,
+                                1.1659e-21
+                            ],
+                            [
+                                0.003926,
+                                1.2415e-21
+                            ],
+                            [
+                                0.004026,
+                                1.3094e-21
+                            ],
+                            [
+                                0.004126,
+                                1.3709e-21
+                            ],
+                            [
+                                0.004226,
+                                1.427e-21
+                            ],
+                            [
+                                0.004326,
+                                1.4785e-21
+                            ],
+                            [
+                                0.004426,
+                                1.5261e-21
+                            ],
+                            [
+                                0.004526,
+                                1.5702e-21
+                            ],
+                            [
+                                0.004626,
+                                1.6113e-21
+                            ],
+                            [
+                                0.004726,
+                                1.6496e-21
+                            ],
+                            [
+                                0.004826,
+                                1.6856e-21
+                            ],
+                            [
+                                0.004926,
+                                1.7194e-21
+                            ],
+                            [
+                                0.005026,
+                                1.7513e-21
+                            ],
+                            [
+                                0.005126,
+                                1.7813e-21
+                            ],
+                            [
+                                0.005226,
+                                1.8098e-21
+                            ],
+                            [
+                                0.005326,
+                                1.8367e-21
+                            ],
+                            [
+                                0.005426,
+                                1.8623e-21
+                            ],
+                            [
+                                0.005526,
+                                1.8867e-21
+                            ],
+                            [
+                                0.005626,
+                                1.9099e-21
+                            ],
+                            [
+                                0.005726,
+                                1.932e-21
+                            ],
+                            [
+                                0.005826,
+                                1.9531e-21
+                            ],
+                            [
+                                0.005926,
+                                1.9733e-21
+                            ],
+                            [
+                                0.006026,
+                                1.9926e-21
+                            ],
+                            [
+                                0.006126,
+                                2.0111e-21
+                            ],
+                            [
+                                0.006226,
+                                2.0289e-21
+                            ],
+                            [
+                                0.006326,
+                                2.0459e-21
+                            ],
+                            [
+                                0.006426,
+                                2.0623e-21
+                            ],
+                            [
+                                0.006526,
+                                2.0781e-21
+                            ],
+                            [
+                                0.006626,
+                                2.0932e-21
+                            ],
+                            [
+                                0.006726,
+                                2.1079e-21
+                            ],
+                            [
+                                0.006826,
+                                2.1219e-21
+                            ],
+                            [
+                                0.006926,
+                                2.1355e-21
+                            ],
+                            [
+                                0.007026,
+                                2.1487e-21
+                            ],
+                            [
+                                0.007126,
+                                2.1613e-21
+                            ],
+                            [
+                                0.007226,
+                                2.1736e-21
+                            ],
+                            [
+                                0.007326,
+                                2.1855e-21
+                            ],
+                            [
+                                0.007426,
+                                2.1969e-21
+                            ],
+                            [
+                                0.007526,
+                                2.2081e-21
+                            ],
+                            [
+                                0.007626,
+                                2.2188e-21
+                            ],
+                            [
+                                0.007726,
+                                2.2293e-21
+                            ],
+                            [
+                                0.007826,
+                                2.2394e-21
+                            ],
+                            [
+                                0.007926,
+                                2.2492e-21
+                            ],
+                            [
+                                0.008026,
+                                2.2588e-21
+                            ],
+                            [
+                                0.008126,
+                                2.268e-21
+                            ],
+                            [
+                                0.008226,
+                                2.277e-21
+                            ],
+                            [
+                                0.008326,
+                                2.2858e-21
+                            ],
+                            [
+                                0.008426,
+                                2.2943e-21
+                            ],
+                            [
+                                0.008526,
+                                2.3026e-21
+                            ],
+                            [
+                                0.008626,
+                                2.3107e-21
+                            ],
+                            [
+                                0.008726,
+                                2.3185e-21
+                            ],
+                            [
+                                0.008826,
+                                2.3262e-21
+                            ],
+                            [
+                                0.008926,
+                                2.3336e-21
+                            ],
+                            [
+                                0.009026,
+                                2.3409e-21
+                            ],
+                            [
+                                0.009126,
+                                2.348e-21
+                            ],
+                            [
+                                0.009226,
+                                2.3549e-21
+                            ],
+                            [
+                                0.009326,
+                                2.3616e-21
+                            ],
+                            [
+                                0.009426,
+                                2.3682e-21
+                            ],
+                            [
+                                0.009526,
+                                2.3746e-21
+                            ],
+                            [
+                                0.009626,
+                                2.3809e-21
+                            ],
+                            [
+                                0.009726,
+                                2.387e-21
+                            ],
+                            [
+                                0.01,
+                                2.4031e-21
+                            ],
+                            [
+                                0.02,
+                                2.6727e-21
+                            ],
+                            [
+                                0.03,
+                                2.7567e-21
+                            ],
+                            [
+                                0.04,
+                                2.7978e-21
+                            ],
+                            [
+                                0.05,
+                                2.8221e-21
+                            ],
+                            [
+                                0.06,
+                                2.8382e-21
+                            ],
+                            [
+                                0.07,
+                                2.8497e-21
+                            ],
+                            [
+                                0.08,
+                                2.8582e-21
+                            ],
+                            [
+                                0.09,
+                                2.8649e-21
+                            ],
+                            [
+                                0.1,
+                                2.8702e-21
+                            ],
+                            [
+                                0.2,
+                                2.8939e-21
+                            ],
+                            [
+                                0.3,
+                                2.9018e-21
+                            ],
+                            [
+                                0.4,
+                                2.9057e-21
+                            ],
+                            [
+                                0.5,
+                                2.9081e-21
+                            ],
+                            [
+                                0.6,
+                                2.9096e-21
+                            ],
+                            [
+                                0.7,
+                                2.9108e-21
+                            ],
+                            [
+                                0.8,
+                                2.9116e-21
+                            ],
+                            [
+                                0.9,
+                                2.9122e-21
+                            ],
+                            [
+                                1,
+                                2.9128e-21
+                            ],
+                            [
+                                2,
+                                2.9151e-21
+                            ],
+                            [
+                                3,
+                                2.9159e-21
+                            ],
+                            [
+                                4,
+                                2.9163e-21
+                            ],
+                            [
+                                5,
+                                2.9165e-21
+                            ],
+                            [
+                                6,
+                                2.9167e-21
+                            ],
+                            [
+                                7,
+                                2.9168e-21
+                            ],
+                            [
+                                8,
+                                2.9169e-21
+                            ],
+                            [
+                                9,
+                                2.9169e-21
+                            ],
+                            [
+                                10,
+                                2.917e-21
+                            ]
+                        ]
+                    },
+                    "comments": [
+                        "[e + O2(X,v=0,J=3) <-> e + O2(X,v=0,J=5), Rotational]"
+                    ],
+                    "type": "CrossSection"
+                }
+            ]
+        },
+        {
+            "reaction": {
+                "lhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680606",
+                        "count": 1
+                    }
+                ],
+                "reversible": true,
+                "typeTags": [
+                    "Rotational"
+                ],
+                "rhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680866",
+                        "count": 1
+                    }
+                ]
+            },
+            "info": [
+                {
+                    "_key": "32680975",
+                    "isPartOf": [
+                        "32697347"
+                    ],
+                    "references": [
+                        "32637781"
+                    ],
+                    "versionInfo": {
+                        "version": 1,
+                        "createdOn": "2018-06-29T17:45:00Z",
+                        "status": "published",
+                        "commitMessage": "Migrated from LXCat 2."
+                    },
+                    "threshold": 0.004644,
+                    "parameters": {
+                        "statisticalWeightRatio": 1.36364
+                    },
+                    "data": {
+                        "type": "LUT",
+                        "labels": [
+                            "Energy",
+                            "Cross section"
+                        ],
+                        "units": [
+                            "eV",
+                            "m^2"
+                        ],
+                        "values": [
+                            [
+                                0.004644,
+                                0
+                            ],
+                            [
+                                0.004645,
+                                3.9604e-23
+                            ],
+                            [
+                                0.004655,
+                                1.3121e-22
+                            ],
+                            [
+                                0.004755,
+                                4.124e-22
+                            ],
+                            [
+                                0.004855,
+                                5.627e-22
+                            ],
+                            [
+                                0.004955,
+                                6.7622e-22
+                            ],
+                            [
+                                0.005055,
+                                7.6965e-22
+                            ],
+                            [
+                                0.005155,
+                                8.4982e-22
+                            ],
+                            [
+                                0.005255,
+                                9.2038e-22
+                            ],
+                            [
+                                0.005355,
+                                9.8353e-22
+                            ],
+                            [
+                                0.005455,
+                                1.0407e-21
+                            ],
+                            [
+                                0.005555,
+                                1.0931e-21
+                            ],
+                            [
+                                0.005655,
+                                1.1413e-21
+                            ],
+                            [
+                                0.005755,
+                                1.1859e-21
+                            ],
+                            [
+                                0.005855,
+                                1.2276e-21
+                            ],
+                            [
+                                0.005955,
+                                1.2665e-21
+                            ],
+                            [
+                                0.006055,
+                                1.303e-21
+                            ],
+                            [
+                                0.006155,
+                                1.3374e-21
+                            ],
+                            [
+                                0.006255,
+                                1.3698e-21
+                            ],
+                            [
+                                0.006355,
+                                1.4005e-21
+                            ],
+                            [
+                                0.006455,
+                                1.4297e-21
+                            ],
+                            [
+                                0.006555,
+                                1.4574e-21
+                            ],
+                            [
+                                0.006655,
+                                1.4838e-21
+                            ],
+                            [
+                                0.006755,
+                                1.5089e-21
+                            ],
+                            [
+                                0.006855,
+                                1.5329e-21
+                            ],
+                            [
+                                0.006955,
+                                1.5559e-21
+                            ],
+                            [
+                                0.007055,
+                                1.5779e-21
+                            ],
+                            [
+                                0.007155,
+                                1.599e-21
+                            ],
+                            [
+                                0.007255,
+                                1.6193e-21
+                            ],
+                            [
+                                0.007355,
+                                1.6387e-21
+                            ],
+                            [
+                                0.007455,
+                                1.6574e-21
+                            ],
+                            [
+                                0.007555,
+                                1.6755e-21
+                            ],
+                            [
+                                0.007655,
+                                1.6928e-21
+                            ],
+                            [
+                                0.007755,
+                                1.7096e-21
+                            ],
+                            [
+                                0.007855,
+                                1.7257e-21
+                            ],
+                            [
+                                0.007955,
+                                1.7414e-21
+                            ],
+                            [
+                                0.008055,
+                                1.7565e-21
+                            ],
+                            [
+                                0.008155,
+                                1.7711e-21
+                            ],
+                            [
+                                0.008255,
+                                1.7852e-21
+                            ],
+                            [
+                                0.008355,
+                                1.7989e-21
+                            ],
+                            [
+                                0.008455,
+                                1.8121e-21
+                            ],
+                            [
+                                0.008555,
+                                1.825e-21
+                            ],
+                            [
+                                0.008655,
+                                1.8375e-21
+                            ],
+                            [
+                                0.008755,
+                                1.8496e-21
+                            ],
+                            [
+                                0.008855,
+                                1.8614e-21
+                            ],
+                            [
+                                0.008955,
+                                1.8728e-21
+                            ],
+                            [
+                                0.009055,
+                                1.8839e-21
+                            ],
+                            [
+                                0.009155,
+                                1.8947e-21
+                            ],
+                            [
+                                0.009255,
+                                1.9052e-21
+                            ],
+                            [
+                                0.009355,
+                                1.9154e-21
+                            ],
+                            [
+                                0.009455,
+                                1.9254e-21
+                            ],
+                            [
+                                0.009555,
+                                1.9351e-21
+                            ],
+                            [
+                                0.009655,
+                                1.9445e-21
+                            ],
+                            [
+                                0.009755,
+                                1.9538e-21
+                            ],
+                            [
+                                0.01,
+                                1.9754e-21
+                            ],
+                            [
+                                0.02,
+                                2.3651e-21
+                            ],
+                            [
+                                0.03,
+                                2.4815e-21
+                            ],
+                            [
+                                0.04,
+                                2.5376e-21
+                            ],
+                            [
+                                0.05,
+                                2.5708e-21
+                            ],
+                            [
+                                0.06,
+                                2.5926e-21
+                            ],
+                            [
+                                0.07,
+                                2.6081e-21
+                            ],
+                            [
+                                0.08,
+                                2.6197e-21
+                            ],
+                            [
+                                0.09,
+                                2.6286e-21
+                            ],
+                            [
+                                0.1,
+                                2.6357e-21
+                            ],
+                            [
+                                0.2,
+                                2.6676e-21
+                            ],
+                            [
+                                0.3,
+                                2.6782e-21
+                            ],
+                            [
+                                0.4,
+                                2.6834e-21
+                            ],
+                            [
+                                0.5,
+                                2.6866e-21
+                            ],
+                            [
+                                0.6,
+                                2.6887e-21
+                            ],
+                            [
+                                0.7,
+                                2.6902e-21
+                            ],
+                            [
+                                0.8,
+                                2.6913e-21
+                            ],
+                            [
+                                0.9,
+                                2.6922e-21
+                            ],
+                            [
+                                1,
+                                2.6929e-21
+                            ],
+                            [
+                                2,
+                                2.696e-21
+                            ],
+                            [
+                                3,
+                                2.6971e-21
+                            ],
+                            [
+                                4,
+                                2.6976e-21
+                            ],
+                            [
+                                5,
+                                2.6979e-21
+                            ],
+                            [
+                                6,
+                                2.6981e-21
+                            ],
+                            [
+                                7,
+                                2.6983e-21
+                            ],
+                            [
+                                8,
+                                2.6984e-21
+                            ],
+                            [
+                                9,
+                                2.6985e-21
+                            ],
+                            [
+                                10,
+                                2.6985e-21
+                            ]
+                        ]
+                    },
+                    "comments": [
+                        "[e + O2(X,v=0,J=5) <-> e + O2(X,v=0,J=7), Rotational]"
+                    ],
+                    "type": "CrossSection"
+                }
+            ]
+        },
+        {
+            "reaction": {
+                "lhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680866",
+                        "count": 1
+                    }
+                ],
+                "reversible": true,
+                "typeTags": [
+                    "Rotational"
+                ],
+                "rhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680646",
+                        "count": 1
+                    }
+                ]
+            },
+            "info": [
+                {
+                    "_key": "32681001",
+                    "isPartOf": [
+                        "32697347"
+                    ],
+                    "references": [
+                        "32637781"
+                    ],
+                    "versionInfo": {
+                        "version": 1,
+                        "createdOn": "2018-06-29T17:45:00Z",
+                        "status": "published",
+                        "commitMessage": "Migrated from LXCat 2."
+                    },
+                    "threshold": 0.0060729,
+                    "parameters": {
+                        "statisticalWeightRatio": 1.26667
+                    },
+                    "data": {
+                        "type": "LUT",
+                        "labels": [
+                            "Energy",
+                            "Cross section"
+                        ],
+                        "units": [
+                            "eV",
+                            "m^2"
+                        ],
+                        "values": [
+                            [
+                                0.0060729,
+                                0
+                            ],
+                            [
+                                0.0060739,
+                                3.3295e-23
+                            ],
+                            [
+                                0.0060839,
+                                1.1034e-22
+                            ],
+                            [
+                                0.0061839,
+                                3.4765e-22
+                            ],
+                            [
+                                0.0062839,
+                                4.7548e-22
+                            ],
+                            [
+                                0.0063839,
+                                5.7273e-22
+                            ],
+                            [
+                                0.0064839,
+                                6.533e-22
+                            ],
+                            [
+                                0.0065839,
+                                7.229e-22
+                            ],
+                            [
+                                0.0066839,
+                                7.8454e-22
+                            ],
+                            [
+                                0.0067839,
+                                8.4005e-22
+                            ],
+                            [
+                                0.0068839,
+                                8.9064e-22
+                            ],
+                            [
+                                0.0069839,
+                                9.3717e-22
+                            ],
+                            [
+                                0.0070839,
+                                9.8028e-22
+                            ],
+                            [
+                                0.0071839,
+                                1.0204e-21
+                            ],
+                            [
+                                0.0072839,
+                                1.058e-21
+                            ],
+                            [
+                                0.0073839,
+                                1.0934e-21
+                            ],
+                            [
+                                0.0074839,
+                                1.1267e-21
+                            ],
+                            [
+                                0.0075839,
+                                1.1582e-21
+                            ],
+                            [
+                                0.0076839,
+                                1.1881e-21
+                            ],
+                            [
+                                0.0077839,
+                                1.2166e-21
+                            ],
+                            [
+                                0.0078839,
+                                1.2436e-21
+                            ],
+                            [
+                                0.0079839,
+                                1.2695e-21
+                            ],
+                            [
+                                0.0080839,
+                                1.2942e-21
+                            ],
+                            [
+                                0.0081839,
+                                1.3179e-21
+                            ],
+                            [
+                                0.0082839,
+                                1.3406e-21
+                            ],
+                            [
+                                0.0083839,
+                                1.3623e-21
+                            ],
+                            [
+                                0.0084839,
+                                1.3833e-21
+                            ],
+                            [
+                                0.0085839,
+                                1.4034e-21
+                            ],
+                            [
+                                0.0086839,
+                                1.4228e-21
+                            ],
+                            [
+                                0.0087839,
+                                1.4416e-21
+                            ],
+                            [
+                                0.0088839,
+                                1.4596e-21
+                            ],
+                            [
+                                0.0089839,
+                                1.4771e-21
+                            ],
+                            [
+                                0.0090839,
+                                1.4939e-21
+                            ],
+                            [
+                                0.0091839,
+                                1.5102e-21
+                            ],
+                            [
+                                0.0092839,
+                                1.526e-21
+                            ],
+                            [
+                                0.0093839,
+                                1.5413e-21
+                            ],
+                            [
+                                0.0094839,
+                                1.5562e-21
+                            ],
+                            [
+                                0.0095839,
+                                1.5706e-21
+                            ],
+                            [
+                                0.0096839,
+                                1.5845e-21
+                            ],
+                            [
+                                0.0097839,
+                                1.5981e-21
+                            ],
+                            [
+                                0.01,
+                                1.6261e-21
+                            ],
+                            [
+                                0.02,
+                                2.1653e-21
+                            ],
+                            [
+                                0.03,
+                                2.3174e-21
+                            ],
+                            [
+                                0.04,
+                                2.3897e-21
+                            ],
+                            [
+                                0.05,
+                                2.4321e-21
+                            ],
+                            [
+                                0.06,
+                                2.46e-21
+                            ],
+                            [
+                                0.07,
+                                2.4797e-21
+                            ],
+                            [
+                                0.08,
+                                2.4944e-21
+                            ],
+                            [
+                                0.09,
+                                2.5058e-21
+                            ],
+                            [
+                                0.1,
+                                2.5148e-21
+                            ],
+                            [
+                                0.2,
+                                2.5551e-21
+                            ],
+                            [
+                                0.3,
+                                2.5684e-21
+                            ],
+                            [
+                                0.4,
+                                2.5751e-21
+                            ],
+                            [
+                                0.5,
+                                2.579e-21
+                            ],
+                            [
+                                0.6,
+                                2.5817e-21
+                            ],
+                            [
+                                0.7,
+                                2.5835e-21
+                            ],
+                            [
+                                0.8,
+                                2.585e-21
+                            ],
+                            [
+                                0.9,
+                                2.5861e-21
+                            ],
+                            [
+                                1,
+                                2.5869e-21
+                            ],
+                            [
+                                2,
+                                2.5909e-21
+                            ],
+                            [
+                                3,
+                                2.5922e-21
+                            ],
+                            [
+                                4,
+                                2.5929e-21
+                            ],
+                            [
+                                5,
+                                2.5933e-21
+                            ],
+                            [
+                                6,
+                                2.5935e-21
+                            ],
+                            [
+                                7,
+                                2.5937e-21
+                            ],
+                            [
+                                8,
+                                2.5938e-21
+                            ],
+                            [
+                                9,
+                                2.594e-21
+                            ],
+                            [
+                                10,
+                                2.594e-21
+                            ]
+                        ]
+                    },
+                    "comments": [
+                        "[e + O2(X,v=0,J=7) <-> e + O2(X,v=0,J=9), Rotational]"
+                    ],
+                    "type": "CrossSection"
+                }
+            ]
+        },
+        {
+            "reaction": {
+                "lhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680646",
+                        "count": 1
+                    }
+                ],
+                "reversible": true,
+                "typeTags": [
+                    "Rotational"
+                ],
+                "rhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680726",
+                        "count": 1
+                    }
+                ]
+            },
+            "info": [
+                {
+                    "_key": "32681027",
+                    "isPartOf": [
+                        "32697347"
+                    ],
+                    "references": [
+                        "32637781"
+                    ],
+                    "versionInfo": {
+                        "version": 1,
+                        "createdOn": "2018-06-29T17:45:00Z",
+                        "status": "published",
+                        "commitMessage": "Migrated from LXCat 2."
+                    },
+                    "threshold": 0.0075018,
+                    "parameters": {
+                        "statisticalWeightRatio": 1.21053
+                    },
+                    "data": {
+                        "type": "LUT",
+                        "labels": [
+                            "Energy",
+                            "Cross section"
+                        ],
+                        "units": [
+                            "eV",
+                            "m^2"
+                        ],
+                        "values": [
+                            [
+                                0.0075018,
+                                0
+                            ],
+                            [
+                                0.0075028,
+                                2.925e-23
+                            ],
+                            [
+                                0.0075128,
+                                9.6946e-23
+                            ],
+                            [
+                                0.0076128,
+                                3.0593e-22
+                            ],
+                            [
+                                0.0077128,
+                                4.1906e-22
+                            ],
+                            [
+                                0.0078128,
+                                5.0549e-22
+                            ],
+                            [
+                                0.0079128,
+                                5.7742e-22
+                            ],
+                            [
+                                0.0080128,
+                                6.3982e-22
+                            ],
+                            [
+                                0.0081128,
+                                6.953e-22
+                            ],
+                            [
+                                0.0082128,
+                                7.4546e-22
+                            ],
+                            [
+                                0.0083128,
+                                7.9136e-22
+                            ],
+                            [
+                                0.0084128,
+                                8.3373e-22
+                            ],
+                            [
+                                0.0085128,
+                                8.7312e-22
+                            ],
+                            [
+                                0.0086128,
+                                9.0996e-22
+                            ],
+                            [
+                                0.0087128,
+                                9.4456e-22
+                            ],
+                            [
+                                0.0088128,
+                                9.7719e-22
+                            ],
+                            [
+                                0.0089128,
+                                1.0081e-21
+                            ],
+                            [
+                                0.0090128,
+                                1.0374e-21
+                            ],
+                            [
+                                0.0091128,
+                                1.0653e-21
+                            ],
+                            [
+                                0.0092128,
+                                1.0919e-21
+                            ],
+                            [
+                                0.0093128,
+                                1.1173e-21
+                            ],
+                            [
+                                0.0094128,
+                                1.1416e-21
+                            ],
+                            [
+                                0.0095128,
+                                1.1649e-21
+                            ],
+                            [
+                                0.0096128,
+                                1.1873e-21
+                            ],
+                            [
+                                0.0097128,
+                                1.2088e-21
+                            ],
+                            [
+                                0.01,
+                                1.2663e-21
+                            ],
+                            [
+                                0.02,
+                                2.0028e-21
+                            ],
+                            [
+                                0.03,
+                                2.1941e-21
+                            ],
+                            [
+                                0.04,
+                                2.2837e-21
+                            ],
+                            [
+                                0.05,
+                                2.3358e-21
+                            ],
+                            [
+                                0.06,
+                                2.3699e-21
+                            ],
+                            [
+                                0.07,
+                                2.394e-21
+                            ],
+                            [
+                                0.08,
+                                2.4119e-21
+                            ],
+                            [
+                                0.09,
+                                2.4257e-21
+                            ],
+                            [
+                                0.1,
+                                2.4367e-21
+                            ],
+                            [
+                                0.2,
+                                2.4856e-21
+                            ],
+                            [
+                                0.3,
+                                2.5017e-21
+                            ],
+                            [
+                                0.4,
+                                2.5097e-21
+                            ],
+                            [
+                                0.5,
+                                2.5145e-21
+                            ],
+                            [
+                                0.6,
+                                2.5177e-21
+                            ],
+                            [
+                                0.7,
+                                2.52e-21
+                            ],
+                            [
+                                0.8,
+                                2.5217e-21
+                            ],
+                            [
+                                0.9,
+                                2.523e-21
+                            ],
+                            [
+                                1,
+                                2.5241e-21
+                            ],
+                            [
+                                2,
+                                2.5288e-21
+                            ],
+                            [
+                                3,
+                                2.5304e-21
+                            ],
+                            [
+                                4,
+                                2.5312e-21
+                            ],
+                            [
+                                5,
+                                2.5317e-21
+                            ],
+                            [
+                                6,
+                                2.532e-21
+                            ],
+                            [
+                                7,
+                                2.5322e-21
+                            ],
+                            [
+                                8,
+                                2.5324e-21
+                            ],
+                            [
+                                9,
+                                2.5325e-21
+                            ],
+                            [
+                                10,
+                                2.5326e-21
+                            ]
+                        ]
+                    },
+                    "comments": [
+                        "[e + O2(X,v=0,J=9) <-> e + O2(X,v=0,J=11), Rotational]"
+                    ],
+                    "type": "CrossSection"
+                }
+            ]
+        },
+        {
+            "reaction": {
+                "lhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680726",
+                        "count": 1
+                    }
+                ],
+                "reversible": true,
+                "typeTags": [
+                    "Rotational"
+                ],
+                "rhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680786",
+                        "count": 1
+                    }
+                ]
+            },
+            "info": [
+                {
+                    "_key": "32681053",
+                    "isPartOf": [
+                        "32697347"
+                    ],
+                    "references": [
+                        "32637781"
+                    ],
+                    "versionInfo": {
+                        "version": 1,
+                        "createdOn": "2018-06-29T17:45:00Z",
+                        "status": "published",
+                        "commitMessage": "Migrated from LXCat 2."
+                    },
+                    "threshold": 0.0089307,
+                    "parameters": {
+                        "statisticalWeightRatio": 1.17391
+                    },
+                    "data": {
+                        "type": "LUT",
+                        "labels": [
+                            "Energy",
+                            "Cross section"
+                        ],
+                        "units": [
+                            "eV",
+                            "m^2"
+                        ],
+                        "values": [
+                            [
+                                0.0089307,
+                                0
+                            ],
+                            [
+                                0.0089317,
+                                2.6382e-23
+                            ],
+                            [
+                                0.0089417,
+                                8.745e-23
+                            ],
+                            [
+                                0.0090417,
+                                2.7625e-22
+                            ],
+                            [
+                                0.0091417,
+                                3.7879e-22
+                            ],
+                            [
+                                0.0092417,
+                                4.5738e-22
+                            ],
+                            [
+                                0.0093417,
+                                5.2298e-22
+                            ],
+                            [
+                                0.0094417,
+                                5.8004e-22
+                            ],
+                            [
+                                0.0095417,
+                                6.3093e-22
+                            ],
+                            [
+                                0.0096417,
+                                6.7707e-22
+                            ],
+                            [
+                                0.0097417,
+                                7.1939e-22
+                            ],
+                            [
+                                0.01,
+                                8.1531e-22
+                            ],
+                            [
+                                0.02,
+                                1.8549e-21
+                            ],
+                            [
+                                0.03,
+                                2.0895e-21
+                            ],
+                            [
+                                0.04,
+                                2.1974e-21
+                            ],
+                            [
+                                0.05,
+                                2.2597e-21
+                            ],
+                            [
+                                0.06,
+                                2.3003e-21
+                            ],
+                            [
+                                0.07,
+                                2.3288e-21
+                            ],
+                            [
+                                0.08,
+                                2.35e-21
+                            ],
+                            [
+                                0.09,
+                                2.3664e-21
+                            ],
+                            [
+                                0.1,
+                                2.3794e-21
+                            ],
+                            [
+                                0.2,
+                                2.437e-21
+                            ],
+                            [
+                                0.3,
+                                2.4559e-21
+                            ],
+                            [
+                                0.4,
+                                2.4653e-21
+                            ],
+                            [
+                                0.5,
+                                2.4709e-21
+                            ],
+                            [
+                                0.6,
+                                2.4747e-21
+                            ],
+                            [
+                                0.7,
+                                2.4773e-21
+                            ],
+                            [
+                                0.8,
+                                2.4793e-21
+                            ],
+                            [
+                                0.9,
+                                2.4809e-21
+                            ],
+                            [
+                                1,
+                                2.4821e-21
+                            ],
+                            [
+                                2,
+                                2.4877e-21
+                            ],
+                            [
+                                3,
+                                2.4896e-21
+                            ],
+                            [
+                                4,
+                                2.4905e-21
+                            ],
+                            [
+                                5,
+                                2.4911e-21
+                            ],
+                            [
+                                6,
+                                2.4914e-21
+                            ],
+                            [
+                                7,
+                                2.4917e-21
+                            ],
+                            [
+                                8,
+                                2.4919e-21
+                            ],
+                            [
+                                9,
+                                2.4921e-21
+                            ],
+                            [
+                                10,
+                                2.4922e-21
+                            ]
+                        ]
+                    },
+                    "comments": [
+                        "[e + O2(X,v=0,J=11) <-> e + O2(X,v=0,J=13), Rotational]"
+                    ],
+                    "type": "CrossSection"
+                }
+            ]
+        },
+        {
+            "reaction": {
+                "lhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680786",
+                        "count": 1
+                    }
+                ],
+                "reversible": true,
+                "typeTags": [
+                    "Rotational"
+                ],
+                "rhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680626",
+                        "count": 1
+                    }
+                ]
+            },
+            "info": [
+                {
+                    "_key": "32696857",
+                    "isPartOf": [
+                        "32697347"
+                    ],
+                    "references": [
+                        "32637781"
+                    ],
+                    "versionInfo": {
+                        "version": 1,
+                        "createdOn": "2018-06-29T17:45:00Z",
+                        "status": "published",
+                        "commitMessage": "Migrated from LXCat 2."
+                    },
+                    "threshold": 0.01036,
+                    "parameters": {
+                        "statisticalWeightRatio": 1.14815
+                    },
+                    "data": {
+                        "type": "LUT",
+                        "labels": [
+                            "Energy",
+                            "Cross section"
+                        ],
+                        "units": [
+                            "eV",
+                            "m^2"
+                        ],
+                        "values": [
+                            [
+                                0.01036,
+                                0
+                            ],
+                            [
+                                0.010361,
+                                2.4215e-23
+                            ],
+                            [
+                                0.010371,
+                                8.0273e-23
+                            ],
+                            [
+                                0.010471,
+                                2.5378e-22
+                            ],
+                            [
+                                0.011471,
+                                7.6707e-22
+                            ],
+                            [
+                                0.012471,
+                                1.0141e-21
+                            ],
+                            [
+                                0.013471,
+                                1.1845e-21
+                            ],
+                            [
+                                0.014471,
+                                1.3137e-21
+                            ],
+                            [
+                                0.015471,
+                                1.4167e-21
+                            ],
+                            [
+                                0.016471,
+                                1.5013e-21
+                            ],
+                            [
+                                0.017471,
+                                1.5725e-21
+                            ],
+                            [
+                                0.018471,
+                                1.6333e-21
+                            ],
+                            [
+                                0.019471,
+                                1.686e-21
+                            ],
+                            [
+                                0.02,
+                                1.7112e-21
+                            ],
+                            [
+                                0.03,
+                                1.9943e-21
+                            ],
+                            [
+                                0.04,
+                                2.1217e-21
+                            ],
+                            [
+                                0.05,
+                                2.1946e-21
+                            ],
+                            [
+                                0.06,
+                                2.2419e-21
+                            ],
+                            [
+                                0.07,
+                                2.2751e-21
+                            ],
+                            [
+                                0.08,
+                                2.2996e-21
+                            ],
+                            [
+                                0.09,
+                                2.3186e-21
+                            ],
+                            [
+                                0.1,
+                                2.3336e-21
+                            ],
+                            [
+                                0.2,
+                                2.4001e-21
+                            ],
+                            [
+                                0.3,
+                                2.4218e-21
+                            ],
+                            [
+                                0.4,
+                                2.4326e-21
+                            ],
+                            [
+                                0.5,
+                                2.4391e-21
+                            ],
+                            [
+                                0.6,
+                                2.4434e-21
+                            ],
+                            [
+                                0.7,
+                                2.4464e-21
+                            ],
+                            [
+                                0.8,
+                                2.4487e-21
+                            ],
+                            [
+                                0.9,
+                                2.4505e-21
+                            ],
+                            [
+                                1,
+                                2.452e-21
+                            ],
+                            [
+                                2,
+                                2.4584e-21
+                            ],
+                            [
+                                3,
+                                2.4605e-21
+                            ],
+                            [
+                                4,
+                                2.4616e-21
+                            ],
+                            [
+                                5,
+                                2.4622e-21
+                            ],
+                            [
+                                6,
+                                2.4626e-21
+                            ],
+                            [
+                                7,
+                                2.4629e-21
+                            ],
+                            [
+                                8,
+                                2.4632e-21
+                            ],
+                            [
+                                9,
+                                2.4633e-21
+                            ],
+                            [
+                                10,
+                                2.4635e-21
+                            ]
+                        ]
+                    },
+                    "comments": [
+                        "[e + O2(X,v=0,J=13) <-> e + O2(X,v=0,J=15), Rotational]"
+                    ],
+                    "type": "CrossSection"
+                }
+            ]
+        },
+        {
+            "reaction": {
+                "lhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680626",
+                        "count": 1
+                    }
+                ],
+                "reversible": true,
+                "typeTags": [
+                    "Rotational"
+                ],
+                "rhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680826",
+                        "count": 1
+                    }
+                ]
+            },
+            "info": [
+                {
+                    "_key": "32696883",
+                    "isPartOf": [
+                        "32697347"
+                    ],
+                    "references": [
+                        "32637781"
+                    ],
+                    "versionInfo": {
+                        "version": 1,
+                        "createdOn": "2018-06-29T17:45:00Z",
+                        "status": "published",
+                        "commitMessage": "Migrated from LXCat 2."
+                    },
+                    "threshold": 0.011789,
+                    "parameters": {
+                        "statisticalWeightRatio": 1.12903
+                    },
+                    "data": {
+                        "type": "LUT",
+                        "labels": [
+                            "Energy",
+                            "Cross section"
+                        ],
+                        "units": [
+                            "eV",
+                            "m^2"
+                        ],
+                        "values": [
+                            [
+                                0.011789,
+                                0
+                            ],
+                            [
+                                0.01179,
+                                2.2504e-23
+                            ],
+                            [
+                                0.0118,
+                                7.4606e-23
+                            ],
+                            [
+                                0.0119,
+                                2.36e-22
+                            ],
+                            [
+                                0.0129,
+                                7.171e-22
+                            ],
+                            [
+                                0.0139,
+                                9.5226e-22
+                            ],
+                            [
+                                0.0149,
+                                1.1165e-21
+                            ],
+                            [
+                                0.0159,
+                                1.2425e-21
+                            ],
+                            [
+                                0.0169,
+                                1.3438e-21
+                            ],
+                            [
+                                0.0179,
+                                1.4277e-21
+                            ],
+                            [
+                                0.0189,
+                                1.4988e-21
+                            ],
+                            [
+                                0.0199,
+                                1.56e-21
+                            ],
+                            [
+                                0.02,
+                                1.5657e-21
+                            ],
+                            [
+                                0.03,
+                                1.9038e-21
+                            ],
+                            [
+                                0.04,
+                                2.0521e-21
+                            ],
+                            [
+                                0.05,
+                                2.1361e-21
+                            ],
+                            [
+                                0.06,
+                                2.1903e-21
+                            ],
+                            [
+                                0.07,
+                                2.2283e-21
+                            ],
+                            [
+                                0.08,
+                                2.2563e-21
+                            ],
+                            [
+                                0.09,
+                                2.2778e-21
+                            ],
+                            [
+                                0.1,
+                                2.2949e-21
+                            ],
+                            [
+                                0.2,
+                                2.3704e-21
+                            ],
+                            [
+                                0.3,
+                                2.395e-21
+                            ],
+                            [
+                                0.4,
+                                2.4072e-21
+                            ],
+                            [
+                                0.5,
+                                2.4145e-21
+                            ],
+                            [
+                                0.6,
+                                2.4194e-21
+                            ],
+                            [
+                                0.7,
+                                2.4228e-21
+                            ],
+                            [
+                                0.8,
+                                2.4254e-21
+                            ],
+                            [
+                                0.9,
+                                2.4274e-21
+                            ],
+                            [
+                                1,
+                                2.429e-21
+                            ],
+                            [
+                                2,
+                                2.4363e-21
+                            ],
+                            [
+                                3,
+                                2.4387e-21
+                            ],
+                            [
+                                4,
+                                2.4399e-21
+                            ],
+                            [
+                                5,
+                                2.4406e-21
+                            ],
+                            [
+                                6,
+                                2.4411e-21
+                            ],
+                            [
+                                7,
+                                2.4414e-21
+                            ],
+                            [
+                                8,
+                                2.4417e-21
+                            ],
+                            [
+                                9,
+                                2.4419e-21
+                            ],
+                            [
+                                10,
+                                2.442e-21
+                            ]
+                        ]
+                    },
+                    "comments": [
+                        "[e + O2(X,v=0,J=15) <-> e + O2(X,v=0,J=17), Rotational]"
+                    ],
+                    "type": "CrossSection"
+                }
+            ]
+        },
+        {
+            "reaction": {
+                "lhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680826",
+                        "count": 1
+                    }
+                ],
+                "reversible": true,
+                "typeTags": [
+                    "Rotational"
+                ],
+                "rhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680806",
+                        "count": 1
+                    }
+                ]
+            },
+            "info": [
+                {
+                    "_key": "32696909",
+                    "isPartOf": [
+                        "32697347"
+                    ],
+                    "references": [
+                        "32637781"
+                    ],
+                    "versionInfo": {
+                        "version": 1,
+                        "createdOn": "2018-06-29T17:45:00Z",
+                        "status": "published",
+                        "commitMessage": "Migrated from LXCat 2."
+                    },
+                    "threshold": 0.013217,
+                    "parameters": {
+                        "statisticalWeightRatio": 1.11429
+                    },
+                    "data": {
+                        "type": "LUT",
+                        "labels": [
+                            "Energy",
+                            "Cross section"
+                        ],
+                        "units": [
+                            "eV",
+                            "m^2"
+                        ],
+                        "values": [
+                            [
+                                0.013217,
+                                0
+                            ],
+                            [
+                                0.013218,
+                                2.111e-23
+                            ],
+                            [
+                                0.013228,
+                                6.9987e-23
+                            ],
+                            [
+                                0.013328,
+                                2.2149e-22
+                            ],
+                            [
+                                0.014328,
+                                6.7582e-22
+                            ],
+                            [
+                                0.015328,
+                                9.0067e-22
+                            ],
+                            [
+                                0.016328,
+                                1.0594e-21
+                            ],
+                            [
+                                0.017328,
+                                1.1821e-21
+                            ],
+                            [
+                                0.018328,
+                                1.2816e-21
+                            ],
+                            [
+                                0.019328,
+                                1.3647e-21
+                            ],
+                            [
+                                0.02,
+                                1.4134e-21
+                            ],
+                            [
+                                0.03,
+                                1.8153e-21
+                            ],
+                            [
+                                0.04,
+                                1.986e-21
+                            ],
+                            [
+                                0.05,
+                                2.0817e-21
+                            ],
+                            [
+                                0.06,
+                                2.1431e-21
+                            ],
+                            [
+                                0.07,
+                                2.1859e-21
+                            ],
+                            [
+                                0.08,
+                                2.2175e-21
+                            ],
+                            [
+                                0.09,
+                                2.2417e-21
+                            ],
+                            [
+                                0.1,
+                                2.2609e-21
+                            ],
+                            [
+                                0.2,
+                                2.3454e-21
+                            ],
+                            [
+                                0.3,
+                                2.3729e-21
+                            ],
+                            [
+                                0.4,
+                                2.3866e-21
+                            ],
+                            [
+                                0.5,
+                                2.3947e-21
+                            ],
+                            [
+                                0.6,
+                                2.4001e-21
+                            ],
+                            [
+                                0.7,
+                                2.404e-21
+                            ],
+                            [
+                                0.8,
+                                2.4069e-21
+                            ],
+                            [
+                                0.9,
+                                2.4091e-21
+                            ],
+                            [
+                                1,
+                                2.4109e-21
+                            ],
+                            [
+                                2,
+                                2.419e-21
+                            ],
+                            [
+                                3,
+                                2.4217e-21
+                            ],
+                            [
+                                4,
+                                2.423e-21
+                            ],
+                            [
+                                5,
+                                2.4238e-21
+                            ],
+                            [
+                                6,
+                                2.4243e-21
+                            ],
+                            [
+                                7,
+                                2.4247e-21
+                            ],
+                            [
+                                8,
+                                2.425e-21
+                            ],
+                            [
+                                9,
+                                2.4252e-21
+                            ],
+                            [
+                                10,
+                                2.4254e-21
+                            ]
+                        ]
+                    },
+                    "comments": [
+                        "[e + O2(X,v=0,J=17) <-> e + O2(X,v=0,J=19), Rotational]"
+                    ],
+                    "type": "CrossSection"
+                }
+            ]
+        },
+        {
+            "reaction": {
+                "lhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680806",
+                        "count": 1
+                    }
+                ],
+                "reversible": true,
+                "typeTags": [
+                    "Rotational"
+                ],
+                "rhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680746",
+                        "count": 1
+                    }
+                ]
+            },
+            "info": [
+                {
+                    "_key": "32696935",
+                    "isPartOf": [
+                        "32697347"
+                    ],
+                    "references": [
+                        "32637781"
+                    ],
+                    "versionInfo": {
+                        "version": 1,
+                        "createdOn": "2018-06-29T17:45:00Z",
+                        "status": "published",
+                        "commitMessage": "Migrated from LXCat 2."
+                    },
+                    "threshold": 0.014646,
+                    "parameters": {
+                        "statisticalWeightRatio": 1.10256
+                    },
+                    "data": {
+                        "type": "LUT",
+                        "labels": [
+                            "Energy",
+                            "Cross section"
+                        ],
+                        "units": [
+                            "eV",
+                            "m^2"
+                        ],
+                        "values": [
+                            [
+                                0.014646,
+                                0
+                            ],
+                            [
+                                0.014647,
+                                1.9945e-23
+                            ],
+                            [
+                                0.014657,
+                                6.6128e-23
+                            ],
+                            [
+                                0.014757,
+                                2.0935e-22
+                            ],
+                            [
+                                0.015757,
+                                6.4096e-22
+                            ],
+                            [
+                                0.016757,
+                                8.5676e-22
+                            ],
+                            [
+                                0.017757,
+                                1.0104e-21
+                            ],
+                            [
+                                0.018757,
+                                1.1301e-21
+                            ],
+                            [
+                                0.019757,
+                                1.2277e-21
+                            ],
+                            [
+                                0.02,
+                                1.2489e-21
+                            ],
+                            [
+                                0.03,
+                                1.7269e-21
+                            ],
+                            [
+                                0.04,
+                                1.9218e-21
+                            ],
+                            [
+                                0.05,
+                                2.0298e-21
+                            ],
+                            [
+                                0.06,
+                                2.0987e-21
+                            ],
+                            [
+                                0.07,
+                                2.1466e-21
+                            ],
+                            [
+                                0.08,
+                                2.1818e-21
+                            ],
+                            [
+                                0.09,
+                                2.2088e-21
+                            ],
+                            [
+                                0.1,
+                                2.2301e-21
+                            ],
+                            [
+                                0.2,
+                                2.3238e-21
+                            ],
+                            [
+                                0.3,
+                                2.3542e-21
+                            ],
+                            [
+                                0.4,
+                                2.3693e-21
+                            ],
+                            [
+                                0.5,
+                                2.3783e-21
+                            ],
+                            [
+                                0.6,
+                                2.3842e-21
+                            ],
+                            [
+                                0.7,
+                                2.3885e-21
+                            ],
+                            [
+                                0.8,
+                                2.3917e-21
+                            ],
+                            [
+                                0.9,
+                                2.3942e-21
+                            ],
+                            [
+                                1,
+                                2.3961e-21
+                            ],
+                            [
+                                2,
+                                2.405e-21
+                            ],
+                            [
+                                3,
+                                2.408e-21
+                            ],
+                            [
+                                4,
+                                2.4095e-21
+                            ],
+                            [
+                                5,
+                                2.4103e-21
+                            ],
+                            [
+                                6,
+                                2.4109e-21
+                            ],
+                            [
+                                7,
+                                2.4114e-21
+                            ],
+                            [
+                                8,
+                                2.4117e-21
+                            ],
+                            [
+                                9,
+                                2.4119e-21
+                            ],
+                            [
+                                10,
+                                2.4121e-21
+                            ]
+                        ]
+                    },
+                    "comments": [
+                        "[e + O2(X,v=0,J=19) <-> e + O2(X,v=0,J=21), Rotational]"
+                    ],
+                    "type": "CrossSection"
+                }
+            ]
+        },
+        {
+            "reaction": {
+                "lhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680746",
+                        "count": 1
+                    }
+                ],
+                "reversible": true,
+                "typeTags": [
+                    "Rotational"
+                ],
+                "rhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680766",
+                        "count": 1
+                    }
+                ]
+            },
+            "info": [
+                {
+                    "_key": "32696961",
+                    "isPartOf": [
+                        "32697347"
+                    ],
+                    "references": [
+                        "32637781"
+                    ],
+                    "versionInfo": {
+                        "version": 1,
+                        "createdOn": "2018-06-29T17:45:00Z",
+                        "status": "published",
+                        "commitMessage": "Migrated from LXCat 2."
+                    },
+                    "threshold": 0.016075,
+                    "parameters": {
+                        "statisticalWeightRatio": 1.09302
+                    },
+                    "data": {
+                        "type": "LUT",
+                        "labels": [
+                            "Energy",
+                            "Cross section"
+                        ],
+                        "units": [
+                            "eV",
+                            "m^2"
+                        ],
+                        "values": [
+                            [
+                                0.016075,
+                                0
+                            ],
+                            [
+                                0.016076,
+                                1.8954e-23
+                            ],
+                            [
+                                0.016086,
+                                6.2843e-23
+                            ],
+                            [
+                                0.016186,
+                                1.9901e-22
+                            ],
+                            [
+                                0.017186,
+                                6.1102e-22
+                            ],
+                            [
+                                0.018186,
+                                8.1876e-22
+                            ],
+                            [
+                                0.019186,
+                                9.677e-22
+                            ],
+                            [
+                                0.02,
+                                1.0646e-21
+                            ],
+                            [
+                                0.03,
+                                1.6373e-21
+                            ],
+                            [
+                                0.04,
+                                1.8586e-21
+                            ],
+                            [
+                                0.05,
+                                1.9795e-21
+                            ],
+                            [
+                                0.06,
+                                2.0562e-21
+                            ],
+                            [
+                                0.07,
+                                2.1093e-21
+                            ],
+                            [
+                                0.08,
+                                2.1482e-21
+                            ],
+                            [
+                                0.09,
+                                2.178e-21
+                            ],
+                            [
+                                0.1,
+                                2.2016e-21
+                            ],
+                            [
+                                0.2,
+                                2.3046e-21
+                            ],
+                            [
+                                0.3,
+                                2.3379e-21
+                            ],
+                            [
+                                0.4,
+                                2.3544e-21
+                            ],
+                            [
+                                0.5,
+                                2.3642e-21
+                            ],
+                            [
+                                0.6,
+                                2.3708e-21
+                            ],
+                            [
+                                0.7,
+                                2.3754e-21
+                            ],
+                            [
+                                0.8,
+                                2.3789e-21
+                            ],
+                            [
+                                0.9,
+                                2.3816e-21
+                            ],
+                            [
+                                1,
+                                2.3838e-21
+                            ],
+                            [
+                                2,
+                                2.3935e-21
+                            ],
+                            [
+                                3,
+                                2.3967e-21
+                            ],
+                            [
+                                4,
+                                2.3983e-21
+                            ],
+                            [
+                                5,
+                                2.3993e-21
+                            ],
+                            [
+                                6,
+                                2.4e-21
+                            ],
+                            [
+                                7,
+                                2.4004e-21
+                            ],
+                            [
+                                8,
+                                2.4008e-21
+                            ],
+                            [
+                                9,
+                                2.401e-21
+                            ],
+                            [
+                                10,
+                                2.4012e-21
+                            ]
+                        ]
+                    },
+                    "comments": [
+                        "[e + O2(X,v=0,J=21) <-> e + O2(X,v=0,J=23), Rotational]"
+                    ],
+                    "type": "CrossSection"
+                }
+            ]
+        },
+        {
+            "reaction": {
+                "lhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680766",
+                        "count": 1
+                    }
+                ],
+                "reversible": true,
+                "typeTags": [
+                    "Rotational"
+                ],
+                "rhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680686",
+                        "count": 1
+                    }
+                ]
+            },
+            "info": [
+                {
+                    "_key": "32696987",
+                    "isPartOf": [
+                        "32697347"
+                    ],
+                    "references": [
+                        "32637781"
+                    ],
+                    "versionInfo": {
+                        "version": 1,
+                        "createdOn": "2018-06-29T17:45:00Z",
+                        "status": "published",
+                        "commitMessage": "Migrated from LXCat 2."
+                    },
+                    "threshold": 0.017504,
+                    "parameters": {
+                        "statisticalWeightRatio": 1.08511
+                    },
+                    "data": {
+                        "type": "LUT",
+                        "labels": [
+                            "Energy",
+                            "Cross section"
+                        ],
+                        "units": [
+                            "eV",
+                            "m^2"
+                        ],
+                        "values": [
+                            [
+                                0.017504,
+                                0
+                            ],
+                            [
+                                0.017505,
+                                1.8096e-23
+                            ],
+                            [
+                                0.017515,
+                                6.0002e-23
+                            ],
+                            [
+                                0.017615,
+                                1.9006e-22
+                            ],
+                            [
+                                0.018615,
+                                5.8492e-22
+                            ],
+                            [
+                                0.019615,
+                                7.8546e-22
+                            ],
+                            [
+                                0.02,
+                                8.458e-22
+                            ],
+                            [
+                                0.03,
+                                1.5452e-21
+                            ],
+                            [
+                                0.04,
+                                1.7955e-21
+                            ],
+                            [
+                                0.05,
+                                1.9302e-21
+                            ],
+                            [
+                                0.06,
+                                2.015e-21
+                            ],
+                            [
+                                0.07,
+                                2.0734e-21
+                            ],
+                            [
+                                0.08,
+                                2.1162e-21
+                            ],
+                            [
+                                0.09,
+                                2.1489e-21
+                            ],
+                            [
+                                0.1,
+                                2.1747e-21
+                            ],
+                            [
+                                0.2,
+                                2.2871e-21
+                            ],
+                            [
+                                0.3,
+                                2.3234e-21
+                            ],
+                            [
+                                0.4,
+                                2.3413e-21
+                            ],
+                            [
+                                0.5,
+                                2.352e-21
+                            ],
+                            [
+                                0.6,
+                                2.3591e-21
+                            ],
+                            [
+                                0.7,
+                                2.3641e-21
+                            ],
+                            [
+                                0.8,
+                                2.3679e-21
+                            ],
+                            [
+                                0.9,
+                                2.3709e-21
+                            ],
+                            [
+                                1,
+                                2.3732e-21
+                            ],
+                            [
+                                2,
+                                2.3838e-21
+                            ],
+                            [
+                                3,
+                                2.3873e-21
+                            ],
+                            [
+                                4,
+                                2.389e-21
+                            ],
+                            [
+                                5,
+                                2.3901e-21
+                            ],
+                            [
+                                6,
+                                2.3908e-21
+                            ],
+                            [
+                                7,
+                                2.3913e-21
+                            ],
+                            [
+                                8,
+                                2.3917e-21
+                            ],
+                            [
+                                9,
+                                2.3919e-21
+                            ],
+                            [
+                                10,
+                                2.3922e-21
+                            ]
+                        ]
+                    },
+                    "comments": [
+                        "[e + O2(X,v=0,J=23) <-> e + O2(X,v=0,J=25), Rotational]"
+                    ],
+                    "type": "CrossSection"
+                }
+            ]
+        },
+        {
+            "reaction": {
+                "lhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680686",
+                        "count": 1
+                    }
+                ],
+                "reversible": true,
+                "typeTags": [
+                    "Rotational"
+                ],
+                "rhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680586",
+                        "count": 1
+                    }
+                ]
+            },
+            "info": [
+                {
+                    "_key": "32697013",
+                    "isPartOf": [
+                        "32697347"
+                    ],
+                    "references": [
+                        "32637781"
+                    ],
+                    "versionInfo": {
+                        "version": 1,
+                        "createdOn": "2018-06-29T17:45:00Z",
+                        "status": "published",
+                        "commitMessage": "Migrated from LXCat 2."
+                    },
+                    "threshold": 0.018933,
+                    "parameters": {
+                        "statisticalWeightRatio": 1.07843
+                    },
+                    "data": {
+                        "type": "LUT",
+                        "labels": [
+                            "Energy",
+                            "Cross section"
+                        ],
+                        "units": [
+                            "eV",
+                            "m^2"
+                        ],
+                        "values": [
+                            [
+                                0.018933,
+                                0
+                            ],
+                            [
+                                0.018934,
+                                1.7345e-23
+                            ],
+                            [
+                                0.018944,
+                                5.7513e-23
+                            ],
+                            [
+                                0.019044,
+                                1.8222e-22
+                            ],
+                            [
+                                0.020044,
+                                5.6192e-22
+                            ],
+                            [
+                                0.021044,
+                                7.5594e-22
+                            ],
+                            [
+                                0.022044,
+                                8.9663e-22
+                            ],
+                            [
+                                0.023044,
+                                1.0081e-21
+                            ],
+                            [
+                                0.024044,
+                                1.1004e-21
+                            ],
+                            [
+                                0.025044,
+                                1.179e-21
+                            ],
+                            [
+                                0.026044,
+                                1.2471e-21
+                            ],
+                            [
+                                0.027044,
+                                1.3071e-21
+                            ],
+                            [
+                                0.028044,
+                                1.3604e-21
+                            ],
+                            [
+                                0.029044,
+                                1.4082e-21
+                            ],
+                            [
+                                0.03,
+                                1.4496e-21
+                            ],
+                            [
+                                0.04,
+                                1.7321e-21
+                            ],
+                            [
+                                0.05,
+                                1.8814e-21
+                            ],
+                            [
+                                0.06,
+                                1.9746e-21
+                            ],
+                            [
+                                0.07,
+                                2.0386e-21
+                            ],
+                            [
+                                0.08,
+                                2.0853e-21
+                            ],
+                            [
+                                0.09,
+                                2.1209e-21
+                            ],
+                            [
+                                0.1,
+                                2.149e-21
+                            ],
+                            [
+                                0.2,
+                                2.271e-21
+                            ],
+                            [
+                                0.3,
+                                2.3102e-21
+                            ],
+                            [
+                                0.4,
+                                2.3296e-21
+                            ],
+                            [
+                                0.5,
+                                2.3411e-21
+                            ],
+                            [
+                                0.6,
+                                2.3488e-21
+                            ],
+                            [
+                                0.7,
+                                2.3543e-21
+                            ],
+                            [
+                                0.8,
+                                2.3583e-21
+                            ],
+                            [
+                                0.9,
+                                2.3615e-21
+                            ],
+                            [
+                                1,
+                                2.364e-21
+                            ],
+                            [
+                                2,
+                                2.3754e-21
+                            ],
+                            [
+                                3,
+                                2.3792e-21
+                            ],
+                            [
+                                4,
+                                2.3811e-21
+                            ],
+                            [
+                                5,
+                                2.3822e-21
+                            ],
+                            [
+                                6,
+                                2.383e-21
+                            ],
+                            [
+                                7,
+                                2.3835e-21
+                            ],
+                            [
+                                8,
+                                2.3839e-21
+                            ],
+                            [
+                                9,
+                                2.3842e-21
+                            ],
+                            [
+                                10,
+                                2.3845e-21
+                            ]
+                        ]
+                    },
+                    "comments": [
+                        "[e + O2(X,v=0,J=25) <-> e + O2(X,v=0,J=27), Rotational]"
+                    ],
+                    "type": "CrossSection"
+                }
+            ]
+        },
+        {
+            "reaction": {
+                "lhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680586",
+                        "count": 1
+                    }
+                ],
+                "reversible": true,
+                "typeTags": [
+                    "Rotational"
+                ],
+                "rhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680666",
+                        "count": 1
+                    }
+                ]
+            },
+            "info": [
+                {
+                    "_key": "32697039",
+                    "isPartOf": [
+                        "32697347"
+                    ],
+                    "references": [
+                        "32637781"
+                    ],
+                    "versionInfo": {
+                        "version": 1,
+                        "createdOn": "2018-06-29T17:45:00Z",
+                        "status": "published",
+                        "commitMessage": "Migrated from LXCat 2."
+                    },
+                    "threshold": 0.020362,
+                    "parameters": {
+                        "statisticalWeightRatio": 1.07273
+                    },
+                    "data": {
+                        "type": "LUT",
+                        "labels": [
+                            "Energy",
+                            "Cross section"
+                        ],
+                        "units": [
+                            "eV",
+                            "m^2"
+                        ],
+                        "values": [
+                            [
+                                0.020362,
+                                0
+                            ],
+                            [
+                                0.020363,
+                                1.6681e-23
+                            ],
+                            [
+                                0.020373,
+                                5.531e-23
+                            ],
+                            [
+                                0.020473,
+                                1.7527e-22
+                            ],
+                            [
+                                0.021473,
+                                5.4143e-22
+                            ],
+                            [
+                                0.022473,
+                                7.2954e-22
+                            ],
+                            [
+                                0.023473,
+                                8.6656e-22
+                            ],
+                            [
+                                0.024473,
+                                9.7558e-22
+                            ],
+                            [
+                                0.025473,
+                                1.0662e-21
+                            ],
+                            [
+                                0.026473,
+                                1.1436e-21
+                            ],
+                            [
+                                0.027473,
+                                1.211e-21
+                            ],
+                            [
+                                0.028473,
+                                1.2704e-21
+                            ],
+                            [
+                                0.029473,
+                                1.3234e-21
+                            ],
+                            [
+                                0.03,
+                                1.3492e-21
+                            ],
+                            [
+                                0.04,
+                                1.6678e-21
+                            ],
+                            [
+                                0.05,
+                                1.8326e-21
+                            ],
+                            [
+                                0.06,
+                                1.9347e-21
+                            ],
+                            [
+                                0.07,
+                                2.0044e-21
+                            ],
+                            [
+                                0.08,
+                                2.0552e-21
+                            ],
+                            [
+                                0.09,
+                                2.0938e-21
+                            ],
+                            [
+                                0.1,
+                                2.1242e-21
+                            ],
+                            [
+                                0.2,
+                                2.2559e-21
+                            ],
+                            [
+                                0.3,
+                                2.2981e-21
+                            ],
+                            [
+                                0.4,
+                                2.3189e-21
+                            ],
+                            [
+                                0.5,
+                                2.3313e-21
+                            ],
+                            [
+                                0.6,
+                                2.3396e-21
+                            ],
+                            [
+                                0.7,
+                                2.3454e-21
+                            ],
+                            [
+                                0.8,
+                                2.3498e-21
+                            ],
+                            [
+                                0.9,
+                                2.3532e-21
+                            ],
+                            [
+                                1,
+                                2.356e-21
+                            ],
+                            [
+                                2,
+                                2.3682e-21
+                            ],
+                            [
+                                3,
+                                2.3722e-21
+                            ],
+                            [
+                                4,
+                                2.3742e-21
+                            ],
+                            [
+                                5,
+                                2.3755e-21
+                            ],
+                            [
+                                6,
+                                2.3763e-21
+                            ],
+                            [
+                                7,
+                                2.3769e-21
+                            ],
+                            [
+                                8,
+                                2.3773e-21
+                            ],
+                            [
+                                9,
+                                2.3776e-21
+                            ],
+                            [
+                                10,
+                                2.3779e-21
+                            ]
+                        ]
+                    },
+                    "comments": [
+                        "[e + O2(X,v=0,J=27) <-> e + O2(X,v=0,J=29), Rotational]"
+                    ],
+                    "type": "CrossSection"
+                }
+            ]
+        },
+        {
+            "reaction": {
+                "lhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680666",
+                        "count": 1
+                    }
+                ],
+                "reversible": true,
+                "typeTags": [
+                    "Rotational"
+                ],
+                "rhs": [
+                    {
+                        "state": "32582124",
+                        "count": 1
+                    },
+                    {
+                        "state": "32680890",
+                        "count": 1
+                    }
+                ]
+            },
+            "info": [
+                {
+                    "_key": "32697065",
+                    "isPartOf": [
+                        "32697347"
+                    ],
+                    "references": [
+                        "32637781"
+                    ],
+                    "versionInfo": {
+                        "version": 1,
+                        "createdOn": "2018-06-29T17:45:00Z",
+                        "status": "published",
+                        "commitMessage": "Migrated from LXCat 2."
+                    },
+                    "threshold": 0.021791,
+                    "parameters": {
+                        "statisticalWeightRatio": 1.0678
+                    },
+                    "data": {
+                        "type": "LUT",
+                        "labels": [
+                            "Energy",
+                            "Cross section"
+                        ],
+                        "units": [
+                            "eV",
+                            "m^2"
+                        ],
+                        "values": [
+                            [
+                                0.021791,
+                                0
+                            ],
+                            [
+                                0.021792,
+                                1.6087e-23
+                            ],
+                            [
+                                0.021802,
+                                5.3342e-23
+                            ],
+                            [
+                                0.021902,
+                                1.6906e-22
+                            ],
+                            [
+                                0.022902,
+                                5.2304e-22
+                            ],
+                            [
+                                0.023902,
+                                7.0574e-22
+                            ],
+                            [
+                                0.024902,
+                                8.3937e-22
+                            ],
+                            [
+                                0.025902,
+                                9.4607e-22
+                            ],
+                            [
+                                0.026902,
+                                1.0351e-21
+                            ],
+                            [
+                                0.027902,
+                                1.1114e-21
+                            ],
+                            [
+                                0.028902,
+                                1.1779e-21
+                            ],
+                            [
+                                0.029902,
+                                1.2368e-21
+                            ],
+                            [
+                                0.03,
+                                1.2422e-21
+                            ],
+                            [
+                                0.04,
+                                1.6023e-21
+                            ],
+                            [
+                                0.05,
+                                1.7837e-21
+                            ],
+                            [
+                                0.06,
+                                1.8951e-21
+                            ],
+                            [
+                                0.07,
+                                1.9708e-21
+                            ],
+                            [
+                                0.08,
+                                2.0257e-21
+                            ],
+                            [
+                                0.09,
+                                2.0674e-21
+                            ],
+                            [
+                                0.1,
+                                2.1001e-21
+                            ],
+                            [
+                                0.2,
+                                2.2416e-21
+                            ],
+                            [
+                                0.3,
+                                2.2869e-21
+                            ],
+                            [
+                                0.4,
+                                2.3092e-21
+                            ],
+                            [
+                                0.5,
+                                2.3224e-21
+                            ],
+                            [
+                                0.6,
+                                2.3312e-21
+                            ],
+                            [
+                                0.7,
+                                2.3375e-21
+                            ],
+                            [
+                                0.8,
+                                2.3422e-21
+                            ],
+                            [
+                                0.9,
+                                2.3458e-21
+                            ],
+                            [
+                                1,
+                                2.3487e-21
+                            ],
+                            [
+                                2,
+                                2.3618e-21
+                            ],
+                            [
+                                3,
+                                2.3661e-21
+                            ],
+                            [
+                                4,
+                                2.3683e-21
+                            ],
+                            [
+                                5,
+                                2.3696e-21
+                            ],
+                            [
+                                6,
+                                2.3704e-21
+                            ],
+                            [
+                                7,
+                                2.371e-21
+                            ],
+                            [
+                                8,
+                                2.3715e-21
+                            ],
+                            [
+                                9,
+                                2.3719e-21
+                            ],
+                            [
+                                10,
+                                2.3722e-21
+                            ]
+                        ]
+                    },
+                    "comments": [
+                        "[e + O2(X,v=0,J=29) <-> e + O2(X,v=0,J=31), Rotational]"
+                    ],
+                    "type": "CrossSection"
+                }
+            ]
+        }
+    ],
+    "sets": {
+        "32697347": {
+            "_key": "32697347",
+            "complete": true,
+            "contributor": {
+                "contact": "LL Alves (llalves@tecnico.ulisboa.pt) and V Guerra",
+                "description": "IST-Lisbon database contains up-to-date electron-neutral scattering cross sections (together with the measured swarm parameters used to validate these data), resulting from the research effort of the Group N-Plasmas Reactive: Modelling and Engineering (N-PRiME) with IPFN/IST (Instituto de Plasmas e Fusao Nuclear / Instituto Superior Tecnico), Lisbon, Portugal. <br> The data, compiled from the literature, correspond to contributions from different authors (see detailed references in the database). For each gas the database presents a <b>COMPLETE SET</b> of cross sections, validated against measured swarm parameters by solving the two-term homogeneous electron Boltzmann equation. In most cases, predictions are in agreement with measurements within 1-20%, for reduced electric fields E/N ~ 1e-4 - 500 Td. To improve predictions at low E/N, some sets need to be completed with rotational cross sections, also available in the database.",
+                "howToReference": "L.L. Alves, ''The IST-Lisbon database on LXCat'' J. Phys. Conf. Series 2014, 565, 1",
+                "name": "IST-Lisbon",
+                "totalSets": 28
+            },
+            "description": "E. Gerjouy and S. Stein, ''Rotational Excitation by Slow Electrons'' 1955 Phys. Rev. 97 1671.\r\nO2-rot is a set of rotational excitation cross sections by electron impact, for transitions O2(X,v=0,J) --> O2(X,v=0,J+2) (J=1,3,..,29), which complements the COMPLETE set of O2 cross sections, available in this database under group O2.\r\nCalculations using these cross sections should include inelastic-stepwise and superelastic transitions between rotational states O2(J=1), O2(J=3), ... , O2(J=29), assuming a Boltzmann distribution for their populations: \r\nn_J/N = (g_J/P_rot) exp[-E_J/(k_B T_g)] with P_rot = Sum_(J odd)^31 g_J exp[-E_J/(k_B T_g)] [cf. R.D. Hake Jr. and A.V. Phelps 1967 Phys. Rev. 158 70]. At T_g=300K, these populations are n_1/N=4.09E-02 n_3/N=8.91E-02 n_5/N=1.24E-01 n_7/N=1.41E-01 n_9/N=1.41E-01 n_11/N=1.27E-01 n_13/N=1.06E-01 n_15/N=8.13E-02 n_17/N=5.81E-02 n_19/N=3.88E-02 n_21/N=2.42E-02 n_23/N=1.42E-02 n_25/N=7.82E-03 n_27/N=4.05E-03 n_29/N=1.97E-03 n_31/N=9.04E-04.",
+            "name": "O2-rot",
+            "versionInfo": {
+                "commitMessage": "Migrated from LXCat 2.",
+                "createdOn": "2019-12-19T09:30:00Z",
+                "status": "published",
+                "version": 2
+            },
+            "publishedIn": "32637781"
+        }
+    }
+}

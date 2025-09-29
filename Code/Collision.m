@@ -54,7 +54,7 @@ classdef Collision < handle
   end
 
   properties (Constant = true)
-    supportedCollisions = {'Effective' 'Elastic' 'Rotational' 'Vibrational' 'Excitation' 'Ionization' 'Attachment'};
+    supportedCollisions = {'Effective' 'Elastic' 'Rotational' 'Vibrational' 'Ionization' 'Attachment' 'Excitation'};
   end
 
   methods (Access = public)
@@ -110,7 +110,7 @@ classdef Collision < handle
             'for binary collisions'], collision.description);
         end
       end
-      if any(strcmp(type, {'Effective' 'Elastic'})) && ~strcmp(target.type, 'ele')
+      if strcmp(type, 'Effective') && ~strcmp(target.type, 'ele')
         error(['Found ''%s'' collision with ''%s'' as target [%s].\n%s collisions are only allowed for ' ...
           'electronic states, please check LXCat files.\n'], type, target.name, collision.description, type);
       end
@@ -182,7 +182,7 @@ classdef Collision < handle
     
       % check that 'Elastic' cross section is available for the maximum value of the energy grid
       if strcmp(collision.type, 'Elastic')
-        if energyGrid.node(end) > collision.rawCrossSection(1:end)
+        if energyGrid.node(end) > collision.rawCrossSection(1,end)
           error(['''%s'' cross section data is not available for the maximum energy of the simulation (%f eV).\n'...
             'Simulation is not reliable under this conditions.'], collision.description, energyGrid.node(end));
         end
@@ -352,11 +352,9 @@ classdef Collision < handle
       
       % check that 'Elastic' cross section is available for the maximum value of the energy grid
       if strcmp(collision.type, 'Elastic')
-        if energyGrid.node(end) > collision.rawCrossSection(1:end)
+        if energyGrid.node(end) > collision.rawCrossSection(1,end)
           error(['''%s'' cross section data is not available for the maximum energy of the simulation (%f eV).\n'...
-            'The cross section is set to zero beyond %f eV .\n'...  
-            'Simulation is not reliable under this conditions.'], collision.description, energyGrid.node(end), ...
-            collision.rawCrossSection(1,end));
+            'Simulation is not reliable under this conditions.'], collision.description, energyGrid.node(end));
         end
       end
       

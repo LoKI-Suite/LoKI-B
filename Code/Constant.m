@@ -79,5 +79,12 @@ classdef Constant
 
     end
 
+    function conversionFactorSccm = sccmToParticleRateCoeff()
+      % conversionFactorSccm sccm into particle rate coefficient in S.I. units (s-1)
+      %   standard atmospheric pressure/Boltzmann constant*1e-6/60/standard temperature
+      %   with standard temperature = 273.15 K  
+      conversionFactorSccm = Constant.atmosphereInPa/Constant.boltzmann*1e-6/60/273.15;
+    end      
+    
   end
 end

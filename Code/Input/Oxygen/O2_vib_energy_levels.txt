@@ -1,0 +1,46 @@
+% Excitation energy of vibrational levels O2(X,v=0-41)
+% Laporta V., Celiberto R. and Tennyson J. 
+% "Resonant vibrational-excitation cross sections and rate constants for low-energy electron scattering by molecular oxygen"
+% Plasma Sources Science and Technology, 22(2), p.025001 (2013)
+O2(X,v=0) 0.000E+00
+O2(X,v=1) 1.960E-01
+O2(X,v=2) 3.880E-01
+O2(X,v=3) 5.730E-01
+O2(X,v=4) 7.560E-01
+O2(X,v=5) 9.370E-01
+O2(X,v=6) 1.117E+00
+O2(X,v=7) 1.291E+00
+O2(X,v=8) 1.461E+00
+O2(X,v=9) 1.629E+00
+O2(X,v=10) 1.796E+00
+O2(X,v=11) 1.960E+00
+O2(X,v=12) 2.122E+00
+O2(X,v=13) 2.281E+00
+O2(X,v=14) 2.435E+00
+O2(X,v=15) 2.587E+00
+O2(X,v=16) 2.735E+00
+O2(X,v=17) 2.881E+00
+O2(X,v=18) 3.024E+00
+O2(X,v=19) 3.164E+00
+O2(X,v=20) 3.301E+00
+O2(X,v=21) 3.436E+00
+O2(X,v=22) 3.568E+00
+O2(X,v=23) 3.696E+00
+O2(X,v=24) 3.821E+00
+O2(X,v=25) 3.942E+00
+O2(X,v=26) 4.059E+00
+O2(X,v=27) 4.172E+00
+O2(X,v=28) 4.280E+00
+O2(X,v=29) 4.382E+00
+O2(X,v=30) 4.476E+00
+O2(X,v=31) 4.565E+00
+O2(X,v=32) 4.651E+00
+O2(X,v=33) 4.730E+00
+O2(X,v=34) 4.794E+00
+O2(X,v=35) 4.847E+00
+O2(X,v=36) 4.898E+00
+O2(X,v=37) 4.938E+00
+O2(X,v=38) 4.960E+00
+O2(X,v=39) 4.976E+00
+O2(X,v=40) 4.987E+00
+O2(X,v=41) 4.994E+00

@@ -1,0 +1,76 @@
+{
+  "workingConditions": {
+    "reducedField": "pulse@reducedFieldPulse, 1e-18, 2e-6, logspace, 100, 1e-6, 50",
+    "electronTemperature": "linspace(0.03, 5, 300)",
+    "excitationFrequency": 0,
+    "gasPressure": 133320,
+    "gasTemperature": 300,
+    "wallTemperature": 390,
+    "extTemperature": 300,
+    "surfaceSiteDensity": 1e19,
+    "electronDensity": 1e19,
+    "chamberLength": 1.0,
+    "chamberRadius": 1.0,
+    "totalSccmInFlow": 1,
+    "totalSccmOutFlow": "ensureIsobaric"
+  },
+  "electronKinetics": {
+    "isOn": true,
+    "eedfType": "boltzmann",
+    "ionizationOperatorType": "usingSDCS",
+    "growthModelType": "temporal",
+    "includeEECollisions": false,
+    "LXCatFiles": ["Nitrogen/N2_LXCat.json"],
+    "gasProperties": {
+      "mass": "Databases/masses.txt",
+      "fraction": ["N2 = 1"],
+      "harmonicFrequency": "Databases/harmonicFrequencies.txt",
+      "anharmonicFrequency": "Databases/anharmonicFrequencies.txt",
+      "rotationalConstant": "Databases/rotationalConstants.txt",
+      "electricQuadrupoleMoment": "Databases/quadrupoleMoment.txt",
+      "OPBParameter": "Databases/OPBParameter.txt"
+    },
+    "stateProperties": {
+      "energy": [
+        "N2(X^1S_g^+,v=*) = harmonicOscillatorEnergy"
+      ],
+      "statisticalWeight": [
+        "N2(X^1S_g^+,v=*) = 1.0"
+      ],
+      "population": [
+        "N2(X^1S_g^+) = 1.0",
+        "N2(X^1S_g^+,v=*) = boltzmannPopulationVibrationalCutoff@gasTemperature,0"
+        "_the use of this function is consistent with the current data in LXCat3.0 (sept 2025), but is inconsistent with the .in file calling the data in LXCat2.0"
+      ]
+    },
+    "numerics": {
+      "energyGrid": {
+        "maxEnergy": 18,
+        "cellNumber": 1800
+      },
+      "maxPowerBalanceRelError": 100,
+      "nonLinearRoutines": {
+        "algorithm": "temporalIntegration",
+        "mixingParameter": 0.7,
+        "maxEedfRelError": 1e-9
+      }
+    }
+  },
+  "gui": {
+    "isOn": true,
+    "refreshFrequency": 1
+  },
+  "output": {
+    "isOn": false,
+    "dataFormat":  "txt",
+    "folder": "simulation_pulse_1",
+    "dataSets": [
+      "log",
+      "eedf",
+      "swarmParameters",
+      "rateCoefficients",
+      "powerBalance",
+      "lookUpTable"
+    ]
+  }
+}

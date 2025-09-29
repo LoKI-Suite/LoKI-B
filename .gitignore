@@ -1,2 +1,16 @@
 /Code/Output/*
 *.asv
+/Manual/*.aux
+/Manual/*.out
+/Manual/*.log
+/Manual/*.pdf
+/Manual/*.gz
+/Manual/*.snm
+/Manual/*.xml
+/Manual/*.nav
+/Manual/*.bcf
+/Manual/*.tex.*
+*/desktop.ini
+
+*.code-workspace
+/Utilities/__pycache__

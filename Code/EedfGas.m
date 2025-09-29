@@ -159,9 +159,9 @@ classdef EedfGas < Gas
     end
     
     function collisionArray = checkElasticCollisions(gas, collisionArray)
-    % checkElasticCollisions checks for each electronic state (with population) of the gas to have an elastic 
-    % collision defined. In case the Elastic collision is not found, the functions tries to obtain it from an 
-    % Effective one.
+    % checkElasticCollisions checks for each target state of the gas to have an elastic collision defined. In case the
+    % Elastic collision is not found, the functions tries to obtain it from an Effective one. The function returns the
+    % collision array of the gas with the Elastic collision added (if needed).
     %
     % Note: the function avoid dummy gases (gases without collisions, created for the sake of a pretty output)
       
@@ -170,33 +170,36 @@ classdef EedfGas < Gas
         return;
       end
       
-      % loop over all the states of the gas
+      % loop over all the states of the gas to find an electronic state
       for state = gas.stateArray
         if strcmp(state.type, 'ele')
-          % loop over every electronic state of the gas
-          for eleState = [state state.siblingArray]
-            % find electronic states with population
-            if eleState.isTarget
-              % look for an Elastic collision associated with the state
-              elasticCollisionNeedsToBeCreated = true;
-              for collision = eleState.collisionArray
-                if strcmp(collision.type, 'Elastic')
-                  elasticCollisionNeedsToBeCreated = false;
-                  break;
-                end
-              end
-              % create Elastic collision in case it is needed
-              if elasticCollisionNeedsToBeCreated
-                rawElasticCrossSection = gas.elasticFromEffectiveCrossSection;
+
+          % check for effective cross sections among siblings of electronic target states
+          [~] = state.checkSiblingsEffectiveCrossSections();
+
+          % check elastic collisions for electronic target states (recursively checked for children states)
+          [allElasticCollisionsFound, ~] = state.checkSiblingsElasticCollisions();
+          break;
+        end
+      end
+      % create Elastic collisions in case they are not found
+      if ~allElasticCollisionsFound
+        rawElasticCrossSection = gas.elasticFromEffectiveCrossSection;
+        % loop over all the states of the gas to find an electronic state
+        for state = gas.stateArray
+          if strcmp(state.type, 'ele')
+            % loop over every electronic state of the gas
+            for eleState = [state state.siblingArray]
+              % create Elastic collision with every electronic target state
+              if eleState.isTarget
                 collisionArray = Collision.add('Elastic', false, eleState, eleState, 1, false, 0.0, ...
                   rawElasticCrossSection, collisionArray, 0);
               end
             end
+            break;
           end
-          break;
         end
-      end
-      
+      end      
     end
     
     function rawElasticCrossSection = elasticFromEffectiveCrossSection(gas)

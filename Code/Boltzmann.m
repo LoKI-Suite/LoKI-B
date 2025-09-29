@@ -121,7 +121,7 @@ classdef Boltzmann < handle
       addlistener(boltzmann.workCond, 'updatedGasTemperature', @boltzmann.evaluateMatrix);
       %       addlistener(workCond, 'updatedGasDensity', @boltzmann.);
       addlistener(boltzmann.workCond, 'updatedReducedField', @boltzmann.evaluateFieldOperator);
-      addlistener(boltzmann.workCond, 'updatedExcitationFrequency', @boltzmann.evaluateFieldOperator);
+      addlistener(boltzmann.workCond, 'updatedReducedExcitationFrequency', @boltzmann.evaluateFieldOperator);
       
       % store gases for which the CAR is activated (in case there is any)
       if isfield(setup.info.electronKinetics, 'CARgases')
@@ -219,8 +219,8 @@ classdef Boltzmann < handle
     end
 
     function evaluateMacroscopicParameters(boltzmann)
-      % evaluateMacroscopicParameters evaluate elctron-impact rate coefficients, swarm parameters and power channels
-      % using Boltzmann operators from the Boltzmann equation 
+    % evaluateMacroscopicParameters evaluate electron-impact rate coefficients, swarm parameters and power channels
+    % using Boltzmann operators from the Boltzmann equation 
 
       boltzmann.evaluatePower(false);
       boltzmann.evaluateSwarmParameters;
@@ -986,7 +986,7 @@ classdef Boltzmann < handle
       % initial guess for the eedf from the linear Boltzmann equation (i.e. without non-linear operators)
       boltzmann.linearSolver();
       
-      % select the appropiate method depending on the growth model (if non-conservative operators are activated)
+      % select the appropriate method depending on the growth model (if non-conservative operators are activated)
       if boltzmann.includeNonConservativeIonization || boltzmann.includeNonConservativeAttachment
         switch boltzmann.eDensGrowthModel
           case 'spatial'
@@ -1057,6 +1057,7 @@ classdef Boltzmann < handle
       attachmentMatrixAux = boltzmann.attachmentMatrix;
       D = zeros(cellNumber);
       U = zeros(cellNumber);
+      D1 = zeros(cellNumber);
       MatrixFieldSpatialGrowth = zeros(cellNumber);
       totalCrossSectionAux = boltzmann.totalCrossSection;
       cellTotalCrossSectionAux = 0.5*(totalCrossSectionAux(1:end-1) + totalCrossSectionAux(2:end));
@@ -1085,19 +1086,27 @@ classdef Boltzmann < handle
       
       % evaluation of the diffusion and mobility components of the spatial growth terms
       D0 = energyCell./(3*cellTotalCrossSectionAux);
-      U0sup = EoN/(6*energyStep)*[0 energyCell(1:cellNumber-1)./(cellTotalCrossSectionAux(1:cellNumber-1))];
-      U0inf = -EoN/(6*energyStep)*[energyCell(2:cellNumber)./(cellTotalCrossSectionAux(2:cellNumber)) 0];
-      U0 = U0sup+U0inf;
-      
-      % evaluate effective ionization rate, reduced diffusion coefficient, and mobility times the electric field
-      CI = dot(eedf,integrandCI);
+      D0node = energyNode./(3*totalCrossSectionAux);
+      U0sup = EoN/(2*energyStep)*[0 D0node(2:cellNumber)]; 
+      U0inf = - EoN/(2*energyStep)*[D0node(2:cellNumber) 0];
+      U0mid = EoN/(2*energyStep)*[-D0node(2) D0node(2:end-2)-D0node(3:end-1) D0node(end-1)];          
+      U0 = U0sup+U0mid+U0inf;
+          
+      % evaluation of the reduced diffusion coefficient and the mobility times the electric field
       ND = gamma*energyStep*dot(D0,eedf);
       muE = -gamma*energyStep*dot(U0,eedf);
+
+      % evaluations of the effective ionization rate
+      CI = dot(eedf,integrandCI);
       
-      % evaluate reduced townsend coefficient (initial eedf guess may lead to negative root argument, in which case, 
-      % it should be calculated assuming that there is no electron density gradient)
+      % evaluate reduced Townsend coefficient 
+      % NOTE: the initial eedf guess may lead to negative root argument, in which case, it can be calculated 
+      %  ... either assuming that there is no electron density gradient: alpha/N = CI/vd = CI/(mu*E)
+      %  ... or assuming that the discriminant is zero (and using the expression for the root of the quadratic equation):
+      %      alpha/N = mu*E/(2D) = 2*CI/vd =  2*CI/(mu*E)  
       if muE^2-4*CI*ND < 0
         alphaRedEffNew = CI/muE;
+%         alphaRedEffNew = 2*CI/muE;
       else
         alphaRedEffNew = (muE - sqrt(muE^2-4*CI*ND))/(2*ND);
       end
@@ -1109,7 +1118,7 @@ classdef Boltzmann < handle
 
         % writing of MatrixFieldSpatialGrowth which refers to the additional electric field terms of the spatial 
         % growth model
-        g_fieldSpatialGrowthAux = alphaRedEffNew*energyNode./(6*totalCrossSectionAux);
+        g_fieldSpatialGrowthAux = 0.5*alphaRedEffNew.*D0node;
         g_fieldSpatialGrowthAux(1) = 0;
         g_fieldSpatialGrowthAux(end) = 0;
         for k=1:cellNumber
@@ -1122,17 +1131,21 @@ classdef Boltzmann < handle
           end
         end
         
-        % calculation of the diffusion and mobility matrices of the spatial growth model
+        % calculation of the diffusion matrix of the spatial growth model
         D(1:cellNumber+1:cellNumber*cellNumber) = alphaRedEffNew*alphaRedEffNew*D0;
+
+        % calculation of the mobility matrices of the spatial growth model
         U(cellNumber+1:cellNumber+1:cellNumber*cellNumber) = alphaRedEffNew*U0sup(2:cellNumber);
         U(2:cellNumber+1:cellNumber*cellNumber) = alphaRedEffNew*U0inf(1:cellNumber-1);
+        D1(1:cellNumber+1:cellNumber*cellNumber) = alphaRedEffNew*U0mid;
         
         % writting of the Boltzmann matrix (expansion of the following expression because of performance reasons)
-        % matrixAux =  1.e20*(MatrixI + D + U + baseMatrix + Mee)
+        % matrixAux =  1.e20*(MatrixI + D + D1 + U + baseMatrix + Mee)
         matrixAux = 1.e20*baseMatrix;
         matrixAux(1:cellNumber+1:cellNumber*cellNumber) = matrixAux(1:cellNumber+1:cellNumber*cellNumber) + ...
           1.e20*(MatrixFieldSpatialGrowth(1:cellNumber+1:cellNumber*cellNumber) + ...
-          D(1:cellNumber+1:cellNumber*cellNumber) + Mee(1:cellNumber+1:cellNumber*cellNumber));
+          D(1:cellNumber+1:cellNumber*cellNumber) + D1(1:cellNumber+1:cellNumber*cellNumber) + ...
+        Mee(1:cellNumber+1:cellNumber*cellNumber));
         matrixAux(cellNumber+1:cellNumber+1:cellNumber*cellNumber) = ...
           matrixAux(cellNumber+1:cellNumber+1:cellNumber*cellNumber) + 1.e20 * ...
           ( MatrixFieldSpatialGrowth(cellNumber+1:cellNumber+1:cellNumber*cellNumber) + ...
@@ -1147,15 +1160,18 @@ classdef Boltzmann < handle
         
         % invert the matrix to obtain a new solution
         eedf = matrixInversion(matrixAux, boltzmann.energyGrid);
-        
-        % evaluate effective ionization rate, reduced diffusion coefficient, and mobility times the electric field
-        CI = dot(eedf,integrandCI);
+                
+        % evaluation of the reduced diffusion coefficient and the mobility times the electric field
         ND = gamma*energyStep*dot(D0,eedf);
         muE = -gamma*energyStep*dot(U0,eedf);
-        
+      
+        %  evaluation of the effective ionization rate
+        CI = dot(eedf,integrandCI);
+         
         % calculation of the new effective reduced first Townsend coefficient
         if muE^2-4*CI*ND < 0
           alphaRedEffNew = CI/muE;
+%           alphaRedEffNew = 2*CI/muE;
         else
           alphaRedEffNew = (muE - sqrt(muE^2-4*CI*ND))/(2*ND);
         end
@@ -1186,7 +1202,7 @@ classdef Boltzmann < handle
       
       % copy of spatial growth model terms used on the electron-electron collisions routine
       if boltzmann.includeEECollisions
-        boltzmann.ionSpatialGrowthD = D;
+        boltzmann.ionSpatialGrowthD = D+D1;
         boltzmann.ionSpatialGrowthU = U;
         boltzmann.fieldMatrixSpatGrowth = MatrixFieldSpatialGrowth;
       end
@@ -1358,15 +1374,16 @@ classdef Boltzmann < handle
       
       % writing auxiliary matrix A, without constant alpha
       auxA = zeros(cellNumber);
+      auxMatrix = zeros(cellNumber);
       auxEnergyArray = -(energyStep/2)*sqrt(energyCell)+(2/3)*energyCell.^(3/2);
       % from power conservation, terms on the last row (cellNumber,:) and on the first column (:,1) are zero
       for k=1:cellNumber-1
-        auxA(k,2:k) = auxEnergyArray(2:k);
-        auxA(k,k+1:cellNumber) = (2/3)*energyNode(k+1)^(3/2);
+        auxMatrix(k,2:k) = auxEnergyArray(2:k);
+        auxMatrix(k,k+1:cellNumber) = (2/3)*energyNode(k+1)^(3/2);
       end
       % detailed balance condition
       for k=1:cellNumber-1
-        auxA(k,2:cellNumber) = sqrt(auxA(k,2:cellNumber).*auxA(1:cellNumber-1,k+1)'); 
+        auxA(k,2:cellNumber) = sqrt(auxMatrix(k,2:cellNumber).*auxMatrix(1:cellNumber-1,k+1)'); 
       end
       
       % writing auxiliary matrix B, without constant alpha
@@ -1409,10 +1426,11 @@ classdef Boltzmann < handle
         ratio = abs(Pee/Preference);
         
         % evaluate convergence criteria
-        if  max(abs(eedf-eedfOld)./eedfOld)<boltzmann.maxEedfRelError && abs(ratio)<1e-9
+        if  max(abs(eedf-eedfOld)./eedfOld)<boltzmann.maxEedfRelError && abs(ratio)<boltzmann.maxPowerBalanceRelError
           break;
         elseif max(abs(eedf-eedfOld)./eedfOld)<boltzmann.maxEedfRelError && iteration>200
-          str = sprintf('\\t- e-e iterative scheme: EEDF has converged but abs(Pee/Pref)= %.16g > 1e-9\\n',ratio);
+          str = sprintf('\\t- e-e iterative scheme: EEDF has converged but abs(Pee/Pref)= %.16g > %.16g\\n', ...
+          ratio,boltzmann.maxPowerBalanceRelError);
           notify(boltzmann, 'genericStatusMessage', StatusEventData(str, 'status'));
           str = sprintf('\\t- Ionization degree:%f; Reduced electric field:%f (Td) \\n',ne/n0,EoNTd);
           notify(boltzmann, 'genericStatusMessage', StatusEventData(str, 'status'));
@@ -1496,37 +1514,56 @@ classdef Boltzmann < handle
           case 'temporal'
             g_ELocal = boltzmann.workCond.reducedFieldSI^2*boltzmann.g_fieldTemporalGrowth; % elements of the electric field operator (local copy)
             power.field = gamma*sum(eedfLocal.*(g_ELocal(2:end)-g_ELocal(1:end-1)));
-            
+            % evaluate power gained from the field - alternative calculation for temporal case (DC case)     
+%             EoN = boltzmann.workCond.reducedFieldSI;
+%             boltzmann.evaluateSwarmParameters;
+%             power.field = boltzmann.swarmParam.redMobility*EoN^2;      
+            % evaluate power gained from the field - alternative calculation for temporal case (HF case)     
+%             EoN = boltzmann.workCond.reducedFieldSI;
+%             boltzmann.evaluateSwarmParameters;
+%             power.field = real(boltzmann.swarmParam.redMobilityHF)*EoN^2;      
+
             power.eDensGrowth = - boltzmann.CIEff*energyStep*sum(eedfLocal.*energyCell.*sqrt(energyCell));
-          case 'spatial'
+            % evaluate power lost due to density growth - alternative calculation for temporal case      
+%             boltzmann.evaluateSwarmParameters;
+%             power.eDensGrowth = - boltzmann.CIEff*boltzmann.swarmParam.meanEnergy;
+
+            case 'spatial'
             totalCrossSectionLocal = boltzmann.totalCrossSection;
             cellTotalCrossSection =  0.5*(totalCrossSectionLocal(1:N) + totalCrossSectionLocal(2:N+1));
             alphaRedEffLocal = boltzmann.alphaRedEff;
             reducedFieldSILocal = boltzmann.workCond.reducedFieldSI;
-            % elements of the electric field operator (local copy)
+            % evaluate general elements of the electric field operator (local copy)
             g_ELocal = reducedFieldSILocal^2*boltzmann.g_E; 
+            % evaluate specific elements of the electric field operator due to the spatial growth model
+            g_ELocalSpatial = reducedFieldSILocal*boltzmann.g_fieldSpatialGrowth;
             % evaluate power gained from the field
-            power.field = gamma*sum(eedfLocal.*(g_ELocal(2:end)-g_ELocal(1:end-1)));
-            % evaluate correction due to the electric field term of the spatial growth model
-            g_ELocal = reducedFieldSILocal*boltzmann.g_fieldSpatialGrowth;
-            correction = gamma*sum(eedfLocal.*(-g_ELocal(2:end)-g_ELocal(1:end-1)))*energyStep;
-            power.field = power.field+correction;
-            
-            % diffusion contribution
+            power.field = gamma*(sum(eedfLocal.*(g_ELocal(2:end)-g_ELocal(1:end-1) + ...
+                (-g_ELocalSpatial(2:end)-g_ELocalSpatial(1:end-1))*energyStep)));            
+            % evaluate power gained from the field - alternative calculation for spatial case      
+%             EoN = boltzmann.workCond.reducedFieldSI;
+%             boltzmann.evaluateSwarmParameters;
+%             D0node = energyNode./(3*totalCrossSectionLocal);
+%             power.field = boltzmann.swarmParam.redMobility*EoN^2 - ...
+%                 0.5*gamma*energyStep*alphaRedEffLocal*EoN*sum(D0node(2:end-1).*(eedfLocal(2:end)+eedfLocal(1:end-1)));
+                        
+            % evaluate power lost due to spatial growth: diffusion contribution
             powerDiffusion = alphaRedEffLocal^2*gamma*energyStep/3*sum(energyCell(1:N).^2.*eedfLocal(1:N)./...
-              cellTotalCrossSection(1:N));
-            
-            % mobility contribution
-            powerMobility = gamma*alphaRedEffLocal*(reducedFieldSILocal/6)*(...
-              energyCell(1)^2*eedfLocal(2)/cellTotalCrossSection(1) - ...
-              energyCell(N)^2*eedfLocal(N-1)/cellTotalCrossSection(N) + ...
-              sum(energyCell(2:N-1).^2.*(eedfLocal(3:N)-eedfLocal(1:N-2))./cellTotalCrossSection(2:N-1)));
-            
-            % power of spatial growth component
+              cellTotalCrossSection(1:N));            
+            % evaluate power lost due to spatial growth: mobility contribution
+            powerMobility = gamma*alphaRedEffLocal*(reducedFieldSILocal/3)*(...
+              sum(energyNode(2:N).^2.*(eedfLocal(2:N)-eedfLocal(1:N-1))./totalCrossSectionLocal(2:N)));            
+            % evaluate total power lost due to spatial growth
             power.eDensGrowth =  powerDiffusion + powerMobility;
+            % evaluate power lost due to density growth - alternative calculation for spatial case      
+%             EoN = boltzmann.workCond.reducedFieldSI;
+%             boltzmann.evaluateSwarmParameters;
+%             power.eDensGrowth = - alphaRedEffLocal*(boltzmann.swarmParam.redMobilityEnergy*EoN - ...
+%                 alphaRedEffLocal*boltzmann.swarmParam.redDiffCoeffEnergy);
+            
         end
       else
-        % elements of the electric field operator (local copy)
+        % evaluate general elements of the electric field operator (local copy)
         g_ELocal = boltzmann.workCond.reducedFieldSI^2*boltzmann.g_E; 
         % evaluate power gained from the field
         power.field = gamma*sum(eedfLocal.*(g_ELocal(2:end)-g_ELocal(1:end-1)));
@@ -1694,6 +1731,7 @@ classdef Boltzmann < handle
       
       % evaluate auxiliary total momentum transfer cross section function (see documentation)
       totalCrossSectionAux = boltzmann.totalCrossSection;
+      cellTotalCrossSectionAux = 0.5*(totalCrossSectionAux(1:end-1) + totalCrossSectionAux(2:end));
       if strcmp(boltzmann.eDensGrowthModel,'temporal') && ...
           ( boltzmann.includeNonConservativeIonization || boltzmann.includeNonConservativeAttachment )
         totalCrossSectionAux(2:end) = totalCrossSectionAux(2:end) + (boltzmann.CIEff/gamma)./sqrt(energyNode(2:end));
@@ -1722,13 +1760,17 @@ classdef Boltzmann < handle
       end
       
       % evaluate reduced energy diffusion coefficient
+      % this coefficient corresponds to the heat diffusion (G) defined in Allis 1956
+      % here, and contrary to other references, the reduced energy diffusion coefficient (in eV m-1 s-1) is not normalized to the electron mean energy
       swarmParam.redDiffCoeffEnergy = 2*gamma/3*energyStep*sum(energyCell.^2.*eedfLocal./...
         (totalCrossSectionAux(1:end-1)+totalCrossSectionAux(2:end)));
-      
+    
       % evaluate reduced energy mobility
+      % this coefficient corresponds to the thermoelectricity (beta) defined in Allis 1956
+      % here, and contrary to other references, the reduced energy mobility (in m-1 s-1) is not normalized to the electron mean energy
       swarmParam.redMobilityEnergy = -gamma/3*sum(energyNode(2:end-1).^2.*(eedfLocal(2:end)-eedfLocal(1:end-1))./...
         totalCrossSectionAux(2:end-1));
-      
+    
       % evaluate drift velocity
       if strcmp(boltzmann.eDensGrowthModel,'spatial') && ...
           ( boltzmann.includeNonConservativeIonization || boltzmann.includeNonConservativeAttachment )
@@ -1748,7 +1790,6 @@ classdef Boltzmann < handle
         end
       end
       swarmParam.redTownsendCoeff = totalIonRateCoeff / swarmParam.driftVelocity;
-      
       % evaluate reduced attachment coefficient
       totalAttRateCoeff = 0;
       for gas = boltzmann.gasArray

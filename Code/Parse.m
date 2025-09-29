@@ -27,8 +27,8 @@ classdef Parse
     commentChar = '%';
     wildCardChar = '*';
     stateRegExp = ['\s*(?<quantity>\d+\s*)?(?<gasName>\w+)\((?<ionCharg>[+-])?'...
-      '(?:,)?(?<eleLevel>[\w''.\[\]/+*-]+){1}(?:,v=)?(?<vibLevel>(?<=,v=)[\w+*-]+)?'...
-      '(?:,J=)?(?<rotLevel>(?<=,J=)[\d+*-]+)?\)\s*'];
+      '(?:,)?(?<eleLevel>[\w''.\[\]/+*^|-]+){1}(?:,v=)?(?<vibLevel>(?<=,v=)[\w+*|-]+)?'...
+      '(?:,J=)?(?<rotLevel>(?<=,J=)[\d+*|-]+)?\)\s*'];
     electronRegExp = '\s*(?<quantity>\d+)?((?:[eE]\s*)(?=[\s]|[+][^\(])|(?:[eE]$))';
     
   end
@@ -43,6 +43,36 @@ classdef Parse
       setupStruct = structArray2struct(structArray);
       
     end
+
+    function [setupStruct, unparsed] = setupFileJson(fileName)
+    % setupFileJson Reads the configuration file in JSON format for the 
+    % simulation and returns a setup structure with all the information.
+     
+        % open file
+        file = [Parse.inputFolder filesep fileName];
+        fileID = fopen(file, 'r');
+        if fileID == -1
+            error('\t Unable to open file: %s\n', file);
+        end   
+    
+        fileStr = fileread(file); % reads file as text
+        
+        % Use regex to remove key-value pairs with keys starting with '_'
+        % after trimming whitespaces
+        fileTextCleaned = regexprep(fileStr, '\s*"_\w+":\s*[^,}]*[,]?', ''); 
+        % Remove array elements starting with '_'
+        fileTextCleaned = regexprep(fileTextCleaned, '\s*"_[^"]*",?', '');
+
+        data = jsondecode(fileTextCleaned); % Using the jsondecode function to parse JSON from string
+        
+        unparsed = file2structArrayJson(fileID);
+
+        % Transpose all list elements in the data structure
+        setupStruct = transposeFields(data);
+
+        fclose(fileID);
+      
+    end
     
     function LXCatEntryArray = LXCatFiles(fileName)
     % LXCatFiles Reads LXCat files, parse their content and returns an
@@ -50,7 +80,7 @@ classdef Parse
       
       % definition of regular expressions to parse LXCat file
       LXCatRegExp1 = 'PROCESS: (?<reactants>.+?)(?<direction>->|<->) (?<products>.+?), (?<type>\w+)';
-      LXCatRegExp2 = 'E = (?<threshold>[\d.e+-]+) eV';
+      LXCatRegExp2 = 'E = (?<threshold>[\d.Ee+-]+) eV';
       LXCatRegExp3 = ['\[(?<reactants>.+?)(?<direction>->|<->)(?<products>.+?), (?<type>\w+)' ...
         '(?<subtype>, momentum-transfer)?\]'];
       % create a cell array with filenames in case only one file is
@@ -79,6 +109,49 @@ classdef Parse
             % add LXCat entry information into LXCatEntry struct array
             LXCatEntryArray = addLXCatEntry(description, parameter, rawCrossSection, LXCatEntryArray);
           end
+        end
+        % close LXCat file
+        fclose(fileID);
+      end
+
+    end
+
+    function LXCatEntryArray_new = LXCatFilesJson(fileName)
+    % LXCatFilesJson Reads LXCat files in JSON format, parse their content 
+    % and returns a structure array 'LXCatEntryArray' with all the 
+    % information.
+      
+      % create a cell array with filenames in case only one file is
+      % received as input
+      if ischar(fileName)
+        fileName = {fileName};
+      end
+      % create an empty struct array of LXCat entries 
+      LXCatEntryArray_new = struct.empty;
+      % loop over different LXCat files that have to be read
+      for i = 1:length(fileName)
+        % open LXCat file
+        fileID = fopen([Parse.inputFolder filesep fileName{i}], 'r');
+        if fileID<0
+          error(' Unable to open LXCat file: %s\n', fileName{i});
+        end
+        % parse LXCat file
+        fileStr = fileread([Parse.inputFolder filesep fileName{i}]); % reads file 
+        jsonData = jsondecode(fileStr); % Using the jsondecode function to parse JSON from string
+        
+        % for each LXCat Process
+        for p = 1:size(jsonData.processes,1)
+
+            % adapt json data from decoding to be used by the
+            % addLXCatEntryJson function
+            threshold = jsonData.processes(p,1).info.threshold;
+            rawCrossSection = jsonData.processes(p,1).info.data.values';
+            description = jsonData.processes(p,1).reaction;
+            
+            % add LXCat entry information into LXCatEntry struct array
+            LXCatEntryArray_new = addLXCatEntryJson(jsonData.states, description, threshold, ...
+                rawCrossSection, LXCatEntryArray_new);
+
         end
         % close LXCat file
         fclose(fileID);
@@ -152,6 +225,7 @@ classdef Parse
     % the information.
     
       regExp = [Parse.stateRegExp '\s*(?<valueStr>.+)'];
+
       fileID = fopen([Parse.inputFolder filesep fileName], 'r');
       if fileID == -1
         error('\t Unable to open file: %s\n', [Parse.inputFolder filesep fileName]);
@@ -182,7 +256,7 @@ classdef Parse
     % an structure with the parsed information. 
     
       regExp = [Parse.stateRegExp '\s*=\s*(?<constant>[\d.eE\s()*/+-]+)?' ...
-        '(?<function>\w+)?(?(function)@?)(?<argument>.+)?\s*'];
+            '(?<function>\w+)?(?(function)@?)(?<argument>.+)?\s*'];
       parsedEntry = regexp(entry, regExp, 'names');
       if isempty(parsedEntry)
         parsedEntry = struct('fileName', entry);
@@ -211,6 +285,53 @@ classdef Parse
   end
   
 end
+
+function data = transposeFields(data)
+    % find column vectors in structures and transpose to row vectors. Process fields recursively.
+    fields = fieldnames(data);  % Get all field names
+
+    for i = 1:numel(fields)
+        field = fields{i};
+        
+        if isstruct(data.(field))  % If the field is a structure, recurse into it
+            data.(field) = transposeFields(data.(field));
+
+        else 
+          % if the field is not a structure, call str2value to convert the field to a value
+          if ischar(data.(field))
+            data.(field) = str2value(data.(field));
+          end
+        
+          % if the field is a vector or cell array, transpose to row
+          if iscell(data.(field)) || isvector(data.(field))  % Check if it's a vector or cell array
+              if size(data.(field), 1) > 1 && size(data.(field), 2) == 1  % If column vector, transpose to row
+                  data.(field) = data.(field)';
+              end
+          end
+        end
+    end
+end
+
+function rawLine = file2structArrayJson(fileID)
+% file2structArrayJson Reads an input file and returns the unparsed data 
+% for output purposes.
+%
+
+  rawLine = cell.empty;
+  while ~feof(fileID)
+    % erase commas, quotation marks and brackets from the input file
+    % match = ["{", "}", "[", "]", '"', ","];
+    % match = ["{", "}", "[", "]", '"'];
+    % rawLine{end+1} = erase((fgetl(fileID)), match);
+    % line = strtrim(rawLine{end});
+    line = fgetl(fileID);
+    if ~isempty(line)
+        rawLine{end+1} = line;
+    end
+  end
+      
+end
+
 
 function [structArray, rawLine] = file2structArray(file)
 % file2structArray Reads an input file and and creates an array of input
@@ -242,6 +363,7 @@ function [structArray, rawLine] = file2structArray(file)
   fclose(fileID);
       
 end
+
 
 function structure = structArray2struct(structArray)
 % structArray2struct Convert an array of structures into a single structure.
@@ -296,11 +418,285 @@ function value = str2value(str)
       
 end
 
+function LXCatEntryArray = addLXCatEntryJson(jsonStates, description, parameter, rawCrossSection, LXCatEntryArray)
+% addLXCatEntryJson analyses the information of a particular LXCat entry in
+% JSON format and adds it to the structure array LXCatEntryArray
+  
+  % The reading of the typeTags is a WIP, which is going to evolve 
+  % according to the new LXCat3
+
+  % reaction type and subtype
+  % read only the first typeTag
+  LXCatEntryArray(end+1).type = description.typeTags{1,1};
+  % if typeTag is Electronic, change to Excitation
+  % this is going to evolve according to the new LXCat3 - WIP
+  if strcmpi(description.typeTags{1,1}, 'Electronic')
+    LXCatEntryArray(end).type = 'Excitation';
+  end
+
+
+  % check if it's momentum transfer cross-section
+  % This is a WIP, which is going to evolve according to the new LXCat3
+  LXCatEntryArray(end).isMomentumTransfer = any(strcmp(description.typeTags, ...
+    'MomentumTransfer'));  
+
+  % reversible reaction
+  LXCatEntryArray(end).isReverse = description.reversible == 1;
+
+  % add the raw data to the structure
+  LXCatEntryArray(end).rawCrossSection = rawCrossSection;
+
+  % get the fieldnames of the json states
+  statesFieldnamesStr = fieldnames(jsonStates);
+  statesFieldnames = eraseBetween(statesFieldnamesStr,1,1) ;
+
+  % initialize reactantElectrons and productElectrons count
+  LXCatEntryArray(end).reactantElectrons = 0;
+  LXCatEntryArray(end).productElectrons = 0;
+
+  LXCatEntryArray(end).target = struct.empty;
+
+
+  % check if the lhs is empty
+  if isempty(description.lhs)
+      error('A target can not be found in the collision. Please check your LXCat files');
+  end
+  % loop for each species in the targets (lhs)
+  for lhsId = 1:size(description.lhs,1)
+
+      % find the state in the states structure
+      lhsState = description.lhs(lhsId).state;
+      stateId = find(strcmp(statesFieldnames, lhsState), 1);
+      
+      if ~isempty(stateId)
+          % get the state corresponding to the stateId in the left-hand side
+          stateField = jsonStates.(statesFieldnamesStr{stateId});
+          if ~isempty(stateField.detailed)
+              if isfield(stateField.detailed, 'type') && strcmpi(stateField.detailed.type, 'Electron')
+              % if the state is an electron add its count to the reactantElectrons
+              % field
+                  reactantElectrons = description.lhs(lhsId).count;
+                  LXCatEntryArray(end).reactantElectrons = reactantElectrons;
+              else
+                
+                % initialize target fields
+                LXCatEntryArray(end).target(end+1).ionCharg = '';
+                LXCatEntryArray(end).target(end).gasName = '';
+                LXCatEntryArray(end).target(end).quantity = '';
+                LXCatEntryArray(end).target(end).eleLevel = '';
+                LXCatEntryArray(end).target(end).vibLevel = '';
+                LXCatEntryArray(end).target(end).rotLevel = '';
+
+                % if the species is not an electron, add it to the the target structure
+                if isfield(stateField.detailed, 'charge') && stateField.detailed.charge ~= 0
+                    % add the ion charge to the target structure
+                    if stateField.detailed.charge == 1
+                        LXCatEntryArray(end).target(end).ionCharg = '+';
+                    elseif stateField.detailed.charge == -1
+                        LXCatEntryArray(end).target(end).ionCharg = '-';
+                    else
+                        error('Invalid ion charge.');
+                    end
+                end
+                if isfield(stateField.detailed, 'composition')
+                  gasName = '';
+                  for cNum = 1:length(stateField.detailed.composition)
+                    if isequal(stateField.detailed.composition{cNum}{2},1)
+                        gasName = strcat(gasName, stateField.detailed.composition{cNum}{1});
+                    else
+                        gasName = strcat(gasName, num2str(stateField.detailed.composition{cNum}{1}), ...
+                            num2str(stateField.detailed.composition{cNum}{2}));
+                    end
+                  end
+                  LXCatEntryArray(end).target(end).gasName = gasName;
+                      
+                end
+                % fill the target structure with the electronic, vibrational and rotational levels
+                [LXCatEntryArray(end).target(end).eleLevel, LXCatEntryArray(end).target(end).vibLevel, ...
+                    LXCatEntryArray(end).target(end).rotLevel] = parseStateLevelInfoJson(stateField);
+
+                % Assign quantity to target
+                LXCatEntryArray(end).target.quantity = description.lhs(lhsId).count;
+    
+              end
+          end
+
+      end
+
+  end
+
+  %% Products
+  LXCatEntryArray(end).productArray = struct.empty;
+
+  % check if the rhs is empty
+  if isempty(description.rhs)
+    error('A product can not be found in the collision. Please check your LXCat files');
+  end
+
+  % loop for each species in the products (rhs)
+  for rhsId = 1:size(description.rhs,1)
+
+    % find the state in the states structure
+    rhsState = description.rhs(rhsId).state;
+    stateId = find(strcmp(statesFieldnames, rhsState), 1);
+    
+    if ~isempty(stateId)
+        stateField = jsonStates.(statesFieldnamesStr{stateId});
+        if ~isempty(stateField.detailed)
+            if isfield(stateField.detailed, 'type') && strcmpi(stateField.detailed.type, 'Electron')
+            % if the state is an electron add its count to the productElectrons
+            % field
+                productElectrons = description.rhs(rhsId).count;
+                LXCatEntryArray(end).productElectrons = productElectrons;
+            else
+              % if the species is not an electron, add it to the the
+              % productArray structure
+              
+              % initialize product fields
+              LXCatEntryArray(end).productArray(end+1).ionCharg = '';
+              LXCatEntryArray(end).productArray(end).gasName = '';
+              LXCatEntryArray(end).productArray(end).quantity = '';
+              LXCatEntryArray(end).productArray(end).eleLevel = '';
+              LXCatEntryArray(end).productArray(end).vibLevel = '';
+              LXCatEntryArray(end).productArray(end).rotLevel = '';
+
+
+              if isfield(stateField.detailed, 'charge') && stateField.detailed.charge ~= 0
+                if stateField.detailed.charge == 1
+                    LXCatEntryArray(end).productArray(end).ionCharg = '+';
+                elseif stateField.detailed.charge == -1
+                    LXCatEntryArray(end).productArray(end).ionCharg = '-';
+                else
+                    error('Invalid ion charge.');
+                end
+              end
+              if isfield(stateField.detailed, 'composition')
+                  gasName = '';
+                  for cNum = 1:length(stateField.detailed.composition)
+                      if isequal(stateField.detailed.composition{cNum}{2},1)
+                          gasName = strcat(gasName, stateField.detailed.composition{cNum}{1});
+                      else
+                          gasName = strcat(gasName, num2str(stateField.detailed.composition{cNum}{1}), ...
+                              num2str(stateField.detailed.composition{cNum}{2}));
+                      end
+                  end
+                  LXCatEntryArray(end).productArray(end).gasName = gasName;
+              end
+              % fill the productArray structure
+              [LXCatEntryArray(end).productArray(end).eleLevel, LXCatEntryArray(end).productArray(end).vibLevel, ...
+                  LXCatEntryArray(end).productArray(end).rotLevel] = parseStateLevelInfoJson(stateField);
+
+              % Assign quantity to product Array
+              LXCatEntryArray(end).productArray(end).quantity = description.rhs(rhsId).count;
+            end
+        end
+    end
+  end
+
+  % 'parameter' represents the threshold
+  if isempty(parameter)
+    LXCatEntryArray(end).threshold = 0;
+  else
+    threshold = parameter;
+    if isnan(threshold) 
+      error('I can not properly parse ''%s'' as the threshold of reaction ''%s''.\nPlease check your LXCat files', ...
+        parameter.threshold, [description.reactants description.direction description.products]);
+    elseif threshold<0
+      error('Reaction ''%s'' has a negative threshold (''%s'').\nPlease check your LXCat files', ...
+        [description.reactants description.direction description.products], parameter.threshold);
+    end
+
+    LXCatEntryArray(end).threshold = threshold;
+  end
+
+end
+
+
+
+function [eleLevel, vibLevel, rotLevel] = parseStateLevelInfoJson(stateField)
+% parseStateLevelInfoJson Parses the electronic, vibrational, and rotational levels from the state field's
+% serialized information. Reads the summary field of the electronic, vibrational, and rotational levels.
+%
+% Inputs:
+%   stateField - State field from LXCat data in JSON format
+%
+% Outputs:
+%   eleLevel - Electronic level string
+%   vibLevel - Vibrational level string  
+%   rotLevel - Rotational level string
+
+
+  eleLevel = '';
+  vibLevel = '';
+  rotLevel = '';
+
+  % electronic level
+  if ~isempty(stateField.serialized) && isfield(stateField.serialized,'electronic')
+    if ~isempty(stateField.serialized.electronic) && isfield(stateField.serialized.electronic, 'summary')
+      % check if size is 1x1, else join with |
+      if size(stateField.serialized.electronic, 1) == 1 && size(stateField.serialized.electronic, 2) == 1
+        eleLevel = stateField.serialized.electronic.summary;
+      else
+        summaries = {stateField.serialized.electronic.summary};
+        eleLevel = strjoin(summaries, '|');
+      end
+
+      % vibrational level
+      if ~isempty(stateField.serialized.electronic) && isfield(stateField.serialized.electronic, 'vibrational')
+        if ~isempty(stateField.serialized.electronic.vibrational) && isfield(stateField.serialized.electronic.vibrational, 'summary')
+          % check if size is 1x1, else join with |
+          if size(stateField.serialized.electronic.vibrational, 1) == 1 && size(stateField.serialized.electronic.vibrational, 2) == 1
+            vibLevel = stateField.serialized.electronic.vibrational.summary;
+          else
+            summaries = {stateField.serialized.electronic.vibrational.summary};
+            vibLevel = strjoin(summaries, '|');
+          end
+          
+          % rotational level
+          if ~isempty(stateField.serialized.electronic.vibrational) && isfield(stateField.serialized.electronic.vibrational, 'rotational')
+            if ~isempty(stateField.serialized.electronic.vibrational.rotational) && ...
+                isfield(stateField.serialized.electronic.vibrational.rotational, 'summary')
+              % check if size is 1x1, else join with |
+              if size(stateField.serialized.electronic.vibrational.rotational, 1) == 1 && size(stateField.serialized.electronic.vibrational.rotational, 2) == 1
+                rotLevel = stateField.serialized.electronic.vibrational.rotational.summary;
+              else
+                summaries = {stateField.serialized.electronic.vibrational.rotational.summary};
+                rotLevel = strjoin(summaries, '|');
+              end
+            else
+              error(['There is no summary available for rotational level of state %s . Please check your LXCat files.'], ...
+              [stateField.serialized.summary])
+            end
+          end
+
+        else
+          error(['There is no summary available for vibrational level of state %s . Please check your LXCat files.'], ...
+          [stateField.serialized.summary])
+        end
+      end
+    else
+      error(['There is no summary available for electronic level of state %s . Please check your LXCat files.'], ...
+      [stateField.serialized.summary])
+    end
+    
+  end
+
+end
+
+
 function LXCatEntryArray = addLXCatEntry(description, parameter, rawCrossSection, LXCatEntryArray)
 % addLXCatEntry analyses the information of a particular LXCat entry and adds it to the structure array
 % LXCatEntryArray.
       
-  LXCatEntryArray(end+1).type = description.type;
+      
+  % if type is Electronic, change to Excitation
+  % This is a WIP, according to the development of the new LXCat3.0
+  if strcmpi(description.type,'Electronic')
+    LXCatEntryArray(end+1).type = 'Excitation';
+  else
+    LXCatEntryArray(end+1).type = description.type;
+  end
+
   if isempty(description.subtype)
     LXCatEntryArray(end).isMomentumTransfer = false;
   else

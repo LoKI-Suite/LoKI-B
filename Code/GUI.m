@@ -147,53 +147,52 @@ classdef GUI < handle
       
       % display the setup info in the GUI
       gui.setupFileInfo.String = setup.unparsedInfo;
-
-      % store handle array for all the gases in the electron kinetics
-      gui.eedfGasArray = setup.electronKineticsGasArray;
-      % store handle array for all the collisions in order to display their cross sections
-      gui.collisionArray = setup.electronKineticsCollisionArray;
-      % add listener to status messages of the electron kinetics object
-      addlistener(setup.electronKinetics, 'genericStatusMessage', @gui.genericStatusMessage);
-      % add listener to update the GUI when a new solution for the EEDF is found
-      addlistener(setup.electronKinetics, 'obtainedNewEedf', @gui.newEedf);
-      % evaluate flag to change the GUI in the case of HF simulations (initialized as false)
-      if setup.workCond.reducedExcFreqSI>0
-        gui.isSimulationHF = true;
-      end
-
-      % create electronKinetics related tabs
-      switch class(setup.electronKinetics)
-        case 'Boltzmann'
-          if setup.electronKinetics.isTimeDependent
-            xLabelText = 'Time (s)';
-            gui.evolvingParameter = 'currentTime';
-            gui.evolvingParameterPopUpMenuStr = 't = %9.3e (s)';
-          else
-            xLabelText = 'Reduced Field (Td)';
-            gui.evolvingParameter = 'reducedField';
-            gui.evolvingParameterPopUpMenuStr = 'E/N = %9.3e (Td)';
-          end
-        case 'PrescribedEedf'
-          xLabelText = 'Electron Temperature (eV)';
-          gui.evolvingParameter = 'electronTemperature';
-          gui.evolvingParameterPopUpMenuStr = 'Te = %9.3e (eV)';
-      end
-      gui.createEedfTab();
-      gui.createRedDiffTab(xLabelText);
-      gui.createRedMobTab(xLabelText);
-      gui.createRedDiffEnergyTab(xLabelText);
-      gui.createRedMobEnergyTab(xLabelText);
-      gui.createEnergyTab(xLabelText);
-      if ~gui.isSimulationHF
-        gui.createRedTownsendTab(xLabelText);
-        gui.createRedAttachmentTab(xLabelText);
-      end
-      gui.createPowerTab(xLabelText);
-      gui.createCrossSectionTab();
-      gui.createPowerBalanceTab();
-      gui.createSwarmParametersTab();
-      gui.createElectronImpactRateCoeffOutputTab();
-
+      
+        % store handle array for all the gases in the electron kinetics
+        gui.eedfGasArray = setup.electronKineticsGasArray;
+        % store handle array for all the collisions in order to display their cross sections
+        gui.collisionArray = setup.electronKineticsCollisionArray;
+        % add listener to status messages of the electron kinetics object
+        addlistener(setup.electronKinetics, 'genericStatusMessage', @gui.genericStatusMessage);
+        % add listener to update the GUI when a new solution for the EEDF is found
+        addlistener(setup.electronKinetics, 'obtainedNewEedf', @gui.newEedf);
+        % evaluate flag to change the GUI in the case of HF simulations (initialized as false)
+        if setup.workCond.reducedExcFreqSI>0
+          gui.isSimulationHF = true;
+        end
+        % create electronKinetics related tabs
+        switch class(setup.electronKinetics)
+          case 'Boltzmann'
+            if setup.electronKinetics.isTimeDependent
+              xLabelText = 'Time (s)';
+              gui.evolvingParameter = 'currentTime';
+              gui.evolvingParameterPopUpMenuStr = 't = %9.3e (s)';
+            else
+              xLabelText = 'Reduced Field (Td)';
+              gui.evolvingParameter = 'reducedField';
+              gui.evolvingParameterPopUpMenuStr = 'E/N = %9.3e (Td)';
+            end
+          case 'PrescribedEedf'
+            xLabelText = 'Electron Temperature (eV)';
+            gui.evolvingParameter = 'electronTemperature';
+            gui.evolvingParameterPopUpMenuStr = 'Te = %9.3e (eV)';
+        end
+        gui.createEedfTab();
+        gui.createRedDiffTab(xLabelText);
+        gui.createRedMobTab(xLabelText);
+        gui.createRedDiffEnergyTab(xLabelText);
+        gui.createRedMobEnergyTab(xLabelText);
+        gui.createEnergyTab(xLabelText);
+        if ~gui.isSimulationHF
+          gui.createRedTownsendTab(xLabelText);
+          gui.createRedAttachmentTab(xLabelText);
+        end
+        gui.createPowerTab(xLabelText);
+        gui.createCrossSectionTab();
+        gui.createPowerBalanceTab();
+        gui.createSwarmParametersTab();
+        gui.createElectronImpactRateCoeffOutputTab();
+      
       % display the gui
       drawnow;
       
@@ -439,7 +438,7 @@ classdef GUI < handle
       hold on;
       
     end
-    
+
     function createPowerBalanceTab(gui)
       
       gui.powerBalanceTab = uitab('Parent', gui.resultsTextTabGroup, 'Title', 'Power Balance');
@@ -908,7 +907,7 @@ classdef GUI < handle
       drawnow;
     
     end
-
+    
     function resultsTextPopUpMenuHandler(gui, ~, ~)
     
       % evaluate solution to show
@@ -1028,6 +1027,7 @@ classdef GUI < handle
     function updateSwarmParamInfo(gui, solutionID)
     
       % save local copy of the solution
+      electronDensity = gui.solutions(solutionID).workCond.electronDensity;
       swarmParam = gui.solutions(solutionID).swarmParam;
       reducedField = gui.solutions(solutionID).workCond.reducedField;
       % create information to display
