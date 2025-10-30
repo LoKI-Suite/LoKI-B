@@ -50,6 +50,7 @@ classdef GUI < handle
     eedfPopUpMenu;
     eedfClearButton;
     anisotropyCheckBox;
+    eedfPlottedSolutions;
     eedfLogScaleCheckBox;
     crossSectionTab;
     crossSectionPlot;
@@ -251,7 +252,8 @@ classdef GUI < handle
       gui.eedfClearButton = uicontrol('Parent', gui.eedfTab, 'Style', 'pushbutton', 'Units', 'normalized', ...
         'Position', [0.75 0.9 0.15 0.05], 'String', 'Clear Graph', 'Callback', @gui.clearEedfPlot);
       gui.anisotropyCheckBox = uicontrol('Parent', gui.eedfTab, 'Style', 'checkbox', 'Units', 'normalized', ...
-        'Position', [0.45 0.9 0.3 0.05], 'String', 'Show First Anisotropy (dashed)', 'Value', 1);
+        'Position', [0.45 0.9 0.3 0.05], 'String', 'Show First Anisotropy (dashed)', 'Value', 1, 'Callback', ...
+        @gui.toggleEedfAnisotropy);
       gui.eedfLogScaleCheckBox = uicontrol('Parent', gui.eedfTab, 'Style', 'checkbox', 'Units', 'normalized', ...
         'Position', [0.45 0.85 0.3 0.05], 'String', 'Y axis logscale', 'Value', 1, 'Callback', @gui.changeEedfScale);
       gui.eedfPlot = axes('Parent', gui.eedfTab, 'Units', 'normalized', 'OuterPosition', [0 0 1 0.9], ...
@@ -514,7 +516,10 @@ classdef GUI < handle
       
       % add legend for the new plot
       gui.eedfLegend{end+1} = gui.eedfPopUpMenu.String{solutionID};
-      
+
+      % add solutionID to vector of plotted solutions (needed for anisotropy toggle interactivity)
+      gui.eedfPlottedSolutions(end+1) = solutionID;
+
       % add new plot
       if isfield(gui.solutions(solutionID), 'firstAnisotropy') && get(gui.anisotropyCheckBox, 'Value')
         gui.eedfHandles(end+1) = plot(gui.eedfPlot, gui.solutions(solutionID).energyValues, ...
@@ -839,7 +844,36 @@ classdef GUI < handle
       legend(gui.eedfPlot, 'off');
       gui.eedfLegend = cell.empty;
       gui.eedfHandles = [];
+      % clear vector of plotted solutions
+      gui.eedfPlottedSolutions = [];
       
+      % refresh gui
+      drawnow;
+      
+    end
+
+    function toggleEedfAnisotropy(gui, ~, ~)
+    % toogleEedfAnisotropy is the callback function of the checkbox "anisotropyCheckBox", it adds or removes the first anisotropy
+    % from the eedf plot according to the value of the checkbox.
+
+      % local save of currently plotted solution(s)
+      currentlyPlottedSolutions = gui.eedfPlottedSolutions;
+
+      % check if legend is active
+      if length(gui.eedfPlot.Legend)>0
+        includeLegend = true;
+      else
+        includeLegend = false;
+      end
+
+      % clear eedf plot
+      gui.clearEedfPlot;
+
+      % plot selected solution(s)
+      for solutionID = currentlyPlottedSolutions
+        gui.addEedfPlot(solutionID, includeLegend);
+      end
+
       % refresh gui
       drawnow;
       
