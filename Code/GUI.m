@@ -33,7 +33,10 @@ classdef GUI < handle
     solutions = struct.empty;
     refreshFrequency;
     evolvingParameter;
+    evolvingParameter2;
     evolvingParameterPopUpMenuStr;
+    evolvingParameterPopUpMenuStr2;
+    evolvingParameterSwarm;    
     isSimulationHF = false;
     
     setupPanel;
@@ -64,34 +67,42 @@ classdef GUI < handle
     inputRateCoeffInfo3;
     inputRateCoeffInfo4;
     inputRateCoeffInfo5;
+    swarmLegend
     redDiffTab;
     redDiffLogScaleCheckBoxX;
     redDiffLogScaleCheckBoxY;
     redDiffPlot;
+    redDiffLegend;    
     redMobTab;
     redMobLogScaleCheckBoxX;
     redMobLogScaleCheckBoxY;
     redMobPlot;
+    redMobLegend;    
     redDiffEnergyTab;
     redDiffEnergyLogScaleCheckBoxX;
     redDiffEnergyLogScaleCheckBoxY;
     redDiffEnergyPlot;
+    redDiffEnergyLegend;
     redMobEnergyTab;
     redMobEnergyLogScaleCheckBoxX;
     redMobEnergyLogScaleCheckBoxY;
     redMobEnergyPlot;
+    redMobEnergyLegend;
     energyTab;
     energyLogScaleCheckBoxX;
     energyLogScaleCheckBoxY;
     energyPlot;
+    TeLegend;    
     redTownsendTab;
     redTownsendLogScaleCheckBoxX;
     redTownsendLogScaleCheckBoxY;
     redTownsendPlot;
+    redTownsendLegend;    
     redAttachmentTab;
     redAttachmentLogScaleCheckBoxX;
     redAttachmentLogScaleCheckBoxY;
     redAttachmentPlot;
+    redAttachmentLegend;
     powerTab;
     powerLogScaleCheckBoxX;
     powerPlot;
@@ -171,7 +182,13 @@ classdef GUI < handle
             else
               xLabelText = 'Reduced Field (Td)';
               gui.evolvingParameter = 'reducedField';
-              gui.evolvingParameterPopUpMenuStr = 'E/N = %9.3e (Td)';
+              if isscalar(setup.info.workingConditions.gasTemperature)
+                gui.evolvingParameterPopUpMenuStr = 'E/N = %9.3e (Td)';
+              else  
+                gui.evolvingParameter2 = 'gasTemperature';
+                gui.evolvingParameterPopUpMenuStr2 = 'E/N = %9.3e (Td); Tg = %9.3e (K)';
+                gui.evolvingParameterSwarm = 'Tg = %9.3e (K)';
+              end
             end
           case 'PrescribedEedf'
             xLabelText = 'Electron Temperature (eV)';
@@ -486,13 +503,27 @@ classdef GUI < handle
       gui.solutions(newSolutionID).workCond = electronKinetics.workCond.struct;
       
       % add new entry to eedfPopUpMenu
-      newString = sprintf(gui.evolvingParameterPopUpMenuStr, electronKinetics.workCond.(gui.evolvingParameter));
+      if isempty(gui.evolvingParameter2)
+        newString = sprintf(gui.evolvingParameterPopUpMenuStr, electronKinetics.workCond.(gui.evolvingParameter));
+      else
+        newString = sprintf(gui.evolvingParameterPopUpMenuStr2, electronKinetics.workCond.(gui.evolvingParameter),...
+          electronKinetics.workCond.(gui.evolvingParameter2));
+      end  
       if length(gui.eedfPopUpMenu.String) == 1
         newString = [newString; gui.eedfPopUpMenu.String];
       else
         newString = [gui.eedfPopUpMenu.String(1:end-1); newString; gui.eedfPopUpMenu.String(end)];
       end
       set(gui.eedfPopUpMenu, 'String', newString);
+
+      % add new entry to swarmLegend
+      if ~isempty(gui.evolvingParameter2)
+        newStringSwarm = sprintf(gui.evolvingParameterSwarm, electronKinetics.workCond.(gui.evolvingParameter2)); 
+        if ~isempty(gui.swarmLegend)
+          newStringSwarm = [gui.swarmLegend(:,:); newStringSwarm];
+        end  
+      gui.swarmLegend = newStringSwarm;
+      end
       
       % add new entry to resultsPopUpMenu
       set(gui.resultsTextPopUpMenu, 'String', newString(1:end-1));
@@ -556,34 +587,119 @@ classdef GUI < handle
       redTown = zeros(1,numberOfSolutions);
       redAtt = zeros(1,numberOfSolutions);
       
-      for idx = 1:numberOfSolutions
-        inputParamValues(idx) = gui.solutions(idx).workCond.(evolvingParameter);
-        redDiff(idx) = gui.solutions(idx).swarmParam.redDiffCoeff;
-        redMob(idx) = gui.solutions(idx).swarmParam.redMobility;
-        if gui.isSimulationHF
-          redMobHF(idx) = gui.solutions(idx).swarmParam.redMobilityHF;
-        end
-        redDiffEnergy(idx) = gui.solutions(idx).swarmParam.redDiffCoeffEnergy;
-        redMobEnergy(idx) = gui.solutions(idx).swarmParam.redMobilityEnergy;
-        Te(idx) = gui.solutions(idx).swarmParam.Te;
-        charE(idx) = gui.solutions(idx).swarmParam.characEnergy;
-        redTown(idx) = gui.solutions(idx).swarmParam.redTownsendCoeff;
-        redAtt(idx) = gui.solutions(idx).swarmParam.redAttCoeff;
-      end
-      
-      plot(gui.redDiffPlot, inputParamValues, redDiff, 'ko', 'Tag', 'redDiffplot');
+      idx = numberOfSolutions;
+      inputParamValues(idx) = gui.solutions(idx).workCond.(evolvingParameter);
+      redDiff(idx) = gui.solutions(idx).swarmParam.redDiffCoeff;
+      redMob(idx) = gui.solutions(idx).swarmParam.redMobility;
       if gui.isSimulationHF
-        plot(gui.redMobPlot, inputParamValues, redMob, 'ko', inputParamValues, real(redMobHF), 'ro', ...
-          inputParamValues, -imag(redMobHF), 'bo', 'Tag', 'redMobplot');
-      else
-        plot(gui.redMobPlot, inputParamValues, redMob, 'ko', 'Tag', 'redMobplot');
-        plot(gui.redTownsendPlot, inputParamValues, redTown, 'ko', 'Tag', 'redTownsendplot');
-        plot(gui.redAttachmentPlot, inputParamValues, redAtt, 'ko', 'Tag', 'redAttachmentplot');
+        redMobHF(idx) = gui.solutions(idx).swarmParam.redMobilityHF;
       end
-      plot(gui.redDiffEnergyPlot, inputParamValues, redDiffEnergy, 'ko', 'Tag', 'redDiffEnergyplot');
-      plot(gui.redMobEnergyPlot, inputParamValues, redMobEnergy, 'ko', 'Tag', 'redMobEnergyplot');
-      plot(gui.energyPlot, inputParamValues, Te, 'ro', inputParamValues, charE, 'bo', 'Tag', 'meanEplot');
+      redDiffEnergy(idx) = gui.solutions(idx).swarmParam.redDiffCoeffEnergy;
+      redMobEnergy(idx) = gui.solutions(idx).swarmParam.redMobilityEnergy;
+      Te(idx) = gui.solutions(idx).swarmParam.Te;
+      charE(idx) = gui.solutions(idx).swarmParam.characEnergy;
+      redTown(idx) = gui.solutions(idx).swarmParam.redTownsendCoeff;
+      redAtt(idx) = gui.solutions(idx).swarmParam.redAttCoeff;
       
+      % Select legends to write in cases of evolvingParameter2 solution
+      % (e.g., avoiding repetitions of Tg-legends for different E/N values)
+      if ~isempty(gui.swarmLegend)
+        for idxLegend = 1:idx
+          if strcmp(gui.swarmLegend(idxLegend,:),gui.swarmLegend(idx,:))
+            idxCurrent = idxLegend;
+            if idxLegend == idx
+                if gui.isSimulationHF
+                    gui.redMobLegend{3*idx-2} = gui.swarmLegend(idx,:);
+                    gui.redMobLegend{3*idx-1} = gui.swarmLegend(idx,:);
+                    gui.redMobLegend{3*idx} = gui.swarmLegend(idx,:);                 
+                else     
+                    gui.redMobLegend{idx} = gui.swarmLegend(idx,:);
+                    gui.redTownsendLegend{idx} = gui.swarmLegend(idx,:);
+                    gui.redAttachmentLegend{idx} = gui.swarmLegend(idx,:);
+                end
+                gui.redDiffLegend{idx} = gui.swarmLegend(idx,:);
+                gui.redDiffEnergyLegend{idx} = gui.swarmLegend(idx,:);
+                gui.redMobEnergyLegend{idx} = gui.swarmLegend(idx,:);
+                gui.TeLegend{2*idx-1} = gui.swarmLegend(idx,:);
+                gui.TeLegend{2*idx} = gui.swarmLegend(idx,:);
+            else
+                if gui.isSimulationHF
+                    gui.redMobLegend{3*idx-2} = "";
+                    gui.redMobLegend{3*idx-1} = "";
+                    gui.redMobLegend{3*idx} = "";
+                else     
+                    gui.redMobLegend{idx} = "";
+                    gui.redTownsendLegend{idx} = "";
+                    gui .redAttachmentLegend{idx} = "";
+                end
+                gui.redDiffLegend{idx} = "";
+                gui.redDiffEnergyLegend{idx} = "";
+                gui.redMobEnergyLegend{idx} = "";
+                gui.TeLegend{2*idx-1} = "";
+                gui.TeLegend{2*idx} = "";
+            end
+            break
+          end
+        end   
+
+        % Generate a different marker for each evolvingParameter2 solution 
+        % (e.g., for different Tg)
+        markers = {'o', '+', '*',   '.', 'x', '_', '|', 'square', 'diamond', '^', 'v', '>', '<', 'pentagram', 'hexagram'};
+        % Circular selection of markers
+        % Example:  getprop(markers, 3) = '*'
+        getFirst = @(v)v{1}; 
+        getprop = @(options, idxCurrent)getFirst(circshift(options,-idxCurrent+1));
+        markerChosen =  getprop(markers,idxCurrent);
+
+      else
+
+        % Consider the same marker for all solutions 
+        markerChosen =  'o';
+
+      end
+
+      % Plot the swarm parameters with different makers for each evolvingParameter2 solution
+      plot(gui.redDiffPlot, inputParamValues(idx), redDiff(idx), 'Color', 'black', 'LineStyle', 'none', ...
+          'Marker', markerChosen, 'Tag', 'redDiffplot');
+
+      if gui.isSimulationHF
+        plot(gui.redMobPlot, inputParamValues(idx), redMob(idx), 'Color', 'black', 'LineStyle', 'none', ...
+            'Marker', markerChosen, 'Tag', 'redMobplot');
+        plot(gui.redMobPlot, inputParamValues(idx), real(redMobHF(idx)), 'Color', 'red', 'LineStyle', 'none', ...
+            'Marker', markerChosen, 'Tag', 'redMobplot');
+        plot(gui.redMobPlot, inputParamValues(idx), -imag(redMobHF(idx)), 'Color', 'blue', 'LineStyle', 'none', ...
+            'Marker', markerChosen, 'Tag', 'redMobplot');
+      else
+        plot(gui.redMobPlot, inputParamValues(idx), redMob(idx), 'Color', 'black', 'LineStyle', 'none', ...
+          'Marker', markerChosen, 'Tag', 'redMobplot');
+        plot(gui.redTownsendPlot, inputParamValues(idx), redTown(idx), 'Color', 'black', 'LineStyle', 'none', ...
+          'Marker', markerChosen, 'Tag', 'redTownsendplot');
+        plot(gui.redAttachmentPlot, inputParamValues(idx), redAtt(idx), 'Color', 'black', 'LineStyle', 'none', ...
+          'Marker', markerChosen, 'Tag', 'redAttachmentplot');
+      end
+
+      plot(gui.redDiffEnergyPlot, inputParamValues(idx), redDiffEnergy(idx), 'Color', 'black', 'LineStyle', 'none', ...
+          'Marker', markerChosen, 'Tag', 'redDiffEnergyplot');
+      plot(gui.redMobEnergyPlot, inputParamValues(idx), redMobEnergy(idx), 'Color', 'black', 'LineStyle', 'none', ...
+          'Marker', markerChosen, 'Tag', 'redMobEnergyplot');
+      plot(gui.energyPlot, inputParamValues(idx), Te(idx), 'Color', 'red', 'LineStyle', 'none', ...
+          'Marker', markerChosen, 'Tag', 'meanEplot');
+      plot(gui.energyPlot, inputParamValues(idx), charE(idx), 'Color', 'blue', 'LineStyle', 'none', ...
+          'Marker', markerChosen, 'Tag', 'meanEplot');
+
+      % Update legends in cases of evolvingParameter2 solution  
+      if ~isempty(gui.swarmLegend)
+        legend(gui.redDiffPlot, gui.redDiffLegend);
+        legend(gui.redMobPlot, gui.redMobLegend);
+        legend(gui.redMobEnergyPlot, gui.redMobEnergyLegend);
+        legend(gui.redDiffEnergyPlot, gui.redDiffEnergyLegend);
+        legend(gui.energyPlot, gui.TeLegend);
+        if ~gui.isSimulationHF
+            legend(gui.redTownsendPlot, gui.redTownsendLegend);
+            legend(gui.redAttachmentPlot, gui.redAttachmentLegend);
+        end    
+      end
+
     end
     
     function changeRedDiffXScale(gui, ~, ~)

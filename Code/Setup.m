@@ -167,6 +167,10 @@ classdef Setup < handle
         else
           auxWorkingConditions = struct();
         end
+        if ~isscalar(setup.info.workingConditions.gasTemperature)
+            auxWorkingConditions.gasTemperature = setup.info.workingConditions.gasTemperature;
+        end    
+
         % evaluate jobs
         for field = fieldnames(auxWorkingConditions)'
           jobs = length(auxWorkingConditions.(field{1}));
