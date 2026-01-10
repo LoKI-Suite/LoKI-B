@@ -33,6 +33,7 @@ classdef GUI < handle
     solutions = struct.empty;
     refreshFrequency;
     evolvingParameter;
+    isSingleEvolvingParameter = false;    
     evolvingParameter2;
     evolvingParameterPopUpMenuStr;
     evolvingParameterPopUpMenuStr2;
@@ -106,6 +107,7 @@ classdef GUI < handle
     powerTab;
     powerLogScaleCheckBoxX;
     powerPlot;
+    powerLegend;    
     powerFieldColor = [0 0 0];
     powerElasticColor = [1 0 0];
     powerCARColor = [0 1 0];
@@ -182,6 +184,9 @@ classdef GUI < handle
             else
               xLabelText = 'Reduced Field (Td)';
               gui.evolvingParameter = 'reducedField';
+              if isscalar(setup.info.workingConditions.reducedField)
+                 gui.isSingleEvolvingParameter = 'true'; 
+              end              
               if isscalar(setup.info.workingConditions.gasTemperature)
                 gui.evolvingParameterPopUpMenuStr = 'E/N = %9.3e (Td)';
               else  
@@ -919,22 +924,170 @@ classdef GUI < handle
         powerAttachment(idx) = gui.solutions(idx).power.attachmentIne;
         powerGrowth(idx) = gui.solutions(idx).power.eDensGrowth;
         powerRef(idx) = gui.solutions(idx).power.reference;
-      end
       
-      plot(gui.powerPlot, inputParamValues, powerField./powerRef, 'Color', gui.powerFieldColor, 'LineWidth', 2);
-      plot(gui.powerPlot, inputParamValues, powerElasticGain./powerRef, ...
-        inputParamValues, powerElasticLoss./powerRef, 'Color', gui.powerElasticColor, 'LineWidth', 2);
-      plot(gui.powerPlot, inputParamValues, powerCARGain./powerRef, ...
-        inputParamValues, powerCARLoss./powerRef, 'Color', gui.powerCARColor, 'LineWidth', 2);
-      plot(gui.powerPlot, inputParamValues, powerRotationalGain./powerRef, ...
-        inputParamValues, powerRotationalLoss./powerRef, 'Color', gui.powerRotColor, 'LineWidth', 2);
-      plot(gui.powerPlot, inputParamValues, powerVibrationalGain./powerRef, ...
-        inputParamValues, powerVibrationalLoss./powerRef, 'Color', gui.powerVibColor, 'LineWidth', 2);
-      plot(gui.powerPlot, inputParamValues, powerElectronicGain./powerRef, ...
-        inputParamValues, powerElectronicLoss./powerRef, 'Color', gui.powerEleColor, 'LineWidth', 2);
-      plot(gui.powerPlot, inputParamValues, powerIonization./powerRef, 'Color', gui.powerIonColor, 'LineWidth', 2);
-      plot(gui.powerPlot, inputParamValues, powerAttachment./powerRef, 'Color', gui.powerAttColor, 'LineWidth', 2);
-      plot(gui.powerPlot, inputParamValues, powerGrowth./powerRef, 'Color', gui.powerGrowthColor, 'LineWidth', 2);
+        % Normalize swarmLegend
+        swarmLegendx = strtrim(string(gui.swarmLegend));        
+      end 
+
+      % Generate a different lineStyle or marker for each evolvingParameter2 solution 
+      % (e.g., for different Tg)
+      lineStyles = {'-', '--', ':', '-+', '-*', '-.', '-x', '-_', '-|', ...
+          '-square', '-diamond', '-^', '-v', '->', '-<','-pentagram', '-hexagram'};
+      markers = {'o', '+', '*', 	'.', 'x', '_', '|', 'square', 'diamond', ...
+          '^', 'v', '>', '<', 'pentagram', 'hexagram'};
+      % Circular selection of lineStyles or markers
+      % Example:  getprop(lineStyles, 3) = ':'
+      getFirst = @(v)v{1}; 
+      getprop = @(options, id)getFirst(circshift(options,-id +1));
+
+      % Legend groups
+      % to enable selecting legends to write in cases of evolvingParameter2 solution
+      % (e.g., avoiding repetitions of Tg-legends for different power channels and E/N values)
+      legendLabels = unique(swarmLegendx, 'stable');
+      nLegends = numel(legendLabels);
+      % Particular case for a single Tg-value 
+      if nLegends == 0
+        nLegends = 1;
+      end  
+      
+      hField = gobjects(nLegends,1);
+      
+      for k = 1:nLegends
+        % indices belonging to this legend group for multiple Tg-values
+        if ~isempty(swarmLegendx)
+          idxGroup = swarmLegendx == legendLabels(k);
+        % indices belonging to this legend group for a single Tg-value
+        else
+          idxGroup = 1:numberOfSolutions;
+        end  
+        if ~any(idxGroup)
+           continue
+        end
+
+        idLineStyle = k;
+
+        % Single E/N calculation - use markers instead of lines in plot
+        if gui.isSingleEvolvingParameter
+            markerChosen = getprop(markers, idLineStyle);
+
+            % hField (only legend-visible)
+            hField(k) = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerField(idxGroup)./ powerRef(idxGroup), ...
+                'Color', gui.powerFieldColor, 'LineStyle', 'none', 'Marker', markerChosen);
+
+            % Other handles (hidden from legend)
+            hElasticGain = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerElasticGain(idxGroup)./ powerRef(idxGroup), ...
+                'Color', gui.powerElasticColor, 'LineStyle', 'none', 'Marker', markerChosen);
+            hElasticLoss = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerElasticLoss(idxGroup)./powerRef(idxGroup), ...
+                'Color', gui.powerElasticColor, 'LineStyle', 'none', 'Marker', markerChosen);       
+            hCARGain = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerCARGain(idxGroup)./ powerRef(idxGroup), ...
+                'Color', gui.powerCARColor, 'LineStyle', 'none', 'Marker', markerChosen);
+            hCARLoss = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerCARLoss(idxGroup)./powerRef(idxGroup), ...
+                'Color', gui.powerCARColor, 'LineStyle', 'none', 'Marker', markerChosen);
+            hRotationalGain = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerRotationalGain(idxGroup)./ powerRef(idxGroup), ...
+                'Color', gui.powerRotColor, 'LineStyle', 'none', 'Marker', markerChosen);
+            hRotationalLoss = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerRotationalLoss(idxGroup)./powerRef(idxGroup), ...
+                'Color', gui.powerRotColor, 'LineStyle', 'none', 'Marker', markerChosen);
+            hVibrationalGain = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerVibrationalGain(idxGroup)./ powerRef(idxGroup), ...
+                'Color', gui.powerVibColor, 'LineStyle', 'none', 'Marker', markerChosen);
+            hVibrationalLoss = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerVibrationalLoss(idxGroup)./powerRef(idxGroup), ...
+                'Color', gui.powerVibColor, 'LineStyle', 'none', 'Marker', markerChosen);
+            hElectronicGain = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerElectronicGain(idxGroup)./ powerRef(idxGroup), ...
+                'Color', gui.powerEleColor, 'LineStyle', 'none', 'Marker', markerChosen);
+            hElectronicLoss = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerElectronicLoss(idxGroup)./powerRef(idxGroup), ...
+                'Color', gui.powerEleColor, 'LineStyle', 'none', 'Marker', markerChosen);
+            hIonization = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerIonization(idxGroup)./powerRef(idxGroup), ...
+                'Color', gui.powerIonColor, 'LineStyle', 'none', 'Marker', markerChosen);
+            hAttachment = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerAttachment(idxGroup)./powerRef(idxGroup), ...
+                'Color', gui.powerAttColor, 'LineStyle', 'none', 'Marker', markerChosen);
+            hGrowth = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerGrowth(idxGroup)./powerRef(idxGroup), ...
+                'Color', gui.powerGrowthColor, 'LineStyle', 'none', 'Marker', markerChosen);
+
+        % Multiple E/N calculations - use lines in plot
+        else    
+            lineStyleChosen = getprop(lineStyles, idLineStyle);
+
+            % hField (only legend-visible)
+            hField(k) = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerField(idxGroup)./ powerRef(idxGroup), ...
+                'Color', gui.powerFieldColor, 'LineStyle', lineStyleChosen, 'LineWidth', 2);
+
+            % Other handles (hidden from legend)
+            hElasticGain = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerElasticGain(idxGroup)./ powerRef(idxGroup), ...
+                'Color', gui.powerElasticColor, 'LineStyle', lineStyleChosen, 'LineWidth', 2);
+            hElasticLoss = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerElasticLoss(idxGroup)./powerRef(idxGroup), ...
+                'Color', gui.powerElasticColor, 'LineStyle', lineStyleChosen, 'LineWidth', 2);       
+            hCARGain = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerCARGain(idxGroup)./ powerRef(idxGroup), ...
+                'Color', gui.powerCARColor, 'LineStyle', lineStyleChosen, 'LineWidth', 2);
+            hCARLoss = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerCARLoss(idxGroup)./powerRef(idxGroup), ...
+                'Color', gui.powerCARColor, 'LineStyle', lineStyleChosen, 'LineWidth', 2);
+            hRotationalGain = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerRotationalGain(idxGroup)./ powerRef(idxGroup), ...
+                'Color', gui.powerRotColor, 'LineStyle', lineStyleChosen, 'LineWidth', 2);
+            hRotationalLoss = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerRotationalLoss(idxGroup)./powerRef(idxGroup), ...
+                'Color', gui.powerRotColor, 'LineStyle', lineStyleChosen, 'LineWidth', 2);
+            hVibrationalGain = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerVibrationalGain(idxGroup)./ powerRef(idxGroup), ...
+                'Color', gui.powerVibColor, 'LineStyle', lineStyleChosen, 'LineWidth', 2);
+            hVibrationalLoss = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerVibrationalLoss(idxGroup)./powerRef(idxGroup), ...
+                'Color', gui.powerVibColor, 'LineStyle', lineStyleChosen, 'LineWidth', 2);
+            hElectronicGain = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerElectronicGain(idxGroup)./ powerRef(idxGroup), ...
+                'Color', gui.powerEleColor, 'LineStyle', lineStyleChosen, 'LineWidth', 2);
+            hElectronicLoss = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerElectronicLoss(idxGroup)./powerRef(idxGroup), ...
+                'Color', gui.powerEleColor, 'LineStyle', lineStyleChosen, 'LineWidth', 2);
+            hIonization = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerIonization(idxGroup)./powerRef(idxGroup), ...
+                'Color', gui.powerIonColor, 'LineStyle', lineStyleChosen, 'LineWidth', 2);
+            hAttachment = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerAttachment(idxGroup)./powerRef(idxGroup), ...
+                'Color', gui.powerAttColor, 'LineStyle', lineStyleChosen, 'LineWidth', 2);
+            hGrowth = plot(gui.powerPlot, ...
+                inputParamValues(idxGroup), powerGrowth(idxGroup)./powerRef(idxGroup), ...
+                'Color', gui.powerGrowthColor, 'LineStyle', lineStyleChosen, 'LineWidth', 2); 
+
+        end    
+        
+        hElasticGain.Annotation.LegendInformation.IconDisplayStyle = 'off';
+        hElasticLoss.Annotation.LegendInformation.IconDisplayStyle = 'off';
+        hCARGain.Annotation.LegendInformation.IconDisplayStyle = 'off';
+        hCARLoss.Annotation.LegendInformation.IconDisplayStyle = 'off';
+        hRotationalGain.Annotation.LegendInformation.IconDisplayStyle = 'off';
+        hRotationalLoss.Annotation.LegendInformation.IconDisplayStyle = 'off';
+        hVibrationalGain.Annotation.LegendInformation.IconDisplayStyle = 'off';
+        hVibrationalLoss.Annotation.LegendInformation.IconDisplayStyle = 'off';
+        hElectronicGain.Annotation.LegendInformation.IconDisplayStyle = 'off';
+        hElectronicLoss.Annotation.LegendInformation.IconDisplayStyle = 'off';
+        hIonization.Annotation.LegendInformation.IconDisplayStyle = 'off';
+        hAttachment.Annotation.LegendInformation.IconDisplayStyle = 'off';
+        hGrowth.Annotation.LegendInformation.IconDisplayStyle = 'off';
+      end
+
+      % --- Create legend (only valid handles)
+      if ~isempty(swarmLegendx)
+        valid = isgraphics(hField);
+        legend(gui.powerPlot, hField(valid), legendLabels(valid))
+      end  
       
     end
     
